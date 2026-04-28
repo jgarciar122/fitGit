@@ -42,19 +42,19 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
         holder.chipMusculo.setText(ejercicio.getMusculoObjetivo());
         holder.chipEquipamiento.setText(ejercicio.getEquipamiento());
 
-        // --- CONFIGURACIÓN DE SEGURIDAD PARA CARGAR EL GIF ---
-        // Construimos la URL con las cabeceras de autenticación necesarias
+// Dentro de onBindViewHolder en AdaptadorEjercicios.java
         GlideUrl glideUrl = new GlideUrl(ejercicio.getUrlGif(), new LazyHeaders.Builder()
-                .addHeader("x-rapidapi-key", API_KEY)
+                .addHeader("x-rapidapi-key", "84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5")
                 .addHeader("x-rapidapi-host", "exercisedb.p.rapidapi.com")
+                // A veces Glide necesita un User-Agent para que el servidor no crea que es un bot
+                .addHeader("User-Agent", "Mozilla/5.0")
                 .build());
 
-        // Carga con Glide
         Glide.with(holder.itemView.getContext())
                 .asGif()
                 .load(glideUrl)
                 .placeholder(R.drawable.imagen_ejemplo)
-                .error(R.drawable.imagen_ejemplo)
+                .error(R.drawable.imagen_ejemplo) // Aquí saldrá tu imagen si falla
                 .into(holder.ivImagen);
 
         // Navegación al detalle

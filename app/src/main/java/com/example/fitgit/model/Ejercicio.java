@@ -69,8 +69,11 @@ public class Ejercicio implements Serializable {
      * Construye la URL del GIF de forma dinámica.
      * Según la nueva estructura de la API, la imagen se obtiene mediante el ID.
      */
+// Dentro de Ejercicio.java
     public String getUrlGif() {
-        return "https://exercisedb.p.rapidapi.com/image?exerciseId=" + id;
+        // Añadimos &resolution=360 para que la API no nos devuelva el error 400
+        // Puedes probar con 180 o 360 según la calidad que quieras
+        return "https://exercisedb.p.rapidapi.com/image?exerciseId=" + id + "&resolution=360";
     }
 
     @Override
