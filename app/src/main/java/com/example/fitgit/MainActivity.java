@@ -54,13 +54,15 @@ public class MainActivity extends AppCompatActivity {
         // 4. SUSCRIPCIÓN A DATOS REALES (El corazón de la conexión)
         // Observamos el LiveData. Cuando la API responda, este bloque se ejecutará automáticamente.
         viewModel.getEjercicios().observe(this, ejercicios -> {
-            if (ejercicios != null) {
-                // Creamos el adaptador con los ejercicios que vienen de internet
+            if (ejercicios != null && !ejercicios.isEmpty()) {
+                // Si hay datos, los ponemos
                 AdaptadorEjercicios adaptador = new AdaptadorEjercicios(ejercicios);
                 rvEjercicios.setAdapter(adaptador);
+                android.util.Log.d("FITGIT_OK", "Ejercicios cargados: " + ejercicios.size());
             } else {
-                // Si la respuesta falla (sin internet o error de API)
-                Toast.makeText(this, "Error al conectar con la API ExerciseDB", Toast.LENGTH_SHORT).show();
+                // Si no hay datos, evitamos que el programa explote
+                Toast.makeText(this, "No se han podido cargar los ejercicios. Revisa tu conexión.", Toast.LENGTH_LONG).show();
+                android.util.Log.e("FITGIT_ERROR", "La lista de ejercicios llegó nula o vacía");
             }
         });
 

@@ -25,8 +25,12 @@ public class RepositorioEjercicio {
         servicio.obtenerTodosLosEjercicios().enqueue(new Callback<List<Ejercicio>>() {
             @Override
             public void onResponse(Call<List<Ejercicio>> call, Response<List<Ejercicio>> response) {
-                if (response.isSuccessful()) {
-                    // Aquí es donde en el futuro guardaremos en Room antes de mostrar
+                if (response.isSuccessful() && response.body() != null) {
+                    // --- AÑADE ESTO PARA VER EL TEXTO REAL ---
+                    retrofit2.Response<List<Ejercicio>> rawResponse = response;
+                    android.util.Log.d("API_RAW_JSON", "Cuerpo completo: " + new com.google.gson.Gson().toJson(response.body().get(0)));
+                    // -----------------------------------------
+
                     datosEjercicios.setValue(response.body());
                 }
             }
