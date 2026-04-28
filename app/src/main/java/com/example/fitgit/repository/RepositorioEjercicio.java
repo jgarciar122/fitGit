@@ -1,12 +1,12 @@
-package com.example.fitgit.repositorio;
+package com.example.fitgit.repository;
 
 import android.app.Application;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import com.example.fitgit.api.ClienteRetrofit;
 import com.example.fitgit.api.ServicioEjercicios;
-import com.example.fitgit.model.AppDatabase;
-import com.example.fitgit.model.EjercicioDao;
+import com.example.fitgit.database.AppDatabase;
+import com.example.fitgit.database.EjercicioDao;
 import com.example.fitgit.model.Ejercicio;
 import java.util.List;
 import java.util.concurrent.ExecutorService;

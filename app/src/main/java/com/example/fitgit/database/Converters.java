@@ -1,4 +1,4 @@
-package com.example.fitgit.model;
+package com.example.fitgit.database;
 
 import androidx.room.TypeConverter;
 import com.google.gson.Gson;

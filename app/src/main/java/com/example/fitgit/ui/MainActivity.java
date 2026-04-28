@@ -1,4 +1,4 @@
-package com.example.fitgit;
+package com.example.fitgit.ui;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider; // IMPORTANTE: Nueva importación
 
+import com.example.fitgit.R;
 import com.example.fitgit.adapter.AdaptadorEjercicios;
 import com.example.fitgit.viewmodel.EjercicioViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

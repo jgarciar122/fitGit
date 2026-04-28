@@ -1,10 +1,12 @@
-package com.example.fitgit.model;
+package com.example.fitgit.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
+import com.example.fitgit.model.Ejercicio;
 
 import java.util.List;
 

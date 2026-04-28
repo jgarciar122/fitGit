@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.example.fitgit.model.Ejercicio;
-import com.example.fitgit.repositorio.RepositorioEjercicio;
+import com.example.fitgit.repository.RepositorioEjercicio;
 
 import java.util.List;
 
