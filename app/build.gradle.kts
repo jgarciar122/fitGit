@@ -44,4 +44,7 @@ dependencies {
     implementation(libs.converter.gson)
     // No olvides Glide para los GIFs si no lo pusiste antes
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.livedata)
 }

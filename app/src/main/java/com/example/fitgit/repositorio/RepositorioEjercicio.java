@@ -1,7 +1,9 @@
-package com.example.fitgit.api;
+package com.example.fitgit.repositorio;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.fitgit.api.ClienteRetrofit;
+import com.example.fitgit.api.ServicioEjercicios;
 import com.example.fitgit.model.Ejercicio;
 
 import java.util.List;
