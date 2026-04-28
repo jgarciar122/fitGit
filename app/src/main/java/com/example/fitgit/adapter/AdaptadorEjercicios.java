@@ -32,12 +32,22 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ejercicio ejercicio = listaEjercicios.get(position);
+
+        // Seteamos los textos
         holder.tvNombre.setText(ejercicio.getNombre());
         holder.chipMusculo.setText(ejercicio.getMusculoObjetivo());
         holder.chipEquipamiento.setText(ejercicio.getEquipamiento());
 
-        holder.ivImagen.setImageResource(R.drawable.imagen_ejemplo);
+        // --- CAMBIO CLAVE: Carga de GIF con Glide ---
+        com.bumptech.glide.Glide.with(holder.itemView.getContext())
+                .asGif() // Obligamos a que lo trate como GIF
+                .load(ejercicio.getUrlGif()) // Usamos la URL que viene de la API
+                .placeholder(R.drawable.imagen_ejemplo) // Lo que se ve mientras descarga
+                .error(R.drawable.imagen_ejemplo) // Lo que se ve si falla (puedes crear uno de error)
+                .into(holder.ivImagen);
+        // --------------------------------------------
 
+        // Navegación al detalle
         holder.itemView.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(v.getContext(), DetallesEjercicioActivity.class);
             intent.putExtra("ejercicio_seleccionado", ejercicio);
