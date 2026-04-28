@@ -1,6 +1,8 @@
 package com.example.fitgit;
 
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -10,6 +12,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.fitgit.adapter.AdaptadorEjercicios;
 import com.example.fitgit.model.Ejercicio;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.vista_principal), (v, insets) -> {
             Insets barrasSistema = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(barrasSistema.left, barrasSistema.top, barrasSistema.right, barrasSistema.bottom);
             return insets;
@@ -99,5 +104,18 @@ public class MainActivity extends AppCompatActivity {
         //Adaptador
         AdaptadorEjercicios adaptador = new AdaptadorEjercicios(listaPrueba);
         rvEjercicios.setAdapter(adaptador);
+
+        // Muestra botón filtrar
+        ChipGroup grupoFiltros = findViewById(R.id.grupo_filtros);
+
+        grupoFiltros.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (!checkedIds.isEmpty()) {
+                int idSeleccionado = checkedIds.get(0);
+                Chip chip = findViewById(idSeleccionado);
+
+                // Esto es solo para la prueba de mañana
+                Toast.makeText(this, "Filtrando por: " + chip.getText(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

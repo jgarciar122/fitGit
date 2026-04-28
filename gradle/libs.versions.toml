@@ -1,6 +1,8 @@
 [versions]
 agp = "8.7.2"
 junit = "4.13.2"
+
+
 # Bajamos estas para que no pidan el SDK 36
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -9,6 +11,9 @@ material = "1.12.0"
 # ESTA ES LA CLAVE: Bajamos de 1.13.0 a 1.9.3
 activity = "1.9.3"
 constraintlayout = "2.2.0"
+# API Retrofit
+retrofit = "2.11.0"
+gson = "2.11.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -18,6 +23,9 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+# API Retrofit
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

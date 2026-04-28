@@ -40,4 +40,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    // No olvides Glide para los GIFs si no lo pusiste antes
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
