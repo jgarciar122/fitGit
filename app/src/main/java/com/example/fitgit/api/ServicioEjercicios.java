@@ -11,12 +11,12 @@ import retrofit2.http.Path;
 
 public interface ServicioEjercicios {
 
-    // Los headers necesarios para ExerciseDB en RapidAPI [cite: 42]
+    // Los headers necesarios para ExerciseDB en RapidAPI
     @Headers({
-            "X-RapidAPI-Key: TU_API_KEY_AQUÍ",
+            "X-RapidAPI-Key: 84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5",
             "X-RapidAPI-Host: exercisedb.p.rapidapi.com"
     })
-    @GET("exercises?limit=20") // Traer 20 ejercicios generales
+    @GET("exercises?limit=20")
     Call<List<Ejercicio>> obtenerTodosLosEjercicios();
 
     @Headers({
