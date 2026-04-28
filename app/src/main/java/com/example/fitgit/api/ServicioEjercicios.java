@@ -19,10 +19,11 @@ public interface ServicioEjercicios {
     @GET("exercises?limit=20")
     Call<List<Ejercicio>> obtenerTodosLosEjercicios();
 
+    // En ServicioEjercicios.java
     @Headers({
-            "X-RapidAPI-Key: TU_API_KEY_AQUÍ",
+            "X-RapidAPI-Key: 84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5", // <--- TU CLAVE REAL SIN ACENTOS
             "X-RapidAPI-Host: exercisedb.p.rapidapi.com"
     })
-    @GET("exercises/bodyPart/{parte}") // Filtrar por parte del cuerpo
-    Call<List<Ejercicio>> obtenerEjerciciosPorParte(@Path("parte") String parte);
+    @GET("exercises/bodyPart/{bodyPart}?limit=20")
+    Call<List<Ejercicio>> obtenerEjerciciosPorMusculo(@Path("bodyPart") String musculo);
 }

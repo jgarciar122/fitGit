@@ -14,12 +14,19 @@ public class EjercicioViewModel extends ViewModel {
 
     public EjercicioViewModel() {
         repositorio = new RepositorioEjercicio();
+        // Obtenemos la referencia al LiveData del repositorio desde el inicio
+        ejercicios = repositorio.obtenerEjercicios();
     }
 
     public LiveData<List<Ejercicio>> getEjercicios() {
-        if (ejercicios == null) {
-            ejercicios = repositorio.obtenerEjercicios();
-        }
         return ejercicios;
+    }
+
+    /**
+     * Método para filtrar los ejercicios por grupo muscular.
+     * Este método es llamado por el Spinner desde la MainActivity.
+     */
+    public void filtrar(String musculo) {
+        repositorio.filtrarPorMusculo(musculo);
     }
 }

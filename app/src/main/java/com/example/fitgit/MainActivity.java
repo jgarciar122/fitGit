@@ -1,6 +1,10 @@
 package com.example.fitgit;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -91,6 +95,28 @@ public class MainActivity extends AppCompatActivity {
                 Chip chip = findViewById(idSeleccionado);
                 Toast.makeText(this, "Filtrando por: " + chip.getText(), Toast.LENGTH_SHORT).show();
             }
+        });
+
+        // 1. Definir las categorías (según la API de ExerciseDB)
+        String[] categorias = {"todos", "back", "cardio", "chest", "lower arms", "lower legs", "neck", "shoulders", "upper arms", "upper legs", "waist"};
+
+// 2. Configurar el Spinner en el onCreate
+        Spinner spinner = findViewById(R.id.spinnerFiltro);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categorias);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+// 3. Escuchar cuando el usuario cambia la selección
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String seleccion = categorias[position];
+                // Llamamos al ViewModel para que filtre (tienes que añadir el método en el ViewModel que llame al repo)
+                viewModel.filtrar(seleccion);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 }

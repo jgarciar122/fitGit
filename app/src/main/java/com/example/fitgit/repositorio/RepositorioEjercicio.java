@@ -43,4 +43,26 @@ public class RepositorioEjercicio {
         });
         return datosEjercicios;
     }
+
+    public void filtrarPorMusculo(String musculo) {
+        // Si el usuario elige "Todos", cargamos la lista normal
+        if (musculo.equalsIgnoreCase("todos")) {
+            obtenerEjercicios();
+            return;
+        }
+
+        servicio.obtenerEjerciciosPorMusculo(musculo.toLowerCase()).enqueue(new Callback<List<Ejercicio>>() {
+            @Override
+            public void onResponse(Call<List<Ejercicio>> call, Response<List<Ejercicio>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    datosEjercicios.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Ejercicio>> call, Throwable t) {
+                // Manejar error
+            }
+        });
+    }
 }

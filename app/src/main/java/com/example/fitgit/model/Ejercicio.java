@@ -1,21 +1,27 @@
 package com.example.fitgit.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Modelo de datos para un Ejercicio.
- * Implementa Serializable para permitir el paso de objetos entre Activities.
- */
+// Mapea esta clase a una tabla de la base de datos local
+@Entity(tableName = "tabla_ejercicios")
 public class Ejercicio implements Serializable {
 
+    // Identificador único obligatorio para que Room pueda indexar
+    @PrimaryKey
+    @NonNull
     @SerializedName("id")
     private String id;
 
     @SerializedName("name")
     private String nombre;
 
+    @ColumnInfo(name = "bodyPart")
     @SerializedName("bodyPart")
     private String parteCuerpo;
 
@@ -25,62 +31,42 @@ public class Ejercicio implements Serializable {
     @SerializedName("equipment")
     private String equipamiento;
 
+    // Estas listas requieren un "TypeConverter" (lo crearemos en el siguiente paso)
     @SerializedName("instructions")
     private List<String> instrucciones;
 
     @SerializedName("secondaryMuscles")
     private List<String> musculosSecundarios;
 
-    // Constructor vacío requerido por GSON para la deserialización
-    public Ejercicio() {
-    }
+    public Ejercicio() {}
 
-    // --- GETTERS ---
+    public String getId() { return id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
-    public String getId() {
-        return id;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getParteCuerpo() { return parteCuerpo; }
+    public void setParteCuerpo(String parteCuerpo) { this.parteCuerpo = parteCuerpo; }
 
-    public String getParteCuerpo() {
-        return parteCuerpo;
-    }
+    public String getMusculoObjetivo() { return musculoObjetivo; }
+    public void setMusculoObjetivo(String musculoObjetivo) { this.musculoObjetivo = musculoObjetivo; }
 
-    public String getMusculoObjetivo() {
-        return musculoObjetivo;
-    }
+    public String getEquipamiento() { return equipamiento; }
+    public void setEquipamiento(String equipamiento) { this.equipamiento = equipamiento; }
 
-    public String getEquipamiento() {
-        return equipamiento;
-    }
+    public List<String> getInstrucciones() { return instrucciones; }
+    public void setInstrucciones(List<String> instrucciones) { this.instrucciones = instrucciones; }
 
-    public List<String> getInstrucciones() {
-        return instrucciones;
-    }
+    public List<String> getMusculosSecundarios() { return musculosSecundarios; }
+    public void setMusculosSecundarios(List<String> musculosSecundarios) { this.musculosSecundarios = musculosSecundarios; }
 
-    public List<String> getMusculosSecundarios() {
-        return musculosSecundarios;
-    }
-
-    /**
-     * Construye la URL del GIF de forma dinámica.
-     * Según la nueva estructura de la API, la imagen se obtiene mediante el ID.
-     */
-// Dentro de Ejercicio.java
     public String getUrlGif() {
-        // Añadimos &resolution=360 para que la API no nos devuelva el error 400
-        // Puedes probar con 180 o 360 según la calidad que quieras
         return "https://exercisedb.p.rapidapi.com/image?exerciseId=" + id + "&resolution=360";
     }
 
     @Override
     public String toString() {
-        return "Ejercicio{" +
-                "id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
-                '}';
+        return "Ejercicio{" + "id='" + id + '\'' + ", nombre='" + nombre + '\'' + '}';
     }
 }

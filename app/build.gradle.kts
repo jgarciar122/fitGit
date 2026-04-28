@@ -50,4 +50,13 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.livedata)
+
+
+    val roomVersion = "2.6.1" // En Kotlin se usa 'val', no 'def'
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+
+// Soporte para LiveData con Room
+    implementation("androidx.room:room-ktx:$roomVersion")
 }
