@@ -22,4 +22,7 @@ public interface EjercicioDao {
 
     @Query("DELETE FROM tabla_ejercicios")
     void borrarTodo();
+    // Añade este para la comprobación rápida
+    @Query("SELECT * FROM tabla_ejercicios LIMIT 1")
+    Ejercicio obtenerUnoSincrono();
 }

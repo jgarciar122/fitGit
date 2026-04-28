@@ -1,68 +1,95 @@
 package com.example.fitgit.repositorio;
 
-import androidx.lifecycle.MutableLiveData;
-
+import android.app.Application;
+import android.util.Log;
+import androidx.lifecycle.LiveData;
 import com.example.fitgit.api.ClienteRetrofit;
 import com.example.fitgit.api.ServicioEjercicios;
+import com.example.fitgit.model.AppDatabase;
+import com.example.fitgit.model.EjercicioDao;
 import com.example.fitgit.model.Ejercicio;
-
 import java.util.List;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RepositorioEjercicio {
     private ServicioEjercicios servicio;
-    private MutableLiveData<List<Ejercicio>> datosEjercicios;
+    private EjercicioDao dao;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public RepositorioEjercicio() {
+    public RepositorioEjercicio(Application application) {
         servicio = ClienteRetrofit.getInstancia();
-        datosEjercicios = new MutableLiveData<>();
+        AppDatabase db = AppDatabase.getDatabase(application);
+        dao = db.ejercicioDao();
     }
 
-    public MutableLiveData<List<Ejercicio>> obtenerEjercicios() {
+    public LiveData<List<Ejercicio>> obtenerEjercicios() {
+        // 1. Siempre devolvemos el LiveData de Room (la UI se engancha aquí)
+        LiveData<List<Ejercicio>> datosLocales = dao.obtenerTodosLosEjercicios();
+
+        // 2. Lógica inteligente de ahorro:
+        executor.execute(() -> {
+            // Comprobamos si hay al menos UN ejercicio en la base de datos
+            if (dao.obtenerUnoSincrono() == null) {
+                Log.d("REPO", "Base de datos vacía. Pidiendo datos a la API...");
+                refrescarEjercicios();
+            } else {
+                Log.d("REPO", "Datos detectados en Room. Ahorrando llamada a la API.");
+            }
+        });
+
+        return datosLocales;
+    }
+
+    private void refrescarEjercicios() {
         servicio.obtenerTodosLosEjercicios().enqueue(new Callback<List<Ejercicio>>() {
             @Override
             public void onResponse(Call<List<Ejercicio>> call, Response<List<Ejercicio>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // --- AÑADE ESTO PARA VER EL TEXTO REAL ---
-                    retrofit2.Response<List<Ejercicio>> rawResponse = response;
-                    android.util.Log.d("API_RAW_JSON", "Cuerpo completo: " + new com.google.gson.Gson().toJson(response.body().get(0)));
-                    // -----------------------------------------
-
-                    datosEjercicios.setValue(response.body());
+                    executor.execute(() -> {
+                        dao.borrarTodo();
+                        dao.insertarEjercicios(response.body());
+                    });
                 }
             }
-
             @Override
             public void onFailure(Call<List<Ejercicio>> call, Throwable t) {
-                // Si falla la red, aquí cargaríamos desde Room (Offline)
-                datosEjercicios.setValue(null);
+                Log.e("REPO", "Fallo de red al refrescar: " + t.getMessage());
             }
         });
-        return datosEjercicios;
     }
 
-    public void filtrarPorMusculo(String musculo) {
-        // Si el usuario elige "Todos", cargamos la lista normal
+    public LiveData<List<Ejercicio>> obtenerEjerciciosFiltrados(String musculo) {
         if (musculo.equalsIgnoreCase("todos")) {
-            obtenerEjercicios();
-            return;
+            return obtenerEjercicios();
+        } else {
+            // Lógica inteligente para filtros:
+            executor.execute(() -> {
+                // Podríamos comprobar si ya tenemos ejercicios de ese músculo en Room
+                // Pero para simplificar el TFG: si Room tiene algo, confiamos en Room.
+                if (dao.obtenerUnoSincrono() == null) {
+                    refrescarEjerciciosPorMusculo(musculo);
+                }
+            });
+            return dao.obtenerEjerciciosPorMusculo(musculo);
         }
+    }
 
+    private void refrescarEjerciciosPorMusculo(String musculo) {
         servicio.obtenerEjerciciosPorMusculo(musculo.toLowerCase()).enqueue(new Callback<List<Ejercicio>>() {
             @Override
             public void onResponse(Call<List<Ejercicio>> call, Response<List<Ejercicio>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    datosEjercicios.setValue(response.body());
+                    executor.execute(() -> {
+                        dao.insertarEjercicios(response.body());
+                    });
                 }
             }
-
             @Override
-            public void onFailure(Call<List<Ejercicio>> call, Throwable t) {
-                // Manejar error
-            }
+            public void onFailure(Call<List<Ejercicio>> call, Throwable t) {}
         });
     }
 }
