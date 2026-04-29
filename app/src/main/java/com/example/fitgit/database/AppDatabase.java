@@ -8,7 +8,7 @@ import androidx.room.TypeConverters;
 
 import com.example.fitgit.model.Ejercicio;
 
-@Database(entities = {Ejercicio.class}, version = 1)
+@Database(entities = {Ejercicio.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class}) // <--- AQUÍ conectamos el traductor
 public abstract class AppDatabase extends RoomDatabase {
 

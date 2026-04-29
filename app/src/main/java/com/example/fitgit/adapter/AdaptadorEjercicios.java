@@ -15,16 +15,27 @@ import com.example.fitgit.R;
 import com.example.fitgit.ui.DetallesEjercicioActivity;
 import com.example.fitgit.model.Ejercicio;
 import com.google.android.material.chip.Chip;
+import java.util.ArrayList; // Importación necesaria
 import java.util.List;
 
 public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicios.ViewHolder> {
 
     private List<Ejercicio> listaEjercicios;
-    // Sustituye esto por tu clave real si no es esta
     private static final String API_KEY = "84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5";
 
+
+    public AdaptadorEjercicios() {
+        this.listaEjercicios = new ArrayList<>();
+    }
+
     public AdaptadorEjercicios(List<Ejercicio> listaEjercicios) {
-        this.listaEjercicios = listaEjercicios;
+        this.listaEjercicios = (listaEjercicios != null) ? listaEjercicios : new ArrayList<>();
+    }
+
+    // ACTUALIZAR DATOS
+    public void setEjercicios(List<Ejercicio> ejercicios) {
+        this.listaEjercicios = ejercicios;
+        notifyDataSetChanged(); // Avisa al RecyclerView que los datos han cambiado
     }
 
     @NonNull
@@ -39,14 +50,13 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
         Ejercicio ejercicio = listaEjercicios.get(position);
 
         holder.tvNombre.setText(ejercicio.getNombre());
-        holder.chipMusculo.setText(ejercicio.getMusculoObjetivo());
+        holder.chipMusculo.setText(ejercicio.getParteCuerpo()); // Cambiado a getParteCuerpo que es lo que pide el filtro
         holder.chipEquipamiento.setText(ejercicio.getEquipamiento());
 
-// Dentro de onBindViewHolder en AdaptadorEjercicios.java
+        // Configuración de Glide con Headers para los GIFs
         GlideUrl glideUrl = new GlideUrl(ejercicio.getUrlGif(), new LazyHeaders.Builder()
-                .addHeader("x-rapidapi-key", "84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5")
+                .addHeader("x-rapidapi-key", API_KEY)
                 .addHeader("x-rapidapi-host", "exercisedb.p.rapidapi.com")
-                // A veces Glide necesita un User-Agent para que el servidor no crea que es un bot
                 .addHeader("User-Agent", "Mozilla/5.0")
                 .build());
 
@@ -54,7 +64,7 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
                 .asGif()
                 .load(glideUrl)
                 .placeholder(R.drawable.imagen_ejemplo)
-                .error(R.drawable.imagen_ejemplo) // Aquí saldrá tu imagen si falla
+                .error(R.drawable.imagen_ejemplo)
                 .into(holder.ivImagen);
 
         // Navegación al detalle
