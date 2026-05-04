@@ -49,6 +49,13 @@
                 android:text="Barra"
                 style="@style/Widget.MaterialComponents.Chip.Action"/>
         </com.google.android.material.chip.ChipGroup>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_guardar_en_rutina_detalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Añadir a mi rutina"
+            app:icon="@android:drawable/ic_input_add" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

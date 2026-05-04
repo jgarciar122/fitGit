@@ -1,14 +1,18 @@
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"> <com.google.android.material.appbar.AppBarLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
-    app:elevation="0dp">
+    android:background="#FAFAFA">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <!-- Mantenemos el botón de pruebas aquí para que sea global -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_cerrar_sesion_temp"
             style="@style/Widget.Material3.Button.TonalButton"
@@ -18,126 +22,15 @@
             android:layout_marginTop="16dp"
             android:text="Cerrar Sesión (Pruebas)"
             app:icon="@android:drawable/ic_lock_power_off" />
-    <com.google.android.material.search.SearchBar
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="Busca un ejercicio (ej. Push up)..." />
 
-</com.google.android.material.appbar.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <!-- ESTE ES EL CONTENEDOR DONDE SE CARGARÁN LOS FRAGMENTS -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="8dp">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/grupo_filtros"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_todos"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Todos"
-                    android:checked="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_pecho"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pecho" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_espalda"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Espalda" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_hombros"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hombros" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_brazos"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Brazos" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_antebrazos"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Antebrazos" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_piernas"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Piernas" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_gemelos"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gemelos" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_cintura"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cintura" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_cuello"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cuello" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/filtro_cardio"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cardio" />
-
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvEjercicios"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingHorizontal="8dp"
-            android:clipToPadding="false"
-            android:paddingBottom="80dp" />
-
-    </LinearLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navegacion_inferior"

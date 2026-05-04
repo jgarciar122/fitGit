@@ -1,60 +1,68 @@
 package com.example.fitgit.ui;
 
 import android.os.Bundle;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.example.fitgit.R;
+import com.example.fitgit.database.AppDatabase;
 import com.example.fitgit.databinding.ActivityDetalleEjercicioBinding;
 import com.example.fitgit.model.Ejercicio;
+import com.example.fitgit.model.Rutina;
+import com.example.fitgit.model.RutinaEjercicioCrossRef;
+
+import java.util.List;
+import java.util.concurrent.Executors;
 
 public class DetallesEjercicioActivity extends AppCompatActivity {
 
     private ActivityDetalleEjercicioBinding binding;
     private static final String API_KEY = "84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5";
-    private boolean esFavorito = false;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 1. Inflar vista con ViewBinding
         binding = ActivityDetalleEjercicioBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // 2. Recuperar el ejercicio enviado desde el Adaptador
+        db = AppDatabase.getDatabase(this);
+
         Ejercicio ejercicio = (Ejercicio) getIntent().getSerializableExtra("ejercicio_seleccionado");
 
         if (ejercicio != null) {
-            setupToolbar(ejercicio.getNombre());
+            setupToolbar();
             cargarDatos(ejercicio);
-            setupFavorito();
+
+            // Configurar el nuevo botón integrado
+            binding.btnGuardarEnRutinaDetalle.setOnClickListener(v -> {
+                mostrarSelectorDeRutinas(ejercicio);
+            });
         }
     }
 
-    private void setupToolbar(String nombre) {
-        // Configuramos la Toolbar dentro del CollapsingToolbar
+    private void setupToolbar() {
         setSupportActionBar(binding.toolbarDetalle);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            // El título se puede mostrar en la Toolbar o dejar que lo maneje el TextView grande
             getSupportActionBar().setTitle("");
         }
 
-        // Botón atrás usando el dispatcher moderno
         binding.toolbarDetalle.setNavigationOnClickListener(v ->
                 getOnBackPressedDispatcher().onBackPressed()
         );
     }
 
     private void cargarDatos(Ejercicio ejercicio) {
-        // Textos básicos
         binding.tvDetalleNombre.setText(ejercicio.getNombre());
-        binding.chipDetalleMusculo.setText(ejercicio.getMusculoObjetivo());
+        binding.chipDetalleMusculo.setText(ejercicio.getParteCuerpo());
         binding.chipDetalleEquipo.setText(ejercicio.getEquipamiento());
 
-        // Carga del GIF con Glide + Headers de seguridad
         GlideUrl glideUrl = new GlideUrl(ejercicio.getUrlGif(), new LazyHeaders.Builder()
                 .addHeader("x-rapidapi-key", API_KEY)
                 .addHeader("x-rapidapi-host", "exercisedb.p.rapidapi.com")
@@ -67,35 +75,51 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
                 .placeholder(R.drawable.imagen_ejemplo)
                 .into(binding.ivDetalleGif);
 
-        // Formateo de instrucciones (Limpieza de lista a texto plano)
         if (ejercicio.getInstrucciones() != null) {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < ejercicio.getInstrucciones().size(); i++) {
-                sb.append("• ").append(ejercicio.getInstrucciones().get(i)).append("\n\n");
+            for (String paso : ejercicio.getInstrucciones()) {
+                sb.append("• ").append(paso).append("\n\n");
             }
             binding.tvDetalleInstrucciones.setText(sb.toString().trim());
         }
     }
 
-    private void setupFavorito() {
-        // En el futuro, aquí deberías consultar a Room:
-        // isFavorito = repositorio.esFavorito(ejercicio.getId());
-        // actualizarIconoFavorito();
-
-        binding.fabFavorito.setOnClickListener(v -> {
-            // 1. Cambiamos el estado (si era true pasa a false, y viceversa)
-            esFavorito = !esFavorito;
-
-            // 2. Actualizamos la interfaz
-            if (esFavorito) {
-                binding.fabFavorito.setImageResource(R.drawable.ic_heart_filled);
-                android.widget.Toast.makeText(this, "Añadido a favoritos", android.widget.Toast.LENGTH_SHORT).show();
-                // Aquí irá la llamada a Room para INSERTAR
-            } else {
-                binding.fabFavorito.setImageResource(R.drawable.ic_heart_outline);
-                android.widget.Toast.makeText(this, "Eliminado de favoritos", android.widget.Toast.LENGTH_SHORT).show();
-                // Aquí irá la llamada a Room para ELIMINAR
+    private void mostrarSelectorDeRutinas(Ejercicio ejercicio) {
+        // Observamos las rutinas disponibles en la base de datos
+        db.rutinaDao().obtenerTodasLasRutinas().observe(this, rutinas -> {
+            if (rutinas == null || rutinas.isEmpty()) {
+                Toast.makeText(this, "No tienes rutinas creadas. Ve a 'Mis Rutinas' primero.", Toast.LENGTH_LONG).show();
+                return;
             }
+
+            // Crear lista de nombres para el diálogo
+            String[] nombres = new String[rutinas.size()];
+            for (int i = 0; i < rutinas.size(); i++) {
+                nombres[i] = rutinas.get(i).getNombre();
+            }
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Añadir a una rutina")
+                    .setItems(nombres, (dialog, which) -> {
+                        Rutina seleccionada = rutinas.get(which);
+                        guardarVinculoEnDB(ejercicio, seleccionada);
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        });
+    }
+
+    private void guardarVinculoEnDB(Ejercicio ejercicio, Rutina rutina) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            RutinaEjercicioCrossRef union = new RutinaEjercicioCrossRef();
+            union.rutinaId = rutina.getId();
+            union.ejercicioId = ejercicio.getId();
+
+            db.rutinaDao().añadirEjercicioARutina(union);
+
+            runOnUiThread(() -> {
+                Toast.makeText(this, "¡Añadido a " + rutina.getNombre() + "!", Toast.LENGTH_SHORT).show();
+            });
         });
     }
 

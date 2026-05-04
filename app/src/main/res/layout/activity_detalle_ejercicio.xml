@@ -81,6 +81,19 @@
 
             </com.google.android.material.chip.ChipGroup>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_guardar_en_rutina_detalle"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="24dp"
+                android:text="Añadir a mi rutina"
+                android:textSize="16sp"
+                app:cornerRadius="16dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconGravity="textStart"
+                app:iconSize="24dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,15 +116,5 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_favorito"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_heart_outline"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
