@@ -1,4 +1,4 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,6 +9,15 @@
     android:background="@android:color/transparent"
     app:elevation="0dp">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cerrar_sesion_temp"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="Cerrar Sesión (Pruebas)"
+            app:icon="@android:drawable/ic_lock_power_off" />
     <com.google.android.material.search.SearchBar
         android:id="@+id/search_bar"
         android:layout_width="match_parent"

@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -44,12 +46,13 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    // No olvides Glide para los GIFs si no lo pusiste antes
+    // Glide(GIFs)
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation(libs.androidx.lifecycle.viewmodel)
@@ -61,6 +64,10 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
-// Soporte para LiveData con Room
+    // Soporte para LiveData con Room
     implementation("androidx.room:room-ktx:$roomVersion")
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
 }

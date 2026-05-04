@@ -1,5 +1,6 @@
 package com.example.fitgit.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -39,6 +40,23 @@ public class MainActivity extends AppCompatActivity {
         configurarFiltros();
 
         configurarNavegacion();
+
+        binding.btnCerrarSesionTemp.setOnClickListener(v -> {
+            // 1. Cerrar sesión en Firebase
+            com.google.firebase.auth.FirebaseAuth.getInstance().signOut();
+
+            // 2. Opcional: Si usaste Google, también conviene cerrar la sesión del cliente de Google
+            // para que la próxima vez te deje elegir cuenta otra vez
+            com.google.android.gms.auth.api.signin.GoogleSignInOptions gso =
+                    new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN).build();
+            com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(this, gso).signOut();
+
+            // 3. Volver al Login y limpiar el historial
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void configurarFiltros() {
@@ -75,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
             String titulo = item.getTitle().toString();
             binding.searchBar.setHint("Buscar en " + titulo + "...");
 
-            // Aquí es donde más adelante cargarás los Fragments si quieres
             return true;
         });
     }

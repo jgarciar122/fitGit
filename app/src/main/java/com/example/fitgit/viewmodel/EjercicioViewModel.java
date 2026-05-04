@@ -35,10 +35,6 @@ public class EjercicioViewModel extends AndroidViewModel { // 1. Cambiado a Andr
         return ejercicios;
     }
 
-    /**
-     * Al cambiar el valor de 'filtroMusculo', el switchMap de arriba
-     * detecta el cambio y actualiza la lista de ejercicios automáticamente.
-     */
     public void filtrar(String musculo) {
         filtroMusculo.setValue(musculo);
     }
