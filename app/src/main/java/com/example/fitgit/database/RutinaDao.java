@@ -2,6 +2,7 @@ package com.example.fitgit.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -28,4 +29,6 @@ public interface RutinaDao {
             "WHERE rutina_ejercicio_cross_ref.rutinaId = :rutinaId")
     LiveData<List<Ejercicio>> obtenerEjerciciosDeRutina(int rutinaId);
 
+    @Delete
+    void eliminarEjercicioDeRutina(RutinaEjercicioCrossRef crossRef);
 }

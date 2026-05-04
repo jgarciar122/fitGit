@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,7 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fitgit.adapter.AdaptadorEjercicios;
 import com.example.fitgit.database.AppDatabase;
-import com.example.fitgit.databinding.FragmentDetalleRutinaBinding; // Asegúrate de que este nombre coincida con tu XML
+import com.example.fitgit.databinding.FragmentDetalleRutinaBinding;
+import com.example.fitgit.model.Ejercicio;
+import com.example.fitgit.model.RutinaEjercicioCrossRef;
+
+import java.util.concurrent.Executors;
 
 public class DetalleRutinaFragment extends Fragment {
     private int rutinaId;
@@ -30,7 +35,6 @@ public class DetalleRutinaFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // 1. Es fundamental inflar el binding aquí
         binding = FragmentDetalleRutinaBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -42,19 +46,24 @@ public class DetalleRutinaFragment extends Fragment {
         if (getArguments() != null) {
             rutinaId = getArguments().getInt("rutina_id");
             nombreRutina = getArguments().getString("rutina_nombre");
-
-            // Opcional: Podrías cambiar el título de una Toolbar aquí con nombreRutina
         }
 
         AppDatabase db = AppDatabase.getDatabase(requireContext());
 
-        // 2. Configurar el RecyclerView con un LayoutManager
+        // 1. Configurar el adaptador en MODO QUITAR
         AdaptadorEjercicios adaptador = new AdaptadorEjercicios();
+        adaptador.setEsModoQuitar(true); // <--- Activamos el botón de Quitar
+
         binding.rvEjerciciosDetalle.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvEjerciciosDetalle.setAdapter(adaptador);
         binding.tvTituloDetalle.setText("RUTINA: " + nombreRutina);
 
-        // 3. Observar los datos
+        // 2. Programar la acción de eliminar cuando se pulse el botón
+        adaptador.setOnEjercicioClickListener(ejercicio -> {
+            eliminarEjercicioDeEstaRutina(db, ejercicio);
+        });
+
+        // 3. Observar los datos (esto se actualiza solo al borrar gracias a LiveData)
         db.rutinaDao().obtenerEjerciciosDeRutina(rutinaId).observe(getViewLifecycleOwner(), ejercicios -> {
             if (ejercicios != null) {
                 adaptador.setEjercicios(ejercicios);
@@ -62,10 +71,28 @@ public class DetalleRutinaFragment extends Fragment {
         });
     }
 
+    private void eliminarEjercicioDeEstaRutina(AppDatabase db, Ejercicio ejercicio) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            // Creamos la referencia que queremos borrar
+            RutinaEjercicioCrossRef ref = new RutinaEjercicioCrossRef();
+            ref.rutinaId = this.rutinaId;
+            ref.ejercicioId = ejercicio.getId();
+
+            // Llamamos al DAO para borrar
+            db.rutinaDao().eliminarEjercicioDeRutina(ref);
+
+            // Avisamos al usuario en el hilo principal
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), ejercicio.getNombre() + " eliminado", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // 4. Limpiar el binding para evitar fugas de memoria
         binding = null;
     }
 }

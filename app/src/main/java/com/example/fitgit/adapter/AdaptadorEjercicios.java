@@ -1,10 +1,10 @@
 package com.example.fitgit.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton; // Importante añadir esto
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -16,6 +16,7 @@ import com.bumptech.glide.load.model.LazyHeaders;
 import com.example.fitgit.R;
 import com.example.fitgit.ui.DetallesEjercicioActivity;
 import com.example.fitgit.model.Ejercicio;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
 
     private List<Ejercicio> listaEjercicios;
     private static final String API_KEY = "84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5";
+
+    // 1. Variable para saber si estamos dentro de una rutina (modo borrar) o en el buscador (modo añadir)
+    private boolean esModoQuitar = false;
 
     public interface OnEjercicioClickListener {
         void onEjercicioClick(Ejercicio ejercicio);
@@ -38,6 +42,11 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
 
     public AdaptadorEjercicios() {
         this.listaEjercicios = new ArrayList<>();
+    }
+
+    // 2. Método para cambiar el modo desde el Fragment
+    public void setEsModoQuitar(boolean esModoQuitar) {
+        this.esModoQuitar = esModoQuitar;
     }
 
     public void setEjercicios(List<Ejercicio> ejercicios) {
@@ -60,7 +69,21 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
         holder.chipMusculo.setText(ejercicio.getParteCuerpo());
         holder.chipEquipamiento.setText(ejercicio.getEquipamiento());
 
-        // Glide con Headers para cargar el GIF
+        // Configuración visual del botón según el modo
+        if (esModoQuitar) {
+            holder.btnAdd.setText("Quitar de la rutina");
+            if (holder.btnAdd instanceof MaterialButton) {
+                ((MaterialButton) holder.btnAdd).setIconResource(android.R.drawable.ic_delete);
+                // Un tono rojo suave para indicar borrado
+                holder.btnAdd.setBackgroundColor(Color.parseColor("#FFEBEE"));
+                holder.btnAdd.setTextColor(Color.RED);
+                ((MaterialButton) holder.btnAdd).setIconTint(android.content.res.ColorStateList.valueOf(Color.RED));
+            }
+        } else {
+            holder.btnAdd.setText("Añadir a una rutina");
+            // Aquí puedes resetear al color original de tu app si fuera necesario
+        }
+
         GlideUrl glideUrl = new GlideUrl(ejercicio.getUrlGif(), new LazyHeaders.Builder()
                 .addHeader("x-rapidapi-key", API_KEY)
                 .addHeader("x-rapidapi-host", "exercisedb.p.rapidapi.com")
@@ -74,14 +97,12 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
                 .error(R.drawable.imagen_ejemplo)
                 .into(holder.ivImagen);
 
-        // --- ACCIÓN 1: Clic en la tarjeta (Abrir Detalles) ---
         holder.itemView.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(v.getContext(), DetallesEjercicioActivity.class);
             intent.putExtra("ejercicio_seleccionado", ejercicio);
             v.getContext().startActivity(intent);
         });
 
-        // --- ACCIÓN 2: Clic en el botón "+" (Añadir a Rutina) ---
         holder.btnAdd.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onEjercicioClick(ejercicio);
@@ -98,7 +119,7 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
         TextView tvNombre;
         ImageView ivImagen;
         Chip chipMusculo, chipEquipamiento;
-        Button btnAdd; // Nueva referencia
+        Button btnAdd;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,7 +127,9 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
             ivImagen = itemView.findViewById(R.id.ivGifEjercicio);
             chipMusculo = itemView.findViewById(R.id.chipMusculo);
             chipEquipamiento = itemView.findViewById(R.id.chipEquipamiento);
-            btnAdd = itemView.findViewById(R.id.btn_guardar_en_rutina_detalle); // Inicialización
+
+            // Asegúrate de que este ID sea el que pusiste en item_ejercicio.xml
+            btnAdd = itemView.findViewById(R.id.btn_guardar_en_rutina_detalle);
         }
     }
 }
