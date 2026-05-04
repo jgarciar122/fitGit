@@ -100,6 +100,7 @@
             holder.itemView.setOnClickListener(v -> {
                 android.content.Intent intent = new android.content.Intent(v.getContext(), DetallesEjercicioActivity.class);
                 intent.putExtra("ejercicio_seleccionado", ejercicio);
+                intent.putExtra("ya_en_rutina", esModoQuitar); // ← usa el flag que ya tienes
                 v.getContext().startActivity(intent);
             });
 

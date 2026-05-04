@@ -58,7 +58,6 @@
             app:selectionRequired="true"
             app:chipSpacingHorizontal="8dp">
 
-            <!-- Estilos corregidos a MaterialComponents -->
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_todos"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
@@ -98,11 +97,39 @@
                 android:text="Brazos" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/filtro_antebrazos"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Antebrazos" />
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_piernas"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Piernas" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filtro_gemelos"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gemelos" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filtro_cintura"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cintura" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filtro_cuello"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cuello" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_cardio"

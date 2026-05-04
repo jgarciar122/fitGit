@@ -9,9 +9,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.example.fitgit.model.RutinaConConteo;
 import com.example.fitgit.R;
 import com.example.fitgit.adapter.AdaptadorRutinas;
 import com.example.fitgit.database.AppDatabase;
@@ -39,8 +40,6 @@ public class RutinasFragment extends Fragment {
 
         db = AppDatabase.getDatabase(requireContext());
 
-        binding.fabAddRutina.setOnClickListener(v -> mostrarDialogoNuevaRutina());
-
         adaptador = new AdaptadorRutinas();
         binding.rvRutinas.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
         binding.rvRutinas.setAdapter(adaptador);
@@ -50,21 +49,34 @@ public class RutinasFragment extends Fragment {
         cargarRutinas();
 
         adaptador.setOnRutinaClickListener(rutina -> {
-            Fragment detalle = DetalleRutinaFragment.newInstance(rutina.getId(), rutina.getNombre());
-
+            Fragment detalle = DetalleRutinaFragment.newInstance(rutina.id, rutina.nombre);
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment, detalle)
                     .addToBackStack(null)
                     .commit();
         });
+
+        adaptador.setOnEliminarRutinaListener(rutina -> {
+            new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
+                    .setTitle("Eliminar rutina")
+                    .setMessage("¿Seguro que quieres eliminar \"" + rutina.nombre + "\"? Se perderán todos sus ejercicios.")
+                    .setPositiveButton("Eliminar", (dialog, which) -> {
+                        Executors.newSingleThreadExecutor().execute(() -> {
+                            Rutina r = new Rutina(rutina.nombre, "");
+                            r.setId(rutina.id);
+                            db.rutinaDao().eliminarRutina(r);
+                        });
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        });
     }
 
     private void mostrarDialogoNuevaRutina() {
-
         final EditText input = new EditText(requireContext());
         input.setHint("Rutina pierna");
 
-        new AlertDialog.Builder(requireContext())
+        new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
                 .setTitle("Nueva Rutina")
                 .setMessage("¿Qué nombre le quieres poner a tu carpeta de ejercicios?")
                 .setView(input)
@@ -85,8 +97,6 @@ public class RutinasFragment extends Fragment {
         executor.execute(() -> {
             Rutina nuevaRutina = new Rutina(nombre, "Mi rutina personalizada");
             db.rutinaDao().insertarRutina(nuevaRutina);
-
-            // Volvemos al hilo principal para avisar al usuario
             getActivity().runOnUiThread(() -> {
                 Toast.makeText(getContext(), "¡Carpeta '" + nombre + "' creada!", Toast.LENGTH_SHORT).show();
             });
@@ -94,7 +104,7 @@ public class RutinasFragment extends Fragment {
     }
 
     private void cargarRutinas() {
-        db.rutinaDao().obtenerTodasLasRutinas().observe(getViewLifecycleOwner(), rutinas -> {
+        db.rutinaDao().obtenerRutinasConConteo().observe(getViewLifecycleOwner(), rutinas -> {
             if (rutinas != null) {
                 adaptador.setRutinas(rutinas);
             }

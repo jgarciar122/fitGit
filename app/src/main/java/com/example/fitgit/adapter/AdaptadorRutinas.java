@@ -3,21 +3,45 @@ package com.example.fitgit.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.fitgit.R;
-import com.example.fitgit.model.Rutina;
+import com.example.fitgit.model.RutinaConConteo;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.RutinaViewHolder> {
 
-    private List<Rutina> listaRutinas = new ArrayList<>();
+    private List<RutinaConConteo> listaRutinas = new ArrayList<>();
 
-    public void setRutinas(List<Rutina> rutinas) {
+    public void setRutinas(List<RutinaConConteo> rutinas) {
         this.listaRutinas = rutinas;
         notifyDataSetChanged();
+    }
+
+    // Listener para abrir la rutina
+    public interface OnRutinaClickListener {
+        void onRutinaClick(RutinaConConteo rutina);
+    }
+
+    private OnRutinaClickListener listener;
+
+    public void setOnRutinaClickListener(OnRutinaClickListener listener) {
+        this.listener = listener;
+    }
+
+    // Listener para eliminar la rutina
+    public interface OnEliminarRutinaListener {
+        void onEliminarClick(RutinaConConteo rutina);
+    }
+
+    private OnEliminarRutinaListener eliminarListener;
+
+    public void setOnEliminarRutinaListener(OnEliminarRutinaListener listener) {
+        this.eliminarListener = listener;
     }
 
     @NonNull
@@ -27,27 +51,19 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
         return new RutinaViewHolder(view);
     }
 
-    public interface OnRutinaClickListener {
-        void onRutinaClick(Rutina rutina);
-    }
-
-    private OnRutinaClickListener listener;
-
-    public void setOnRutinaClickListener(OnRutinaClickListener listener) {
-        this.listener = listener;
-    }
-
-
-
     @Override
     public void onBindViewHolder(@NonNull RutinaViewHolder holder, int position) {
-        Rutina rutina = listaRutinas.get(position);
-        holder.tvNombre.setText(rutina.getNombre());
+        RutinaConConteo rutina = listaRutinas.get(position);
+        holder.tvNombre.setText(rutina.nombre);
+        holder.tvContador.setText(String.valueOf(rutina.numEjercicios));
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onRutinaClick(rutina);
         });
 
+        holder.btnEliminar.setOnClickListener(v -> {
+            if (eliminarListener != null) eliminarListener.onEliminarClick(rutina);
+        });
     }
 
     @Override
@@ -56,10 +72,14 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
     }
 
     class RutinaViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombre;
+        TextView tvNombre, tvContador;
+        ImageButton btnEliminar;
+
         public RutinaViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNombre = itemView.findViewById(R.id.tv_nombre_rutina);
+            tvContador = itemView.findViewById(R.id.tv_num_ejercicios);
+            btnEliminar = itemView.findViewById(R.id.btn_eliminar_rutina);
         }
     }
 }

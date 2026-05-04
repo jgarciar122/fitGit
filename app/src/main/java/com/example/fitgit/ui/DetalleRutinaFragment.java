@@ -50,20 +50,17 @@ public class DetalleRutinaFragment extends Fragment {
 
         AppDatabase db = AppDatabase.getDatabase(requireContext());
 
-        // 1. Configurar el adaptador en MODO QUITAR
         AdaptadorEjercicios adaptador = new AdaptadorEjercicios();
-        adaptador.setEsModoQuitar(true); // <--- Activamos el botón de Quitar
+        adaptador.setEsModoQuitar(true);
 
         binding.rvEjerciciosDetalle.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvEjerciciosDetalle.setAdapter(adaptador);
         binding.tvTituloDetalle.setText("RUTINA: " + nombreRutina);
 
-        // 2. Programar la acción de eliminar cuando se pulse el botón
         adaptador.setOnEjercicioClickListener(ejercicio -> {
             eliminarEjercicioDeEstaRutina(db, ejercicio);
         });
 
-        // 3. Observar los datos (esto se actualiza solo al borrar gracias a LiveData)
         db.rutinaDao().obtenerEjerciciosDeRutina(rutinaId).observe(getViewLifecycleOwner(), ejercicios -> {
             if (ejercicios != null) {
                 adaptador.setEjercicios(ejercicios);
@@ -73,15 +70,13 @@ public class DetalleRutinaFragment extends Fragment {
 
     private void eliminarEjercicioDeEstaRutina(AppDatabase db, Ejercicio ejercicio) {
         Executors.newSingleThreadExecutor().execute(() -> {
-            // Creamos la referencia que queremos borrar
+
             RutinaEjercicioCrossRef ref = new RutinaEjercicioCrossRef();
             ref.rutinaId = this.rutinaId;
             ref.ejercicioId = ejercicio.getId();
 
-            // Llamamos al DAO para borrar
             db.rutinaDao().eliminarEjercicioDeRutina(ref);
 
-            // Avisamos al usuario en el hilo principal
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), ejercicio.getNombre() + " eliminado", Toast.LENGTH_SHORT).show();

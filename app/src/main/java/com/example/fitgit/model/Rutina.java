@@ -7,19 +7,15 @@ import androidx.room.PrimaryKey;
 public class Rutina {
     @PrimaryKey(autoGenerate = true)
     private int id;
-
     private String nombre;
     private String descripcion;
     private long fechaCreacion;
 
-    // Constructor, Getters y Setters
     public Rutina(String nombre, String descripcion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fechaCreacion = System.currentTimeMillis();
     }
-
-    // ... (Genera los getters y setters con Alt+Insert)
 
     public int getId() {
         return id;

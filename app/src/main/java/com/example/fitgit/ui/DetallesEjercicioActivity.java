@@ -34,17 +34,31 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
         db = AppDatabase.getDatabase(this);
 
         Ejercicio ejercicio = (Ejercicio) getIntent().getSerializableExtra("ejercicio_seleccionado");
+        boolean yaEnRutina = getIntent().getBooleanExtra("ya_en_rutina", false); // ← nuevo
 
         if (ejercicio != null) {
             setupToolbar();
             cargarDatos(ejercicio);
 
-            // Configurar el nuevo botón integrado
-            binding.btnGuardarEnRutinaDetalle.setOnClickListener(v -> {
-                mostrarSelectorDeRutinas(ejercicio);
-            });
+            if (yaEnRutina) {
+                // Modo "ya está en la rutina"
+                binding.btnGuardarEnRutinaDetalle.setText("✓ Ya está en la rutina");
+                binding.btnGuardarEnRutinaDetalle.setEnabled(false);
+                binding.btnGuardarEnRutinaDetalle.setIcon(null);
+                binding.btnGuardarEnRutinaDetalle.setAlpha(0.6f);
+                binding.btnGuardarEnRutinaDetalle.setBackgroundTintList(
+                        android.content.res.ColorStateList.valueOf(
+                                androidx.core.content.ContextCompat.getColor(this, android.R.color.darker_gray)
+                        )
+                );
+            } else {
+                // Modo normal: permitir añadir
+                binding.btnGuardarEnRutinaDetalle.setOnClickListener(v -> {
+                    mostrarSelectorDeRutinas(ejercicio);
+                });
+            }
         }
-    }
+        }
 
     private void setupToolbar() {
         setSupportActionBar(binding.toolbarDetalle);

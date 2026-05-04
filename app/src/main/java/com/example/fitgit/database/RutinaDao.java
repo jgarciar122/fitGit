@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.example.fitgit.model.RutinaConConteo;
 import com.example.fitgit.model.Ejercicio;
 import com.example.fitgit.model.Rutina;
 import com.example.fitgit.model.RutinaEjercicioCrossRef;
@@ -29,6 +30,16 @@ public interface RutinaDao {
             "WHERE rutina_ejercicio_cross_ref.rutinaId = :rutinaId")
     LiveData<List<Ejercicio>> obtenerEjerciciosDeRutina(int rutinaId);
 
+    @Query("SELECT rutinas.*, COUNT(rutina_ejercicio_cross_ref.ejercicioId) AS numEjercicios " +
+            "FROM rutinas " +
+            "LEFT JOIN rutina_ejercicio_cross_ref ON rutinas.id = rutina_ejercicio_cross_ref.rutinaId " +
+            "GROUP BY rutinas.id " +
+            "ORDER BY rutinas.fechaCreacion DESC")
+    LiveData<List<RutinaConConteo>> obtenerRutinasConConteo();
+
     @Delete
     void eliminarEjercicioDeRutina(RutinaEjercicioCrossRef crossRef);
+
+    @Delete
+    void eliminarRutina(Rutina rutina);
 }
