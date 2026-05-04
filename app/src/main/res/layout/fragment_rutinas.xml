@@ -3,17 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_light"> <!-- Fondo moderno aplicado -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_rutinas"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Botón Flotante en AZUL ELÉCTRICO -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_rutina"
         android:layout_width="wrap_content"
@@ -23,9 +29,10 @@
         android:contentDescription="Nueva Rutina"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#2196F3"
-        app:tint="@android:color/white"
+        app:backgroundTint="@color/primary"
+        app:tint="@color/white"
         app:elevation="8dp"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />

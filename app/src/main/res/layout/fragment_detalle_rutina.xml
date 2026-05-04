@@ -5,30 +5,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA">
+    android:background="@color/background_light"> <!-- Fondo moderno aplicado -->
 
-    <!-- Título de la sección -->
+    <!-- Título de la sección en AZUL -->
     <TextView
         android:id="@+id/tv_titulo_detalle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         android:text="Ejercicios guardados"
-        android:textSize="22sp"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="#333333"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:textColor="@color/primary"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- RecyclerView para los ejercicios de esta rutina -->
+    <!-- RecyclerView - Limpiamos paddings para que las cards respiren -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_ejercicios_detalle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:clipToPadding="false"
-        android:paddingHorizontal="8dp"
+        android:paddingHorizontal="12dp"
         android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,12 +38,13 @@
         app:layout_constraintTop_toBottomOf="@id/tv_titulo_detalle"
         tools:listitem="@layout/item_ejercicio" />
 
-    <!-- Mensaje opcional por si la rutina está vacía -->
+    <!-- Mensaje de estado vacío mejorado -->
     <TextView
         android:id="@+id/tv_rutina_vacia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Aún no has añadido ejercicios aquí"
+        android:textSize="16sp"
         android:textColor="#888888"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

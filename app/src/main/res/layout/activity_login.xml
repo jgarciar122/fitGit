@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="24dp"
     android:gravity="center"
-    android:background="@color/white">
+    android:background="@color/background_light"> <!-- Fondo gris muy claro moderno -->
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,38 +15,45 @@
         android:text="Bienvenido a FitGit"
         android:textSize="32sp"
         android:fontFamily="sans-serif-black"
-        android:textColor="?attr/colorPrimary"
+        android:textColor="@color/primary"
         android:layout_marginBottom="40dp"/>
 
+    <!-- Cambiado style de Material3 a MaterialComponents para evitar el CRASH -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_email"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Correo electrónico"
-        app:startIconDrawable="@android:drawable/ic_dialog_email">
+        app:startIconDrawable="@android:drawable/ic_dialog_email"
+        app:boxStrokeColor="@color/primary"
+        app:hintTextColor="@color/primary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_password"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Contraseña"
         app:startIconDrawable="@android:drawable/ic_lock_lock"
-        app:passwordToggleEnabled="true">
+        app:passwordToggleEnabled="true"
+        app:boxStrokeColor="@color/primary"
+        app:hintTextColor="@color/primary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,6 +63,8 @@
         android:layout_height="60dp"
         android:layout_marginTop="32dp"
         android:text="Iniciar Sesión"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary"
         app:cornerRadius="12dp" />
 
     <com.google.android.gms.common.SignInButton
@@ -66,12 +75,11 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_registro"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="¿No tienes cuenta? Regístrate" />
-
-
+        android:text="¿No tienes cuenta? Regístrate"
+        android:textColor="@color/primary_dark" />
 
 </LinearLayout>

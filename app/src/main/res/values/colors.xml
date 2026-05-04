@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Colores Base -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#1A1C1E</color>
+
+    <!-- Marca y Energía -->
+    <color name="primary">#2962FF</color>
+    <color name="primary_dark">#0039CB</color>
+    <color name="accent">#00E5FF</color>
+
+    <!-- Fondos y Superficies -->
+    <color name="background_light">#F8F9FA</color>
+    <color name="gris_detalle">#E0E0E0</color> <!-- El que querías para la info -->
+
+    <!-- Estados y Errores -->
+    <color name="error">#B00020</color>
+    <color name="success">#4CAF50</color>
 </resources>

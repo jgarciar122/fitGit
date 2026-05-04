@@ -47,6 +47,7 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onRutinaClick(rutina);
         });
+
     }
 
     @Override

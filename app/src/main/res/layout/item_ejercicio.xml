@@ -4,58 +4,87 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="@color/white"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/ivGifEjercicio"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Imagen del ejercicio" />
+            android:layout_height="260dp"
+            android:background="@color/white">
 
-        <TextView
-            android:id="@+id/tvNombreEjercicio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sentadilla con barra"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/black"/>
+            <ImageView
+                android:id="@+id/ivGifEjercicio"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:padding="0dp"
+                android:contentDescription="Imagen del ejercicio" />
+        </FrameLayout>
 
-        <com.google.android.material.chip.ChipGroup
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipMusculo"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvNombreEjercicio"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cuádriceps" />
+                android:text="Sentadilla con barra"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-black"
+                android:textColor="@color/black"/>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipEquipamiento"
-                android:layout_width="wrap_content"
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Barra"
-                style="@style/Widget.MaterialComponents.Chip.Action"/>
-        </com.google.android.material.chip.ChipGroup>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_guardar_en_rutina_detalle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="Añadir a mi rutina"
-            app:icon="@android:drawable/ic_input_add" />
+                android:layout_marginTop="8dp"
+                app:chipSpacingHorizontal="8dp">
 
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMusculo"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipBackgroundColor="#F0F4FF"
+                    app:chipIconTint="@color/primary"
+                    android:textColor="@color/primary"
+                    android:text="Cuádriceps" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipEquipamiento"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipBackgroundColor="#F0F4FF"
+                    app:chipIconTint="@color/primary"
+                    android:textColor="@color/primary"
+                    android:text="Barra" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_ejercicio_lista"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:text="Añadir a mi rutina"
+                android:textSize="14sp"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/primary"
+                app:cornerRadius="12dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconGravity="textStart" />
+
+        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
