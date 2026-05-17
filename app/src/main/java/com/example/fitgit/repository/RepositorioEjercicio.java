@@ -27,12 +27,9 @@ public class RepositorioEjercicio {
     }
 
     public LiveData<List<Ejercicio>> obtenerEjercicios() {
-        // 1. Siempre devolvemos el LiveData de Room (la UI se engancha aquí)
         LiveData<List<Ejercicio>> datosLocales = dao.obtenerTodosLosEjercicios();
 
-        // 2. Lógica inteligente de ahorro:
         executor.execute(() -> {
-            // Comprobamos si hay al menos UN ejercicio en la base de datos
             if (dao.obtenerUnoSincrono() == null) {
                 Log.d("REPO", "Base de datos vacía. Pidiendo datos a la API...");
                 refrescarEjercicios();
@@ -66,10 +63,7 @@ public class RepositorioEjercicio {
         if (musculo.equalsIgnoreCase("todos")) {
             return obtenerEjercicios();
         } else {
-            // Lógica inteligente para filtros:
             executor.execute(() -> {
-                // Podríamos comprobar si ya tenemos ejercicios de ese músculo en Room
-                // Pero para simplificar el TFG: si Room tiene algo, confiamos en Room.
                 if (dao.obtenerUnoSincrono() == null) {
                     refrescarEjerciciosPorMusculo(musculo);
                 }

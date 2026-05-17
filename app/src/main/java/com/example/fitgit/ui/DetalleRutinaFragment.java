@@ -9,20 +9,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fitgit.adapter.AdaptadorEjercicios;
-import com.example.fitgit.database.AppDatabase;
 import com.example.fitgit.databinding.FragmentDetalleRutinaBinding;
-import com.example.fitgit.model.Ejercicio;
-import com.example.fitgit.model.RutinaEjercicioCrossRef;
-
-import java.util.concurrent.Executors;
+import com.example.fitgit.viewmodel.RutinaViewModel;
 
 public class DetalleRutinaFragment extends Fragment {
     private int rutinaId;
     private String nombreRutina;
     private FragmentDetalleRutinaBinding binding;
+    private RutinaViewModel viewModel;
 
     public static DetalleRutinaFragment newInstance(int id, String nombre) {
         DetalleRutinaFragment fragment = new DetalleRutinaFragment();
@@ -48,40 +46,23 @@ public class DetalleRutinaFragment extends Fragment {
             nombreRutina = getArguments().getString("rutina_nombre");
         }
 
-        AppDatabase db = AppDatabase.getDatabase(requireContext());
+        viewModel = new ViewModelProvider(this).get(RutinaViewModel.class);
 
         AdaptadorEjercicios adaptador = new AdaptadorEjercicios();
         adaptador.setEsModoQuitar(true);
+        adaptador.setRutinaId(rutinaId); // ← NUEVO
 
         binding.rvEjerciciosDetalle.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvEjerciciosDetalle.setAdapter(adaptador);
         binding.tvTituloDetalle.setText("RUTINA: " + nombreRutina);
 
         adaptador.setOnEjercicioClickListener(ejercicio -> {
-            eliminarEjercicioDeEstaRutina(db, ejercicio);
+            viewModel.eliminarEjercicioDeRutina(rutinaId, ejercicio);
+            Toast.makeText(getContext(), ejercicio.getNombre() + " eliminado", Toast.LENGTH_SHORT).show();
         });
 
-        db.rutinaDao().obtenerEjerciciosDeRutina(rutinaId).observe(getViewLifecycleOwner(), ejercicios -> {
-            if (ejercicios != null) {
-                adaptador.setEjercicios(ejercicios);
-            }
-        });
-    }
-
-    private void eliminarEjercicioDeEstaRutina(AppDatabase db, Ejercicio ejercicio) {
-        Executors.newSingleThreadExecutor().execute(() -> {
-
-            RutinaEjercicioCrossRef ref = new RutinaEjercicioCrossRef();
-            ref.rutinaId = this.rutinaId;
-            ref.ejercicioId = ejercicio.getId();
-
-            db.rutinaDao().eliminarEjercicioDeRutina(ref);
-
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), ejercicio.getNombre() + " eliminado", Toast.LENGTH_SHORT).show();
-                });
-            }
+        viewModel.obtenerEjerciciosDeRutina(rutinaId).observe(getViewLifecycleOwner(), ejercicios -> {
+            if (ejercicios != null) adaptador.setEjercicios(ejercicios);
         });
     }
 

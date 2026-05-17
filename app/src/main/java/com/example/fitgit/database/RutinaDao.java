@@ -22,8 +22,8 @@ public interface RutinaDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void añadirEjercicioARutina(RutinaEjercicioCrossRef crossRef);
 
-    @Query("SELECT * FROM rutinas ORDER BY fechaCreacion DESC")
-    LiveData<List<Rutina>> obtenerTodasLasRutinas();
+    @Query("SELECT * FROM rutinas WHERE userId = :userId ORDER BY fechaCreacion DESC")
+    LiveData<List<Rutina>> obtenerTodasLasRutinas(String userId);
 
     @Query("SELECT * FROM tabla_ejercicios INNER JOIN rutina_ejercicio_cross_ref ON " +
             "tabla_ejercicios.id = rutina_ejercicio_cross_ref.ejercicioId " +
@@ -33,9 +33,10 @@ public interface RutinaDao {
     @Query("SELECT rutinas.*, COUNT(rutina_ejercicio_cross_ref.ejercicioId) AS numEjercicios " +
             "FROM rutinas " +
             "LEFT JOIN rutina_ejercicio_cross_ref ON rutinas.id = rutina_ejercicio_cross_ref.rutinaId " +
+            "WHERE rutinas.userId = :userId " +
             "GROUP BY rutinas.id " +
             "ORDER BY rutinas.fechaCreacion DESC")
-    LiveData<List<RutinaConConteo>> obtenerRutinasConConteo();
+    LiveData<List<RutinaConConteo>> obtenerRutinasConConteo(String userId);
 
     @Delete
     void eliminarEjercicioDeRutina(RutinaEjercicioCrossRef crossRef);

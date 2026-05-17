@@ -18,17 +18,15 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- CONTENEDOR DEL ICONO CON CONTADOR -->
         <FrameLayout
             android:layout_width="64dp"
             android:layout_height="64dp">
 
-            <!-- Fondo del Icono -->
             <View
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center"
-                android:background="@drawable/bg_circle_light_blue" /> <!-- Un circulo azul clarito -->
+                android:background="@drawable/bg_circle_light_blue" />
 
             <ImageView
                 android:layout_width="28dp"
@@ -37,8 +35,6 @@
                 android:src="@android:drawable/ic_menu_my_calendar"
                 app:tint="@color/primary" />
 
-            <!-- EL NÚMERO (Contador de ejercicios) -->
-            <!-- Se posiciona arriba a la derecha del icono -->
             <TextView
                 android:id="@+id/tv_num_ejercicios"
                 android:layout_width="24dp"

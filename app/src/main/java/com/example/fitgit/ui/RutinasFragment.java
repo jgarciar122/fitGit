@@ -10,23 +10,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.example.fitgit.model.RutinaConConteo;
 import com.example.fitgit.R;
 import com.example.fitgit.adapter.AdaptadorRutinas;
-import com.example.fitgit.database.AppDatabase;
 import com.example.fitgit.databinding.FragmentRutinasBinding;
-import com.example.fitgit.model.Rutina;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.example.fitgit.viewmodel.RutinaViewModel;
 
 public class RutinasFragment extends Fragment {
 
     private FragmentRutinasBinding binding;
-    private AppDatabase db;
     private AdaptadorRutinas adaptador;
+    private RutinaViewModel viewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +34,7 @@ public class RutinasFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        db = AppDatabase.getDatabase(requireContext());
+        viewModel = new ViewModelProvider(this).get(RutinaViewModel.class);
 
         adaptador = new AdaptadorRutinas();
         binding.rvRutinas.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
@@ -46,7 +42,9 @@ public class RutinasFragment extends Fragment {
 
         binding.fabAddRutina.setOnClickListener(v -> mostrarDialogoNuevaRutina());
 
-        cargarRutinas();
+        viewModel.obtenerRutinasConConteo().observe(getViewLifecycleOwner(), rutinas -> {
+            if (rutinas != null) adaptador.setRutinas(rutinas);
+        });
 
         adaptador.setOnRutinaClickListener(rutina -> {
             Fragment detalle = DetalleRutinaFragment.newInstance(rutina.id, rutina.nombre);
@@ -60,13 +58,7 @@ public class RutinasFragment extends Fragment {
             new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
                     .setTitle("Eliminar rutina")
                     .setMessage("¿Seguro que quieres eliminar \"" + rutina.nombre + "\"? Se perderán todos sus ejercicios.")
-                    .setPositiveButton("Eliminar", (dialog, which) -> {
-                        Executors.newSingleThreadExecutor().execute(() -> {
-                            Rutina r = new Rutina(rutina.nombre, "");
-                            r.setId(rutina.id);
-                            db.rutinaDao().eliminarRutina(r);
-                        });
-                    })
+                    .setPositiveButton("Eliminar", (dialog, which) -> viewModel.eliminarRutina(rutina))
                     .setNegativeButton("Cancelar", null)
                     .show();
         });
@@ -83,32 +75,14 @@ public class RutinasFragment extends Fragment {
                 .setPositiveButton("Crear", (dialog, which) -> {
                     String nombre = input.getText().toString().trim();
                     if (!nombre.isEmpty()) {
-                        guardarRutina(nombre);
+                        viewModel.insertarRutina(nombre);
+                        Toast.makeText(getContext(), "¡Carpeta '" + nombre + "' creada!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
-    }
-
-    private void guardarRutina(String nombre) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            Rutina nuevaRutina = new Rutina(nombre, "Mi rutina personalizada");
-            db.rutinaDao().insertarRutina(nuevaRutina);
-            getActivity().runOnUiThread(() -> {
-                Toast.makeText(getContext(), "¡Carpeta '" + nombre + "' creada!", Toast.LENGTH_SHORT).show();
-            });
-        });
-    }
-
-    private void cargarRutinas() {
-        db.rutinaDao().obtenerRutinasConConteo().observe(getViewLifecycleOwner(), rutinas -> {
-            if (rutinas != null) {
-                adaptador.setRutinas(rutinas);
-            }
-        });
     }
 
     @Override

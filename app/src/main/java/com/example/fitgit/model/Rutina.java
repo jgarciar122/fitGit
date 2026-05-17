@@ -10,12 +10,17 @@ public class Rutina {
     private String nombre;
     private String descripcion;
     private long fechaCreacion;
+    private String userId; // ← NUEVO
 
-    public Rutina(String nombre, String descripcion) {
+    public Rutina(String nombre, String descripcion, String userId) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fechaCreacion = System.currentTimeMillis();
+        this.userId = userId;
     }
+
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
     public int getId() {
         return id;

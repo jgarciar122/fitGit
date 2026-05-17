@@ -9,17 +9,22 @@ import androidx.room.TypeConverters;
 import com.example.fitgit.model.Ejercicio;
 import com.example.fitgit.model.Rutina;
 import com.example.fitgit.model.RutinaEjercicioCrossRef;
+import com.example.fitgit.model.Sesion;
+import com.example.fitgit.model.SerieRegistro;
 
 @Database(entities = {
         Ejercicio.class,
         Rutina.class,
-        RutinaEjercicioCrossRef.class
-}, version = 2, exportSchema = false)
+        RutinaEjercicioCrossRef.class,
+        Sesion.class,
+        SerieRegistro.class
+}, version = 4, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract EjercicioDao ejercicioDao();
     public abstract RutinaDao rutinaDao();
+    public abstract SesionDao sesionDao();
 
     private static volatile AppDatabase INSTANCE;
 

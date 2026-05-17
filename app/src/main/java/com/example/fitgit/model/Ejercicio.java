@@ -8,11 +8,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-// Mapea esta clase a una tabla de la base de datos local
 @Entity(tableName = "tabla_ejercicios")
 public class Ejercicio implements Serializable {
 
-    // Identificador único obligatorio para que Room pueda indexar
     @PrimaryKey
     @NonNull
     @SerializedName("id")
@@ -31,7 +29,6 @@ public class Ejercicio implements Serializable {
     @SerializedName("equipment")
     private String equipamiento;
 
-    // Estas listas requieren un "TypeConverter" (lo crearemos en el siguiente paso)
     @SerializedName("instructions")
     private List<String> instrucciones;
 

@@ -1,6 +1,7 @@
 package com.example.fitgit.ui;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +15,8 @@ import com.example.fitgit.databinding.ActivityDetalleEjercicioBinding;
 import com.example.fitgit.model.Ejercicio;
 import com.example.fitgit.model.Rutina;
 import com.example.fitgit.model.RutinaEjercicioCrossRef;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.List;
 import java.util.concurrent.Executors;
 
 public class DetallesEjercicioActivity extends AppCompatActivity {
@@ -34,14 +35,17 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
         db = AppDatabase.getDatabase(this);
 
         Ejercicio ejercicio = (Ejercicio) getIntent().getSerializableExtra("ejercicio_seleccionado");
-        boolean yaEnRutina = getIntent().getBooleanExtra("ya_en_rutina", false); // ← nuevo
+        boolean yaEnRutina = getIntent().getBooleanExtra("ya_en_rutina", false);
+        int rutinaId = getIntent().getIntExtra("rutina_id", -1);
+
+        // Toast temporal para depurar
+        Toast.makeText(this, "yaEnRutina: " + yaEnRutina + " | rutinaId: " + rutinaId, Toast.LENGTH_LONG).show();
 
         if (ejercicio != null) {
             setupToolbar();
             cargarDatos(ejercicio);
 
             if (yaEnRutina) {
-                // Modo "ya está en la rutina"
                 binding.btnGuardarEnRutinaDetalle.setText("✓ Ya está en la rutina");
                 binding.btnGuardarEnRutinaDetalle.setEnabled(false);
                 binding.btnGuardarEnRutinaDetalle.setIcon(null);
@@ -51,14 +55,24 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
                                 androidx.core.content.ContextCompat.getColor(this, android.R.color.darker_gray)
                         )
                 );
-            } else {
-                // Modo normal: permitir añadir
-                binding.btnGuardarEnRutinaDetalle.setOnClickListener(v -> {
-                    mostrarSelectorDeRutinas(ejercicio);
+
+                binding.btnRegistrarProgreso.setVisibility(View.VISIBLE);
+                binding.btnRegistrarProgreso.setOnClickListener(v -> {
+                    RegistroSeriesBottomSheet sheet = RegistroSeriesBottomSheet.newInstance(
+                            ejercicio.getId(),
+                            ejercicio.getNombre(),
+                            rutinaId
+                    );
+                    sheet.show(getSupportFragmentManager(), "registro_series");
                 });
+
+            } else {
+                binding.btnGuardarEnRutinaDetalle.setOnClickListener(v ->
+                        mostrarSelectorDeRutinas(ejercicio)
+                );
             }
         }
-        }
+    }
 
     private void setupToolbar() {
         setSupportActionBar(binding.toolbarDetalle);
@@ -66,7 +80,6 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("");
         }
-
         binding.toolbarDetalle.setNavigationOnClickListener(v ->
                 getOnBackPressedDispatcher().onBackPressed()
         );
@@ -99,14 +112,13 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
     }
 
     private void mostrarSelectorDeRutinas(Ejercicio ejercicio) {
-        // Observamos las rutinas disponibles en la base de datos
-        db.rutinaDao().obtenerTodasLasRutinas().observe(this, rutinas -> {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.rutinaDao().obtenerTodasLasRutinas(userId).observe(this, rutinas -> {
             if (rutinas == null || rutinas.isEmpty()) {
                 Toast.makeText(this, "No tienes rutinas creadas. Ve a 'Mis Rutinas' primero.", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            // Crear lista de nombres para el diálogo
             String[] nombres = new String[rutinas.size()];
             for (int i = 0; i < rutinas.size(); i++) {
                 nombres[i] = rutinas.get(i).getNombre();
@@ -128,12 +140,10 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
             RutinaEjercicioCrossRef union = new RutinaEjercicioCrossRef();
             union.rutinaId = rutina.getId();
             union.ejercicioId = ejercicio.getId();
-
             db.rutinaDao().añadirEjercicioARutina(union);
-
-            runOnUiThread(() -> {
-                Toast.makeText(this, "¡Añadido a " + rutina.getNombre() + "!", Toast.LENGTH_SHORT).show();
-            });
+            runOnUiThread(() ->
+                    Toast.makeText(this, "¡Añadido a " + rutina.getNombre() + "!", Toast.LENGTH_SHORT).show()
+            );
         });
     }
 

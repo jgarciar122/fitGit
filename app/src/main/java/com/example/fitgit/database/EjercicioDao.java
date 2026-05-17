@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public interface EjercicioDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE) // Si ya existe, lo actualiza
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertarEjercicios(List<Ejercicio> ejercicios);
 
     @Query("SELECT * FROM tabla_ejercicios")

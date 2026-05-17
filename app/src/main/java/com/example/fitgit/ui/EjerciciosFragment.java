@@ -21,6 +21,7 @@ import com.example.fitgit.model.Rutina;
 import com.example.fitgit.model.RutinaEjercicioCrossRef;
 import com.example.fitgit.viewmodel.EjercicioViewModel;
 import com.google.android.material.chip.Chip;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -67,7 +68,8 @@ public class EjerciciosFragment extends Fragment {
 
     private void mostrarSelectorDeRutinas(Ejercicio ejercicio) {
         // Obtenemos las rutinas que el usuario ha creado en la otra pestaña
-        db.rutinaDao().obtenerTodasLasRutinas().observe(getViewLifecycleOwner(), rutinas -> {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.rutinaDao().obtenerTodasLasRutinas(userId).observe(getViewLifecycleOwner(), rutinas -> {
             if (rutinas == null || rutinas.isEmpty()) {
                 Toast.makeText(getContext(), "Crea primero una rutina en 'Mis Rutinas'", Toast.LENGTH_LONG).show();
                 return;
