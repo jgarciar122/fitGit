@@ -7,6 +7,7 @@ import com.example.fitgit.database.SesionDao;
 import com.example.fitgit.model.PuntoGrafica;
 import com.example.fitgit.model.SerieRegistro;
 import com.example.fitgit.model.Sesion;
+import com.example.fitgit.model.SesionConDetalle;
 import java.util.List;
 
 public class RepositorioSesion {
@@ -30,5 +31,9 @@ public class RepositorioSesion {
 
     public LiveData<List<PuntoGrafica>> obtenerEvolucionEjercicio(String ejercicioId, String userId) {
         return dao.obtenerEvolucionEjercicio(ejercicioId, userId);
+    }
+
+    public LiveData<List<SesionConDetalle>> obtenerHistorialCompleto(String userId) {
+        return dao.obtenerHistorialCompleto(userId);
     }
 }

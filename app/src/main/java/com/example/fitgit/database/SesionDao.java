@@ -8,6 +8,7 @@ import androidx.room.Query;
 import com.example.fitgit.model.PuntoGrafica;
 import com.example.fitgit.model.SerieRegistro;
 import com.example.fitgit.model.Sesion;
+import com.example.fitgit.model.SesionConDetalle;
 
 import java.util.List;
 
@@ -57,4 +58,20 @@ public interface SesionDao {
             "WHERE series_registro.ejercicioId = :ejercicioId AND sesiones.userId = :userId " +
             "ORDER BY sesiones.fecha ASC")
     LiveData<List<PuntoGrafica>> obtenerEvolucionEjercicio(String ejercicioId, String userId);
+
+    @Query("SELECT sesiones.id as sesionId, sesiones.fecha, sesiones.rutinaId, " +
+            "rutinas.nombre as nombreRutina, " +
+            "series_registro.ejercicioId, tabla_ejercicios.nombre as nombreEjercicio, " +
+            "series_registro.kg, series_registro.repeticiones " +
+            "FROM sesiones " +
+            "INNER JOIN rutinas ON sesiones.rutinaId = rutinas.id " +
+            "INNER JOIN series_registro ON sesiones.id = series_registro.sesionId " +
+            "INNER JOIN tabla_ejercicios ON series_registro.ejercicioId = tabla_ejercicios.id " +
+            "WHERE sesiones.userId = :userId " +
+            "ORDER BY sesiones.fecha DESC")
+    LiveData<List<SesionConDetalle>> obtenerHistorialCompleto(String userId);
+
+    @Query("SELECT * FROM sesiones WHERE rutinaId = :rutinaId AND userId = :userId " +
+            "AND fecha >= :inicioDia AND fecha <= :finDia LIMIT 1")
+    Sesion obtenerSesionDeHoy(int rutinaId, String userId, long inicioDia, long finDia);
 }

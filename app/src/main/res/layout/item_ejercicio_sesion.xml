@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F0F0F0"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tv_nombre_ejercicio_sesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sentadilla con barra"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_series_ejercicio_sesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="80kg × 10 reps  |  85kg × 8 reps"
+        android:textSize="13sp"
+        android:textColor="#625B71" />
+
+</LinearLayout>

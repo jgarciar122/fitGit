@@ -17,39 +17,62 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Fecha y rutina -->
+        <!-- Cabecera: fecha + rutina -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tv_fecha_sesion"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Hoy"
-                android:textSize="15sp"
-                android:fontFamily="sans-serif-black"
-                android:textColor="@color/black" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_fecha_sesion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hoy"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-black"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_nombre_rutina_sesion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rutina Pecho"
+                    android:textSize="13sp"
+                    android:textColor="@color/primary" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_num_series_sesion"
+                android:id="@+id/tv_num_ejercicios_sesion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3 series"
+                android:text="3 ejercicios"
                 android:textSize="13sp"
-                android:textColor="@color/primary" />
+                android:textColor="#888888" />
+
+            <ImageView
+                android:id="@+id/iv_expandir"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/arrow_down_float"
+                app:tint="#888888" />
 
         </LinearLayout>
 
-        <!-- Series expandibles -->
+        <!-- Lista de ejercicios expandible -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_series_sesion"
+            android:id="@+id/rv_ejercicios_sesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:nestedScrollingEnabled="false"
             android:visibility="gone" />
 

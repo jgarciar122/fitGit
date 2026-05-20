@@ -12,13 +12,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fitgit.adapter.AdaptadorHistorial;
-import com.example.fitgit.database.AppDatabase;
 import com.example.fitgit.databinding.FragmentProgresoBinding;
-import com.example.fitgit.model.Sesion;
 import com.example.fitgit.viewmodel.SesionViewModel;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class ProgresoFragment extends Fragment {
 
@@ -39,44 +36,37 @@ public class ProgresoFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(SesionViewModel.class);
 
         // Configurar RecyclerView del historial
-        adaptador = new AdaptadorHistorial(
-                AppDatabase.getDatabase(requireContext()),
-                getViewLifecycleOwner()
-        );
+        adaptador = new AdaptadorHistorial();
         binding.rvHistorial.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvHistorial.setAdapter(adaptador);
 
-        // Observar historial
-        viewModel.obtenerHistorial().observe(getViewLifecycleOwner(), sesiones -> {
-            if (sesiones == null || sesiones.isEmpty()) {
+        // Observar historial agrupado
+        viewModel.obtenerHistorialAgrupado().observe(getViewLifecycleOwner(), entrenamientos -> {
+            if (entrenamientos == null || entrenamientos.isEmpty()) {
                 binding.tvSinHistorial.setVisibility(View.VISIBLE);
                 binding.rvHistorial.setVisibility(View.GONE);
             } else {
                 binding.tvSinHistorial.setVisibility(View.GONE);
                 binding.rvHistorial.setVisibility(View.VISIBLE);
-                adaptador.setSesiones(sesiones);
+                adaptador.setEntrenamientos(entrenamientos);
             }
         });
 
         // Observar resumen semanal
-        viewModel.obtenerSesionesEstaSemana().observe(getViewLifecycleOwner(), sesiones -> {
-            actualizarResumenSemanal(sesiones);
-        });
+        viewModel.obtenerSesionesEstaSemana().observe(getViewLifecycleOwner(),
+                sesiones -> actualizarResumenSemanal(sesiones));
     }
 
-    private void actualizarResumenSemanal(List<Sesion> sesiones) {
-        // Array de círculos L M X J V S D
-        View[] circulos = {
+    private void actualizarResumenSemanal(java.util.List<com.example.fitgit.model.Sesion> sesiones) {
+        android.widget.TextView[] circulos = {
                 binding.circuloLunes, binding.circuloMartes, binding.circuloMiercoles,
                 binding.circuloJueves, binding.circuloViernes, binding.circuloSabado,
                 binding.circuloDomingo
         };
 
         // Resetear todos a ⬜
-        for (View c : circulos) {
-            if (c instanceof android.widget.TextView) {
-                ((android.widget.TextView) c).setText("⬜");
-            }
+        for (android.widget.TextView c : circulos) {
+            c.setText("⬜");
         }
 
         if (sesiones == null || sesiones.isEmpty()) {
@@ -84,26 +74,19 @@ public class ProgresoFragment extends Fragment {
             return;
         }
 
-        // Marcar los días que hay sesión
         int diasEntrenados = 0;
-        int totalSeries = 0;
         java.util.Set<Integer> diasMarcados = new java.util.HashSet<>();
 
-        for (Sesion sesion : sesiones) {
+        for (com.example.fitgit.model.Sesion sesion : sesiones) {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(sesion.fecha);
             int diaSemana = cal.get(Calendar.DAY_OF_WEEK);
-
-            // Calendar: 1=Dom, 2=Lun, 3=Mar, 4=Mie, 5=Jue, 6=Vie, 7=Sab
-            // Nuestro array: 0=Lun, 1=Mar, 2=Mie, 3=Jue, 4=Vie, 5=Sab, 6=Dom
             int indice = (diaSemana == Calendar.SUNDAY) ? 6 : diaSemana - 2;
 
             if (indice >= 0 && indice <= 6 && !diasMarcados.contains(indice)) {
                 diasMarcados.add(indice);
                 diasEntrenados++;
-                if (circulos[indice] instanceof android.widget.TextView) {
-                    ((android.widget.TextView) circulos[indice]).setText("✅");
-                }
+                circulos[indice].setText("✅");
             }
         }
 

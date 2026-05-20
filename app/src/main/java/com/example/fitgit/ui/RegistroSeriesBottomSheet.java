@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -113,11 +114,30 @@ public class RegistroSeriesBottomSheet extends BottomSheetDialogFragment {
         AppDatabase db = AppDatabase.getDatabase(requireContext());
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            // 1. Crear la sesión y obtener su ID
-            Sesion sesion = new Sesion(rutinaId, userId);
-            long sesionId = db.sesionDao().insertarSesion(sesion);
+            // Inicio y fin del día de hoy
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            long inicioDia = cal.getTimeInMillis();
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            long finDia = cal.getTimeInMillis();
 
-            // 2. Crear las series vinculadas a esa sesión
+            // Buscar si ya hay sesión hoy para esta rutina
+            Sesion sesionExistente = db.sesionDao().obtenerSesionDeHoy(rutinaId, userId, inicioDia, finDia);
+
+            long sesionId;
+            if (sesionExistente != null) {
+                sesionId = sesionExistente.id;
+            } else {
+                Sesion nuevaSesion = new Sesion(rutinaId, userId);
+                sesionId = db.sesionDao().insertarSesion(nuevaSesion);
+            }
+
+            // Guardar las series vinculadas a esa sesión
             List<SerieRegistro> series = new ArrayList<>();
             for (AdaptadorSerie.FilaSerie fila : filas) {
                 series.add(new SerieRegistro((int) sesionId, ejercicioId, fila.kg, fila.reps));

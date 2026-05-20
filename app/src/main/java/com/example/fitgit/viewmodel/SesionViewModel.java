@@ -4,12 +4,18 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
+import com.example.fitgit.model.EjercicioConSeries;
+import com.example.fitgit.model.EntrenamientoDia;
 import com.example.fitgit.model.PuntoGrafica;
 import com.example.fitgit.model.SerieRegistro;
 import com.example.fitgit.model.Sesion;
+import com.example.fitgit.model.SesionConDetalle;
 import com.example.fitgit.repository.RepositorioSesion;
 import com.google.firebase.auth.FirebaseAuth;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SesionViewModel extends AndroidViewModel {
@@ -31,7 +37,6 @@ public class SesionViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Sesion>> obtenerSesionesEstaSemana() {
-        // Timestamp del lunes de esta semana a las 00:00
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -43,5 +48,50 @@ public class SesionViewModel extends AndroidViewModel {
 
     public LiveData<List<PuntoGrafica>> obtenerEvolucionEjercicio(String ejercicioId) {
         return repositorio.obtenerEvolucionEjercicio(ejercicioId, userId);
+    }
+
+    public LiveData<List<EntrenamientoDia>> obtenerHistorialAgrupado() {
+        return Transformations.map(
+                repositorio.obtenerHistorialCompleto(userId),
+                this::agruparPorSesion
+        );
+    }
+
+    private List<EntrenamientoDia> agruparPorSesion(List<SesionConDetalle> filas) {
+        LinkedHashMap<Integer, EntrenamientoDia> mapa = new LinkedHashMap<>();
+
+        if (filas == null) return new ArrayList<>();
+
+        for (SesionConDetalle fila : filas) {
+            if (!mapa.containsKey(fila.sesionId)) {
+                mapa.put(fila.sesionId, new EntrenamientoDia(
+                        fila.fecha, fila.nombreRutina, new ArrayList<>()
+                ));
+            }
+
+            EntrenamientoDia dia = mapa.get(fila.sesionId);
+
+            // Buscar si ya existe ese ejercicio en esta sesión
+            EjercicioConSeries ejercicioExistente = null;
+            for (EjercicioConSeries e : dia.ejercicios) {
+                if (e.ejercicioId.equals(fila.ejercicioId)) {
+                    ejercicioExistente = e;
+                    break;
+                }
+            }
+
+            if (ejercicioExistente == null) {
+                ejercicioExistente = new EjercicioConSeries(
+                        fila.ejercicioId, fila.nombreEjercicio, new ArrayList<>()
+                );
+                dia.ejercicios.add(ejercicioExistente);
+            }
+
+            ejercicioExistente.series.add(
+                    new SerieRegistro(fila.sesionId, fila.ejercicioId, fila.kg, fila.repeticiones)
+            );
+        }
+
+        return new ArrayList<>(mapa.values());
     }
 }
