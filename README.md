@@ -30,41 +30,57 @@ Base de datos local / API remota
 com.example.fitgit
 │
 ├── adapter
-│   ├── AdaptadorEjercicios.java      # RecyclerView de ejercicios (modo añadir / modo quitar)
-│   └── AdaptadorRutinas.java         # RecyclerView de rutinas con contador de ejercicios
+│   ├── AdaptadorEjercicios.java          # RecyclerView de ejercicios (modo añadir / modo quitar)
+│   ├── AdaptadorEjerciciosSesion.java    # RecyclerView para mostrar ejercicios + series en el historial
+│   ├── AdaptadorHistorial.java           # RecyclerView de entrenamientos agrupados (expandibles)
+│   ├── AdaptadorRutinas.java             # RecyclerView de rutinas con contador de ejercicios
+│   └── AdaptadorSerie.java               # RecyclerView editable (kg/reps) en tiempo real
 │
 ├── api
-│   ├── ClienteRetrofit.java          # Configuración del cliente HTTP con Retrofit
-│   └── ServicioEjercicios.java       # Interfaz con los endpoints de la API (ExerciseDB)
+│   ├── ClienteRetrofit.java              # Configuración del cliente HTTP con Retrofit
+│   └── ServicioEjercicios.java           # Interfaz con los endpoints de la API (ExerciseDB)
 │
 ├── database
-│   ├── AppDatabase.java              # Singleton de la base de datos Room
-│   ├── Converters.java               # Conversor de tipos para Room (ej: List<String>)
-│   ├── EjercicioDao.java             # Operaciones CRUD para ejercicios
-│   └── RutinaDao.java                # Operaciones CRUD para rutinas y relaciones
+│   ├── AppDatabase.java                  # Singleton de la base de datos Room (v4)
+│   ├── Converters.java                   # Conversor de tipos para Room (ej: List<String>, Date)
+│   ├── EjercicioDao.java                 # Operaciones CRUD para tabla_ejercicios
+│   ├── RutinaDao.java                    # Operaciones CRUD para rutinas y cross_ref
+│   └── SesionDao.java                    # Operaciones CRUD para sesiones y series_registro
 │
 ├── model
-│   ├── Ejercicio.java                # Entidad Room: tabla_ejercicios
-│   ├── Rutina.java                   # Entidad Room: rutinas
-│   ├── RutinaConConteo.java          # POJO: rutina con número de ejercicios (no es entidad)
-│   └── RutinaEjercicioCrossRef.java  # Tabla intermedia many-to-many: rutina_ejercicio_cross_ref
+│   ├── Ejercicio.java                    # Entidad Room: tabla_ejercicios
+│   ├── EjercicioConSeries.java           # POJO: Relación de un ejercicio con sus series registradas
+│   ├── EntrenamientoDia.java             # POJO: Agrupa ejercicios y series de una misma sesión
+│   ├── PuntoGrafica.java                 # POJO: Fecha + kg máximo para gráficas de evolución
+│   ├── Rutina.java                       # Entidad Room: rutinas
+│   ├── RutinaConConteo.java              # POJO: rutina con número de ejercicios (COUNT + LEFT JOIN)
+│   ├── RutinaEjercicioCrossRef.java      # Tabla intermedia many-to-many: rutina_ejercicio_cross_ref
+│   ├── SerieRegistro.java                # Entidad Room: series_registro (kg y reps)
+│   ├── Sesion.java                       # Entidad Room: sesiones (entrenamiento de un día)
+│   └── SesionConDetalle.java             # POJO: JOIN complejo entre sesiones, rutinas, series y ejercicios
 │
 ├── repository
-│   ├── RepositorioEjercicio.java     # Fuente única de verdad para ejercicios (Room + Retrofit)
-│   └── RepositorioRutina.java        # Fuente única de verdad para rutinas (solo Room)
+│   ├── RepositorioEjercicio.java         # Fuente única para ejercicios (Room + Retrofit)
+│   ├── RepositorioRutina.java            # Fuente única para rutinas (Room)
+│   └── RepositorioSesion.java            # Fuente única para registro de progreso e historial (Room)
 │
 ├── ui
-│   ├── DetalleRutinaFragment.java    # Lista de ejercicios dentro de una rutina (modo quitar)
-│   ├── DetallesEjercicioActivity.java# Vista de detalle de un ejercicio con GIF y botón añadir
-│   ├── EjerciciosFragment.java       # Buscador de ejercicios con filtros por músculo
-│   ├── LoginActivity.java            # Pantalla de inicio de sesión
-│   ├── MainActivity.java             # Actividad principal con navegación por fragmentos
-│   ├── RegistroActivity.java         # Pantalla de registro de usuario
-│   └── RutinasFragment.java          # Lista de rutinas del usuario con opción de crear/eliminar
+│   ├── AnadirEjercicioBottomSheet.java   # Diálogo para añadir ejercicios a rutina (con buscador)
+│   ├── DetalleRutinaFragment.java        # Lista de ejercicios dentro de una rutina (modo quitar)
+│   ├── DetallesEjercicioActivity.java    # Vista de detalle con GIF y botón añadir/registrar progreso
+│   ├── EjerciciosFragment.java           # Buscador general de ejercicios con filtros por músculo
+│   ├── LoginActivity.java                # Pantalla de inicio de sesión (Firebase Auth + Google)
+│   ├── MainActivity.java                 # Actividad principal con navegación manual inferior
+│   ├── PerfilFragment.java               # Pantalla de perfil de usuario y cierre de sesión
+│   ├── ProgresoFragment.java             # Pantalla de resumen semanal e historial expandible
+│   ├── RegistroActivity.java             # Pantalla de registro de nuevo usuario
+│   ├── RegistroSeriesBottomSheet.java    # Diálogo para registrar kg/reps de un ejercicio
+│   └── RutinasFragment.java              # Lista de rutinas del usuario con opción de crear/eliminar
 │
 └── viewmodel
-    ├── EjercicioViewModel.java        # Lógica de UI para ejercicios con filtro reactivo
-    └── RutinaViewModel.java           # Lógica de UI para rutinas y operaciones CRUD
+    ├── EjercicioViewModel.java           # Lógica UI de ejercicios (filtros reactivos y buscador)
+    ├── RutinaViewModel.java              # Lógica UI CRUD de rutinas filtrado por userId
+    └── SesionViewModel.java              # Lógica UI para progreso, historial y evolución
 ```
 
 ---
