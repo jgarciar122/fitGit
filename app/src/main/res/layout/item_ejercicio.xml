@@ -78,9 +78,11 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
                 android:text="Añadir a mi rutina"
+                android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:textAllCaps="false"
                 app:backgroundTint="@color/primary"
+                app:iconTint="@android:color/white"
                 app:cornerRadius="12dp"
                 app:icon="@android:drawable/ic_input_add"
                 app:iconGravity="textStart" />

@@ -38,8 +38,6 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
         boolean yaEnRutina = getIntent().getBooleanExtra("ya_en_rutina", false);
         int rutinaId = getIntent().getIntExtra("rutina_id", -1);
 
-        // Toast temporal para depurar
-        Toast.makeText(this, "yaEnRutina: " + yaEnRutina + " | rutinaId: " + rutinaId, Toast.LENGTH_LONG).show();
 
         if (ejercicio != null) {
             setupToolbar();

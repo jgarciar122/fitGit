@@ -1,6 +1,8 @@
 package com.example.fitgit.ui;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,11 +63,31 @@ public class EjerciciosFragment extends Fragment {
         });
 
         configurarFiltros();
+        configurarBuscador();
+    }
+
+    private void configurarBuscador() {
+        binding.etBuscarEjercicio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.buscarPorNombre(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     private void mostrarSelectorDeRutinas(Ejercicio ejercicio) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db.rutinaDao().obtenerTodasLasRutinas(userId).observe(getViewLifecycleOwner(), rutinas -> {
+            db.rutinaDao().obtenerTodasLasRutinas(userId).removeObservers(getViewLifecycleOwner());
+
             if (rutinas == null || rutinas.isEmpty()) {
                 Toast.makeText(getContext(), "Crea primero una rutina en 'Mis Rutinas'", Toast.LENGTH_LONG).show();
                 return;

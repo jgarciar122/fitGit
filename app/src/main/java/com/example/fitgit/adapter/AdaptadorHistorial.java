@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fitgit.R;
 import com.example.fitgit.model.EntrenamientoDia;
 import com.example.fitgit.model.EjercicioConSeries;
-import com.example.fitgit.model.SerieRegistro;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,19 +41,15 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
     public void onBindViewHolder(@NonNull SesionViewHolder holder, int position) {
         EntrenamientoDia entrenamiento = listaEntrenamientos.get(position);
 
-        // Fecha
         String fecha = new SimpleDateFormat("dd MMM yyyy", Locale.forLanguageTag("es"))
                 .format(new Date(entrenamiento.fecha));
         holder.tvFecha.setText(fecha);
 
-        // Nombre rutina
         holder.tvNombreRutina.setText(entrenamiento.nombreRutina);
 
-        // Número de ejercicios
         int numEjercicios = entrenamiento.ejercicios != null ? entrenamiento.ejercicios.size() : 0;
         holder.tvNumEjercicios.setText(numEjercicios + " ejercicio" + (numEjercicios != 1 ? "s" : ""));
 
-        // Click para expandir/colapsar
         holder.itemView.setOnClickListener(v -> {
             if (holder.rvEjercicios.getVisibility() == View.GONE) {
                 holder.rvEjercicios.setVisibility(View.VISIBLE);

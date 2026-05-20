@@ -38,7 +38,6 @@ public class AdaptadorEjerciciosSesion extends RecyclerView.Adapter<AdaptadorEje
 
         holder.tvNombreEjercicio.setText(ejercicio.nombreEjercicio);
 
-        // Construir texto de series: "80kg×10  |  85kg×8"
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ejercicio.series.size(); i++) {
             SerieRegistro serie = ejercicio.series.get(i);

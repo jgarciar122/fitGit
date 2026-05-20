@@ -27,7 +27,7 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
     private List<Ejercicio> listaEjercicios;
     private static final String API_KEY = "84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5";
     private boolean esModoQuitar = false;
-    private int rutinaId = -1; // ← NUEVO
+    private int rutinaId = -1;
 
     public interface OnEjercicioClickListener {
         void onEjercicioClick(Ejercicio ejercicio);
@@ -80,7 +80,7 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
                 ((MaterialButton) holder.btnAdd).setIconTint(android.content.res.ColorStateList.valueOf(Color.RED));
             }
         } else {
-            holder.btnAdd.setText("Añadir a una rutina");
+            holder.btnAdd.setText("Añadir a mi rutina");
         }
 
         GlideUrl glideUrl = new GlideUrl(ejercicio.getUrlGif(), new LazyHeaders.Builder()
@@ -96,7 +96,6 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
                 .error(R.drawable.imagen_ejemplo)
                 .into(holder.ivImagen);
 
-        // ← ACTUALIZADO: ahora pasa también el rutinaId
         holder.itemView.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(v.getContext(), DetallesEjercicioActivity.class);
             intent.putExtra("ejercicio_seleccionado", ejercicio);
