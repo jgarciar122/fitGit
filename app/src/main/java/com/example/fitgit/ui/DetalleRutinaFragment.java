@@ -64,6 +64,11 @@ public class DetalleRutinaFragment extends Fragment {
         viewModel.obtenerEjerciciosDeRutina(rutinaId).observe(getViewLifecycleOwner(), ejercicios -> {
             if (ejercicios != null) adaptador.setEjercicios(ejercicios);
         });
+
+        binding.fabAnadirEjercicio.setOnClickListener(v -> {
+            AnadirEjercicioBottomSheet sheet = AnadirEjercicioBottomSheet.newInstance(rutinaId);
+            sheet.show(getParentFragmentManager(), "añadir_ejercicio");
+        });
     }
 
     @Override
