@@ -133,7 +133,7 @@ Si eres una IA y estoy pidiéndote ayuda con este proyecto, ten en cuenta lo sig
 
 **El proyecto es una app Android nativa en Java**, no Kotlin, no Flutter, no React Native.
 
-**Arquitectura:** MVVM con Repository. Cualquier lógica de base de datos o red debe ir en el Repositorio, luego exponerse desde el ViewModel como `LiveData`, y ser observada desde el Fragment o Activity. Nunca accedas a `AppDatabase` directamente desde la UI salvo en `DetallesEjercicioActivity` y `AdaptadorHistorial` donde aún queda acceso directo al DAO (pendiente de refactorizar).
+**Arquitectura:** MVVM con Repository. Cualquier lógica de base de datos o red debe ir en el Repositorio, luego exponerse desde el ViewModel como `LiveData`, y ser observada desde el Fragment o Activity. Nunca accedas a `AppDatabase` directamente desde la UI salvo en `DetallesEjercicioActivity`, `EjerciciosFragment` y `AñadirEjercicioBottomSheet` donde aún queda acceso directo al DAO (pendiente de refactorizar).
 
 **Base de datos Room — versión 4:** Cinco tablas:
 - `tabla_ejercicios` — ejercicios cacheados desde la API
@@ -147,30 +147,41 @@ Si eres una IA y estoy pidiéndote ayuda con este proyecto, ten en cuenta lo sig
 **ViewModels disponibles:**
 - `EjercicioViewModel` — ejercicios con filtro reactivo por músculo
 - `RutinaViewModel` — CRUD de rutinas filtrado por userId
-- `SesionViewModel` — historial, resumen semanal y evolución por ejercicio
+- `SesionViewModel` — historial agrupado, resumen semanal y evolución por ejercicio
 
 **Repositorios disponibles:** `RepositorioEjercicio`, `RepositorioRutina`, `RepositorioSesion`.
 
 **Autenticación:** Firebase Auth con email/password y Google Sign-In. El UID se obtiene con `FirebaseAuth.getInstance().getCurrentUser().getUid()`. Los ViewModels lo obtienen automáticamente en el constructor.
 
-**UI:** ViewBinding en todos los Fragments y Activities. Diálogos con `MaterialAlertDialogBuilder` y estilo `R.style.DialogRedondeado`.
+**UI:** ViewBinding en todos los Fragments y Activities. Diálogos con `MaterialAlertDialogBuilder` y estilo `R.style.DialogRedondeado`. Evita caracteres especiales (ñ, acentos) en nombres de archivos XML para que el binding se genere correctamente.
 
-**Navegación:** Manual con `FragmentManager`, sin Navigation Component. Contenedor: `R.id.nav_host_fragment`. Tres pestañas: Ejercicios, Rutinas, Progreso.
+**Navegación:** Manual con `FragmentManager`, sin Navigation Component. Contenedor: `R.id.nav_host_fragment`. Cuatro secciones: Ejercicios, Rutinas, Progreso y Perfil (este último se abre desde el botón de la toolbar).
+
+**Toolbar global:** En `MainActivity` hay una toolbar con título dinámico y botón de perfil. El título se cambia llamando a `setTituloToolbar(String)` o pasando el título en `reemplazarFragment(fragment, titulo)`.
 
 **Adaptadores:**
-- `AdaptadorEjercicios` — flag `esModoQuitar` y `rutinaId`. Pasa `ya_en_rutina` y `rutina_id` por Intent.
+- `AdaptadorEjercicios` — flag `esModoQuitar` y `rutinaId`. En modo quitar muestra botón rojo; pasa `ya_en_rutina=true` y `rutina_id` por Intent al abrir el detalle.
 - `AdaptadorRutinas` — usa `RutinaConConteo` con contador de ejercicios.
-- `AdaptadorSeries` — RecyclerView editable con TextWatcher para kg y reps.
-- `AdaptadorHistorial` — lista de sesiones expandibles. Recibe `AppDatabase` y `LifecycleOwner`.
-- `AdaptadorSeriesResumen` — muestra kg y reps dentro de cada sesión expandida.
+- `AdaptadorSeries` — RecyclerView editable con TextWatcher para kg y reps en tiempo real.
+- `AdaptadorHistorial` — lista de entrenamientos agrupados por sesión, expandibles.
+- `AdaptadorEjerciciosSesion` — muestra nombre del ejercicio + series con kg y reps dentro de cada sesión.
 
-**Registro de progreso:** Botón "Registrar progreso" visible solo cuando `ya_en_rutina=true`. Abre `RegistroSeriesBottomSheet` que precarga las últimas series y guarda `Sesion` + `SerieRegistro` al confirmar.
+**Bottom Sheets disponibles:**
+- `RegistroSeriesBottomSheet` — registrar series (kg + reps) de un ejercicio. Reutiliza la sesión del día si ya existe.
+- `AñadirEjercicioBottomSheet` — añadir ejercicios a una rutina. Excluye los que ya están. Tiene buscador en tiempo real.
 
-**Pantalla de progreso:** `ProgresoFragment` con resumen semanal (✅/⬜ por día) y historial de sesiones expandible. Usa `SesionViewModel`.
+**Registro de progreso:** Botón "Registrar progreso" visible solo cuando `ya_en_rutina=true`. Abre `RegistroSeriesBottomSheet` que precarga las últimas series y guarda `Sesion` + `SerieRegistro` al confirmar. Si ya existe sesión del día para esa rutina la reutiliza.
+
+**Pantalla de progreso:** `ProgresoFragment` con resumen semanal (✅/⬜ por día) e historial de sesiones expandible con ejercicios, kg y reps. Usa `SesionViewModel`.
+
+**Pantalla de perfil:** `PerfilFragment` muestra nombre, email, foto (con CircleImageView + Glide) y proveedor de autenticación. Botón de cerrar sesión.
 
 **POJOs especiales:**
 - `RutinaConConteo` — rutina con campo `numEjercicios` calculado con COUNT + LEFT JOIN
 - `PuntoGrafica` — fecha + kg máximo para gráficas de evolución (pendiente de implementar en UI)
+- `SesionConDetalle` — resultado de JOIN entre sesiones, rutinas, series y ejercicios
+- `EjercicioConSeries` — ejercicio con su lista de series para el historial
+- `EntrenamientoDia` — agrupa ejercicios y series de una misma sesión
 
 **Pendiente de implementar:** Gráfica de evolución por ejercicio en la pantalla de progreso.
 
