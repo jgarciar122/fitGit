@@ -20,14 +20,20 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Cargar el fragment de Ejercicios por defecto al abrir
+        setSupportActionBar(binding.toolbarMain);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
         if (savedInstanceState == null) {
-            reemplazarFragment(new EjerciciosFragment());
+            reemplazarFragment(new EjerciciosFragment(), "Ejercicios");
         }
 
         configurarNavegacion();
 
-        binding.btnCerrarSesionTemp.setOnClickListener(v -> cerrarSesion());
+        binding.btnPerfil.setOnClickListener(v -> {
+            reemplazarFragment(new PerfilFragment(), "Mi Perfil");
+        });
     }
 
     private void configurarNavegacion() {
@@ -35,24 +41,29 @@ public class MainActivity extends AppCompatActivity {
             int id = item.getItemId();
 
             if (id == R.id.nav_ejercicios) {
-                reemplazarFragment(new EjerciciosFragment());
+                reemplazarFragment(new EjerciciosFragment(), "Ejercicios");
                 return true;
             } else if (id == R.id.nav_rutinas) {
-                reemplazarFragment(new RutinasFragment());
+                reemplazarFragment(new RutinasFragment(), "Mis Rutinas");
                 return true;
             } else if (id == R.id.nav_progreso) {
-                reemplazarFragment(new ProgresoFragment());
+                reemplazarFragment(new ProgresoFragment(), "Progreso");
                 return true;
             }
             return false;
         });
     }
 
-    private void reemplazarFragment(Fragment fragment) {
+    private void reemplazarFragment(Fragment fragment, String titulo) {
+        binding.tvToolbarTitulo.setText(titulo);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.nav_host_fragment, fragment)
                 .commit();
+    }
+
+    public void setTituloToolbar(String titulo) {
+        binding.tvToolbarTitulo.setText(titulo);
     }
 
     private void cerrarSesion() {

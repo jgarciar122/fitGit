@@ -7,25 +7,40 @@
     android:background="#FAFAFA">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp">
+        android:background="@color/white"
+        app:elevation="4dp">
 
-        <!-- Mantenemos el botón de pruebas aquí para que sea global -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_cerrar_sesion_temp"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:text="Cerrar Sesión (Pruebas)"
-            app:icon="@android:drawable/ic_lock_power_off" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingHorizontal="8dp">
+
+            <TextView
+                android:id="@+id/tv_toolbar_titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ejercicios"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-black"
+                android:textColor="@color/black" />
+
+            <ImageButton
+                android:id="@+id/btn_perfil"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:tint="@color/primary" />
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- ESTE ES EL CONTENEDOR DONDE SE CARGARÁN LOS FRAGMENTS -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:layout_width="match_parent"
