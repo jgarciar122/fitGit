@@ -133,35 +133,48 @@ Si eres una IA y estoy pidiéndote ayuda con este proyecto, ten en cuenta lo sig
 
 **El proyecto es una app Android nativa en Java**, no Kotlin, no Flutter, no React Native.
 
-**Arquitectura:** MVVM con Repository. Cualquier lógica de base de datos o red debe ir en el Repositorio, luego exponerse desde el ViewModel como `LiveData`, y ser observada desde el Fragment o Activity. Nunca accedas a `AppDatabase` directamente desde la UI salvo en `DetallesEjercicioActivity` donde aún queda acceso directo al DAO (pendiente de refactorizar).
+**Arquitectura:** MVVM con Repository. Cualquier lógica de base de datos o red debe ir en el Repositorio, luego exponerse desde el ViewModel como `LiveData`, y ser observada desde el Fragment o Activity. Nunca accedas a `AppDatabase` directamente desde la UI salvo en `DetallesEjercicioActivity` y `AdaptadorHistorial` donde aún queda acceso directo al DAO (pendiente de refactorizar).
 
 **Base de datos Room — versión 4:** Cinco tablas:
 - `tabla_ejercicios` — ejercicios cacheados desde la API
-- `rutinas` — rutinas del usuario, con campo `userId` de Firebase para separar datos por usuario
+- `rutinas` — rutinas del usuario, con campo `userId` de Firebase
 - `rutina_ejercicio_cross_ref` — relación many-to-many entre rutinas y ejercicios
-- `sesiones` — cada vez que el usuario registra un entrenamiento (rutinaId + userId + fecha)
+- `sesiones` — cada entrenamiento registrado (rutinaId + userId + fecha)
 - `series_registro` — cada serie de un entrenamiento (sesionId + ejercicioId + kg + repeticiones)
 
 **DAOs disponibles:** `EjercicioDao`, `RutinaDao`, `SesionDao`.
 
-**Autenticación:** Firebase Auth con email/password y Google Sign-In. El UID del usuario se obtiene con `FirebaseAuth.getInstance().getCurrentUser().getUid()` y se usa para filtrar rutinas y sesiones. El ViewModel lo obtiene automáticamente en el constructor.
+**ViewModels disponibles:**
+- `EjercicioViewModel` — ejercicios con filtro reactivo por músculo
+- `RutinaViewModel` — CRUD de rutinas filtrado por userId
+- `SesionViewModel` — historial, resumen semanal y evolución por ejercicio
 
-**UI:** Se usa ViewBinding (no `findViewById` salvo en ViewHolders de RecyclerView). Los diálogos usan `MaterialAlertDialogBuilder` con el estilo `R.style.DialogRedondeado`.
+**Repositorios disponibles:** `RepositorioEjercicio`, `RepositorioRutina`, `RepositorioSesion`.
 
-**Navegación:** Manual con `FragmentManager`, sin Navigation Component. El contenedor es `R.id.nav_host_fragment`.
+**Autenticación:** Firebase Auth con email/password y Google Sign-In. El UID se obtiene con `FirebaseAuth.getInstance().getCurrentUser().getUid()`. Los ViewModels lo obtienen automáticamente en el constructor.
+
+**UI:** ViewBinding en todos los Fragments y Activities. Diálogos con `MaterialAlertDialogBuilder` y estilo `R.style.DialogRedondeado`.
+
+**Navegación:** Manual con `FragmentManager`, sin Navigation Component. Contenedor: `R.id.nav_host_fragment`. Tres pestañas: Ejercicios, Rutinas, Progreso.
 
 **Adaptadores:**
-- `AdaptadorEjercicios` — tiene flag `esModoQuitar` y `rutinaId`. En modo quitar muestra botón rojo; pasa `ya_en_rutina=true` y `rutina_id` por Intent al abrir el detalle.
-- `AdaptadorRutinas` — usa `RutinaConConteo` (no `Rutina`) para mostrar contador de ejercicios.
-- `AdaptadorSeries` — RecyclerView editable con TextWatcher para kg y reps en tiempo real.
+- `AdaptadorEjercicios` — flag `esModoQuitar` y `rutinaId`. Pasa `ya_en_rutina` y `rutina_id` por Intent.
+- `AdaptadorRutinas` — usa `RutinaConConteo` con contador de ejercicios.
+- `AdaptadorSeries` — RecyclerView editable con TextWatcher para kg y reps.
+- `AdaptadorHistorial` — lista de sesiones expandibles. Recibe `AppDatabase` y `LifecycleOwner`.
+- `AdaptadorSeriesResumen` — muestra kg y reps dentro de cada sesión expandida.
 
-**Registro de progreso:** Al entrar en un ejercicio desde una rutina (`ya_en_rutina=true`), aparece el botón "Registrar progreso" que abre `RegistroSeriesBottomSheet`. El Bottom Sheet precarga las últimas series del ejercicio y al guardar crea una `Sesion` + lista de `SerieRegistro` vinculadas.
+**Registro de progreso:** Botón "Registrar progreso" visible solo cuando `ya_en_rutina=true`. Abre `RegistroSeriesBottomSheet` que precarga las últimas series y guarda `Sesion` + `SerieRegistro` al confirmar.
 
-**Pendiente de implementar:** Fragment de Progreso (historial de sesiones + resumen semanal + gráfica por ejercicio).
+**Pantalla de progreso:** `ProgresoFragment` con resumen semanal (✅/⬜ por día) y historial de sesiones expandible. Usa `SesionViewModel`.
 
-**Imágenes:** Los GIFs vienen de la API ExerciseDB y se cargan con Glide usando headers personalizados (API key de RapidAPI). `scaleType="centerCrop"` en todos los ImageView de ejercicios.
+**POJOs especiales:**
+- `RutinaConConteo` — rutina con campo `numEjercicios` calculado con COUNT + LEFT JOIN
+- `PuntoGrafica` — fecha + kg máximo para gráficas de evolución (pendiente de implementar en UI)
 
-**Cuando me pases código:** dame siempre el archivo completo si has cambiado más de 3 líneas, o solo el fragmento exacto a cambiar si es un cambio puntual. Indica siempre en qué archivo y en qué método va cada cambio.
+**Pendiente de implementar:** Gráfica de evolución por ejercicio en la pantalla de progreso.
+
+**Cuando me pases código:** dame siempre el archivo completo si has cambiado más de 3 líneas, o solo el fragmento exacto si es un cambio puntual. Indica siempre en qué archivo y método va cada cambio.
 ---
 
 ## 📱 Flujo principal de la app
