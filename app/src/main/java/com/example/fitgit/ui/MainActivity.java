@@ -41,8 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 reemplazarFragment(new RutinasFragment());
                 return true;
             } else if (id == R.id.nav_progreso) {
-                // Aquí iría el de progreso cuando lo tengas
-                // reemplazarFragment(new ProgresoFragment());
+                reemplazarFragment(new ProgresoFragment());
                 return true;
             }
             return false;
