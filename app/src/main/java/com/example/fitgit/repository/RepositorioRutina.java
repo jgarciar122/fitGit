@@ -34,6 +34,8 @@ public class RepositorioRutina {
         executor.execute(() -> dao.insertarRutina(nuevaRutina));
     }
 
+
+
     public void eliminarRutina(Rutina rutina) {
         executor.execute(() -> dao.eliminarRutina(rutina));
     }

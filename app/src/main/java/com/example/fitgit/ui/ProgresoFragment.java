@@ -35,12 +35,10 @@ public class ProgresoFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(SesionViewModel.class);
 
-        // Configurar RecyclerView del historial
         adaptador = new AdaptadorHistorial();
         binding.rvHistorial.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvHistorial.setAdapter(adaptador);
 
-        // Observar historial agrupado
         viewModel.obtenerHistorialAgrupado().observe(getViewLifecycleOwner(), entrenamientos -> {
             if (entrenamientos == null || entrenamientos.isEmpty()) {
                 binding.tvSinHistorial.setVisibility(View.VISIBLE);
@@ -52,7 +50,6 @@ public class ProgresoFragment extends Fragment {
             }
         });
 
-        // Observar resumen semanal
         viewModel.obtenerSesionesEstaSemana().observe(getViewLifecycleOwner(),
                 sesiones -> actualizarResumenSemanal(sesiones));
     }
@@ -64,7 +61,6 @@ public class ProgresoFragment extends Fragment {
                 binding.circuloDomingo
         };
 
-        // Resetear todos a ⬜
         for (android.widget.TextView c : circulos) {
             c.setText("⬜");
         }

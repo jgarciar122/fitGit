@@ -46,4 +46,5 @@ public class RutinaViewModel extends AndroidViewModel {
         ref.ejercicioId = ejercicio.getId();
         repositorio.eliminarEjercicioDeRutina(ref);
     }
+
 }

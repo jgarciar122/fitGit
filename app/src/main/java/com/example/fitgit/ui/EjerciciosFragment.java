@@ -45,17 +45,14 @@ public class EjerciciosFragment extends Fragment {
 
         db = AppDatabase.getDatabase(requireContext());
 
-        // 1. Configurar RecyclerView
         adaptador = new AdaptadorEjercicios();
         binding.rvEjercicios.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvEjercicios.setAdapter(adaptador);
 
-        // --- NUEVO: Escuchar el clic en un ejercicio ---
         adaptador.setOnEjercicioClickListener(ejercicio -> {
             mostrarSelectorDeRutinas(ejercicio);
         });
 
-        // 2. ViewModel
         viewModel = new ViewModelProvider(requireActivity()).get(EjercicioViewModel.class);
         viewModel.getEjercicios().observe(getViewLifecycleOwner(), ejercicios -> {
             if (ejercicios != null) {
@@ -67,7 +64,6 @@ public class EjerciciosFragment extends Fragment {
     }
 
     private void mostrarSelectorDeRutinas(Ejercicio ejercicio) {
-        // Obtenemos las rutinas que el usuario ha creado en la otra pestaña
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db.rutinaDao().obtenerTodasLasRutinas(userId).observe(getViewLifecycleOwner(), rutinas -> {
             if (rutinas == null || rutinas.isEmpty()) {
@@ -75,7 +71,6 @@ public class EjerciciosFragment extends Fragment {
                 return;
             }
 
-            // Preparamos la lista de nombres para el diálogo
             String[] nombresRutinas = new String[rutinas.size()];
             for (int i = 0; i < rutinas.size(); i++) {
                 nombresRutinas[i] = rutinas.get(i).getNombre();
@@ -95,14 +90,12 @@ public class EjerciciosFragment extends Fragment {
     private void vincularEjercicioConRutina(Ejercicio ejercicio, Rutina rutina) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // Creamos la unión en la tabla puente
             RutinaEjercicioCrossRef union = new RutinaEjercicioCrossRef();
             union.rutinaId = rutina.getId();
             union.ejercicioId = ejercicio.getId();
 
             db.rutinaDao().añadirEjercicioARutina(union);
 
-            // Volvemos al hilo de la interfaz para avisar al usuario
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), ejercicio.getNombre() + " añadido a " + rutina.getNombre(), Toast.LENGTH_SHORT).show();

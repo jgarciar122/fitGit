@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fitgit.adapter.AdaptadorEjercicios;
 import com.example.fitgit.database.AppDatabase;
-import com.example.fitgit.databinding.FragmentAñadirEjercicioBinding;
+import com.example.fitgit.databinding.FragmentAnadirEjercicioBinding;
 import com.example.fitgit.model.Ejercicio;
 import com.example.fitgit.model.RutinaEjercicioCrossRef;
 import com.example.fitgit.viewmodel.EjercicioViewModel;
@@ -27,18 +27,18 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 
-public class AñadirEjercicioBottomSheet extends BottomSheetDialogFragment {
+public class AnadirEjercicioBottomSheet extends BottomSheetDialogFragment {
 
     private static final String ARG_RUTINA_ID = "rutina_id";
-    private FragmentAñadirEjercicioBinding binding;
+    private FragmentAnadirEjercicioBinding binding;
     private AdaptadorEjercicios adaptador;
     private EjercicioViewModel viewModel;
     private int rutinaId;
     private List<Ejercicio> todosLosEjercicios = new ArrayList<>();
     private Set<String> ejerciciosEnRutina = new HashSet<>();
 
-    public static AñadirEjercicioBottomSheet newInstance(int rutinaId) {
-        AñadirEjercicioBottomSheet sheet = new AñadirEjercicioBottomSheet();
+    public static AnadirEjercicioBottomSheet newInstance(int rutinaId) {
+        AnadirEjercicioBottomSheet sheet = new AnadirEjercicioBottomSheet();
         Bundle args = new Bundle();
         args.putInt(ARG_RUTINA_ID, rutinaId);
         sheet.setArguments(args);
@@ -48,7 +48,7 @@ public class AñadirEjercicioBottomSheet extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentAñadirEjercicioBinding.inflate(inflater, container, false);
+        binding = FragmentAnadirEjercicioBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

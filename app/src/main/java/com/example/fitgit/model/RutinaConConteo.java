@@ -5,5 +5,5 @@ public class RutinaConConteo {
     public String nombre;
     public String descripcion;
     public long fechaCreacion;
-    public int numEjercicios; // ← el contador
+    public int numEjercicios;
 }

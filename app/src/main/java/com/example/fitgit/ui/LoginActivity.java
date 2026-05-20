@@ -33,15 +33,12 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // 1. Configurar Google Sign-In
         configurarGoogle();
 
-        // Si el usuario ya está logueado, saltamos a MainActivity
         if (mAuth.getCurrentUser() != null) {
             irAMain();
         }
 
-        // Listeners de botones
         binding.btnLogin.setOnClickListener(v -> loginUsuario());
 
         binding.btnRegistro.setOnClickListener(v -> {
@@ -49,12 +46,10 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Listener para el botón de Google
         binding.btnGoogle.setOnClickListener(v -> iniciarSeleccionGoogle());
     }
 
     private void configurarGoogle() {
-        // Configuramos las opciones para pedir el ID Token (necesario para Firebase) y el Email
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)) // Generado automáticamente por el plugin de Google
                 .requestEmail()
@@ -64,12 +59,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void iniciarSeleccionGoogle() {
-        // Abre el selector de cuentas de Google del dispositivo
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    // Manejamos la respuesta de la ventana de Google
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -77,7 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google nos da una cuenta, ahora pedimos el token para Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 if (account != null) {
                     firebaseAuthWithGoogle(account.getIdToken());
@@ -89,7 +81,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        // Convertimos el token de Google en una credencial de Firebase
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {

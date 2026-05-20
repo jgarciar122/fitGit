@@ -31,7 +31,6 @@ public class RegistroActivity extends AppCompatActivity {
         String pass = binding.etPassword.getText().toString().trim();
         String confirmPass = binding.etConfirmPassword.getText().toString().trim();
 
-        // Validaciones básicas
         if (nombre.isEmpty() || email.isEmpty() || pass.isEmpty()) {
             Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_SHORT).show();
             return;
@@ -47,7 +46,6 @@ public class RegistroActivity extends AppCompatActivity {
             return;
         }
 
-        // Crear usuario en Firebase
         mAuth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -67,7 +65,6 @@ public class RegistroActivity extends AppCompatActivity {
 
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task -> {
-                        // Una vez actualizado el nombre, vamos al Main
                         Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);

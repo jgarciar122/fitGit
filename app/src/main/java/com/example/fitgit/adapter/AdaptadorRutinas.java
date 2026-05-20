@@ -22,7 +22,6 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
         notifyDataSetChanged();
     }
 
-    // Listener para abrir la rutina
     public interface OnRutinaClickListener {
         void onRutinaClick(RutinaConConteo rutina);
     }
@@ -33,7 +32,6 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
         this.listener = listener;
     }
 
-    // Listener para eliminar la rutina
     public interface OnEliminarRutinaListener {
         void onEliminarClick(RutinaConConteo rutina);
     }

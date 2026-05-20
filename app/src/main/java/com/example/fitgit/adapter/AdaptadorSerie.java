@@ -19,7 +19,6 @@ import java.util.List;
 
 public class AdaptadorSerie extends RecyclerView.Adapter<AdaptadorSerie.SerieViewHolder> {
 
-    // Clase simple para representar una fila editable
     public static class FilaSerie {
         public float kg;
         public int reps;
@@ -59,7 +58,6 @@ public class AdaptadorSerie extends RecyclerView.Adapter<AdaptadorSerie.SerieVie
 
         holder.tvNumSerie.setText(String.valueOf(position + 1));
 
-        // Ponemos los valores sin disparar el watcher
         holder.etKg.removeTextChangedListener(holder.kgWatcher);
         holder.etReps.removeTextChangedListener(holder.repsWatcher);
 
