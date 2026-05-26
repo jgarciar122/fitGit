@@ -48,6 +48,7 @@ public interface SesionDao {
     @Query("SELECT sesiones.fecha, MAX(series_registro.kg) as kg FROM series_registro " +
             "INNER JOIN sesiones ON series_registro.sesionId = sesiones.id " +
             "WHERE series_registro.ejercicioId = :ejercicioId AND sesiones.userId = :userId " +
+            "GROUP BY sesiones.id " +
             "ORDER BY sesiones.fecha ASC")
     LiveData<List<PuntoGrafica>> obtenerEvolucionEjercicio(String ejercicioId, String userId);
 
@@ -66,4 +67,13 @@ public interface SesionDao {
     @Query("SELECT * FROM sesiones WHERE rutinaId = :rutinaId AND userId = :userId " +
             "AND fecha >= :inicioDia AND fecha <= :finDia LIMIT 1")
     Sesion obtenerSesionDeHoy(int rutinaId, String userId, long inicioDia, long finDia);
+
+    @Query("DELETE FROM series_registro WHERE sesionId = :sesionId")
+    void eliminarSeriesDeSesion(int sesionId);
+
+    @Query("DELETE FROM sesiones WHERE id = :sesionId")
+    void eliminarSesion(int sesionId);
+
+    @Query("DELETE FROM series_registro WHERE sesionId = :sesionId AND ejercicioId = :ejercicioId")
+    void eliminarEjercicioDeSesion(int sesionId, String ejercicioId);
 }

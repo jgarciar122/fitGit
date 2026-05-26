@@ -3,6 +3,7 @@ package com.example.fitgit.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,16 @@ import java.util.List;
 public class AdaptadorEjerciciosSesion extends RecyclerView.Adapter<AdaptadorEjerciciosSesion.ViewHolder> {
 
     private List<EjercicioConSeries> ejercicios = new ArrayList<>();
+
+    public interface OnEliminarEjercicioListener {
+        void onEliminarEjercicio(int sesionId, String ejercicioId);
+    }
+
+    private OnEliminarEjercicioListener listener;
+
+    public void setOnEliminarEjercicioListener(OnEliminarEjercicioListener listener) {
+        this.listener = listener;
+    }
 
     public void setEjercicios(List<EjercicioConSeries> ejercicios) {
         this.ejercicios = ejercicios;
@@ -45,6 +56,14 @@ public class AdaptadorEjerciciosSesion extends RecyclerView.Adapter<AdaptadorEje
             sb.append(serie.kg).append("kg × ").append(serie.repeticiones).append(" reps");
         }
         holder.tvSeries.setText(sb.toString());
+
+        // Botón eliminar ejercicio de la sesión
+        holder.btnEliminar.setOnClickListener(v -> {
+            if (listener != null && !ejercicio.series.isEmpty()) {
+                int sesionId = ejercicio.series.get(0).sesionId;
+                listener.onEliminarEjercicio(sesionId, ejercicio.ejercicioId);
+            }
+        });
     }
 
     @Override
@@ -54,11 +73,13 @@ public class AdaptadorEjerciciosSesion extends RecyclerView.Adapter<AdaptadorEje
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvNombreEjercicio, tvSeries;
+        ImageButton btnEliminar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNombreEjercicio = itemView.findViewById(R.id.tv_nombre_ejercicio_sesion);
             tvSeries = itemView.findViewById(R.id.tv_series_ejercicio_sesion);
+            btnEliminar = itemView.findViewById(R.id.btn_eliminar_ejercicio_sesion);
         }
     }
 }

@@ -57,11 +57,21 @@
                 android:textSize="13sp"
                 android:textColor="#888888" />
 
+            <!-- ← NUEVO: botón eliminar sesión completa -->
+            <ImageButton
+                android:id="@+id/btn_eliminar_sesion"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#FF5252" />
+
             <ImageView
                 android:id="@+id/iv_expandir"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:src="@android:drawable/arrow_down_float"
                 app:tint="#888888" />
 

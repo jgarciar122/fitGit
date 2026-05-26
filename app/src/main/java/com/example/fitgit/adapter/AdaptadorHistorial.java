@@ -3,6 +3,7 @@ package com.example.fitgit.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,26 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
 
     private List<EntrenamientoDia> listaEntrenamientos = new ArrayList<>();
 
+    // Interfaces para los listeners de borrado
+    public interface OnEliminarSesionListener {
+        void onEliminarSesion(int sesionId);
+    }
+
+    public interface OnEliminarEjercicioListener {
+        void onEliminarEjercicio(int sesionId, String ejercicioId);
+    }
+
+    private OnEliminarSesionListener eliminarSesionListener;
+    private OnEliminarEjercicioListener eliminarEjercicioListener;
+
+    public void setOnEliminarSesionListener(OnEliminarSesionListener listener) {
+        this.eliminarSesionListener = listener;
+    }
+
+    public void setOnEliminarEjercicioListener(OnEliminarEjercicioListener listener) {
+        this.eliminarEjercicioListener = listener;
+    }
+
     public void setEntrenamientos(List<EntrenamientoDia> entrenamientos) {
         this.listaEntrenamientos = entrenamientos;
         notifyDataSetChanged();
@@ -41,33 +62,49 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
     public void onBindViewHolder(@NonNull SesionViewHolder holder, int position) {
         EntrenamientoDia entrenamiento = listaEntrenamientos.get(position);
 
+        // Obtenemos el sesionId del primer SerieRegistro
+        int sesionId = !entrenamiento.ejercicios.isEmpty() &&
+                !entrenamiento.ejercicios.get(0).series.isEmpty()
+                ? entrenamiento.ejercicios.get(0).series.get(0).sesionId
+                : -1;
+
         String fecha = new SimpleDateFormat("dd MMM yyyy", Locale.forLanguageTag("es"))
                 .format(new Date(entrenamiento.fecha));
         holder.tvFecha.setText(fecha);
-
         holder.tvNombreRutina.setText(entrenamiento.nombreRutina);
 
         int numEjercicios = entrenamiento.ejercicios != null ? entrenamiento.ejercicios.size() : 0;
         holder.tvNumEjercicios.setText(numEjercicios + " ejercicio" + (numEjercicios != 1 ? "s" : ""));
 
+        // Expandir/colapsar
         holder.itemView.setOnClickListener(v -> {
             if (holder.rvEjercicios.getVisibility() == View.GONE) {
                 holder.rvEjercicios.setVisibility(View.VISIBLE);
                 holder.ivExpandir.setImageResource(android.R.drawable.arrow_up_float);
-                cargarEjercicios(entrenamiento.ejercicios, holder);
+                cargarEjercicios(entrenamiento.ejercicios, sesionId, holder);
             } else {
                 holder.rvEjercicios.setVisibility(View.GONE);
                 holder.ivExpandir.setImageResource(android.R.drawable.arrow_down_float);
             }
         });
+
+        // Botón eliminar sesión completa
+        holder.btnEliminarSesion.setOnClickListener(v -> {
+            if (eliminarSesionListener != null && sesionId != -1) {
+                eliminarSesionListener.onEliminarSesion(sesionId);
+            }
+        });
     }
 
-    private void cargarEjercicios(List<EjercicioConSeries> ejercicios, SesionViewHolder holder) {
+    private void cargarEjercicios(List<EjercicioConSeries> ejercicios, int sesionId, SesionViewHolder holder) {
         AdaptadorEjerciciosSesion adaptador = new AdaptadorEjerciciosSesion();
         adaptador.setEjercicios(ejercicios);
-        holder.rvEjercicios.setLayoutManager(
-                new LinearLayoutManager(holder.itemView.getContext())
-        );
+        adaptador.setOnEliminarEjercicioListener((sId, ejercicioId) -> {
+            if (eliminarEjercicioListener != null) {
+                eliminarEjercicioListener.onEliminarEjercicio(sId, ejercicioId);
+            }
+        });
+        holder.rvEjercicios.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
         holder.rvEjercicios.setAdapter(adaptador);
     }
 
@@ -79,6 +116,7 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
     static class SesionViewHolder extends RecyclerView.ViewHolder {
         TextView tvFecha, tvNombreRutina, tvNumEjercicios;
         ImageView ivExpandir;
+        ImageButton btnEliminarSesion;
         RecyclerView rvEjercicios;
 
         public SesionViewHolder(@NonNull View itemView) {
@@ -87,6 +125,7 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
             tvNombreRutina = itemView.findViewById(R.id.tv_nombre_rutina_sesion);
             tvNumEjercicios = itemView.findViewById(R.id.tv_num_ejercicios_sesion);
             ivExpandir = itemView.findViewById(R.id.iv_expandir);
+            btnEliminarSesion = itemView.findViewById(R.id.btn_eliminar_sesion);
             rvEjercicios = itemView.findViewById(R.id.rv_ejercicios_sesion);
         }
     }

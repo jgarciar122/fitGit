@@ -57,6 +57,14 @@ public class SesionViewModel extends AndroidViewModel {
         );
     }
 
+    public void eliminarSesionCompleta(int sesionId) {
+        repositorio.eliminarSesionCompleta(sesionId);
+    }
+
+    public void eliminarEjercicioDeSesion(int sesionId, String ejercicioId) {
+        repositorio.eliminarEjercicioDeSesion(sesionId, ejercicioId);
+    }
+
     private List<EntrenamientoDia> agruparPorSesion(List<SesionConDetalle> filas) {
         LinkedHashMap<Integer, EntrenamientoDia> mapa = new LinkedHashMap<>();
 
@@ -71,7 +79,6 @@ public class SesionViewModel extends AndroidViewModel {
 
             EntrenamientoDia dia = mapa.get(fila.sesionId);
 
-            // Buscar si ya existe ese ejercicio en esta sesión
             EjercicioConSeries ejercicioExistente = null;
             for (EjercicioConSeries e : dia.ejercicios) {
                 if (e.ejercicioId.equals(fila.ejercicioId)) {

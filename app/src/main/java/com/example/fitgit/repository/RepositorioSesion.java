@@ -9,9 +9,12 @@ import com.example.fitgit.model.SerieRegistro;
 import com.example.fitgit.model.Sesion;
 import com.example.fitgit.model.SesionConDetalle;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RepositorioSesion {
     private SesionDao dao;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public RepositorioSesion(Application application) {
         dao = AppDatabase.getDatabase(application).sesionDao();
@@ -35,5 +38,16 @@ public class RepositorioSesion {
 
     public LiveData<List<SesionConDetalle>> obtenerHistorialCompleto(String userId) {
         return dao.obtenerHistorialCompleto(userId);
+    }
+
+    public void eliminarSesionCompleta(int sesionId) {
+        executor.execute(() -> {
+            dao.eliminarSeriesDeSesion(sesionId);
+            dao.eliminarSesion(sesionId);
+        });
+    }
+
+    public void eliminarEjercicioDeSesion(int sesionId, String ejercicioId) {
+        executor.execute(() -> dao.eliminarEjercicioDeSesion(sesionId, ejercicioId));
     }
 }
