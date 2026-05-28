@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.example.fitgit.R;
+import com.example.fitgit.api.ServicioTraduccion;
 import com.example.fitgit.database.AppDatabase;
 import com.example.fitgit.databinding.ActivityDetalleEjercicioBinding;
 import com.example.fitgit.model.Ejercicio;
@@ -17,6 +18,7 @@ import com.example.fitgit.model.Rutina;
 import com.example.fitgit.model.RutinaEjercicioCrossRef;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class DetallesEjercicioActivity extends AppCompatActivity {
@@ -38,10 +40,10 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
         boolean yaEnRutina = getIntent().getBooleanExtra("ya_en_rutina", false);
         int rutinaId = getIntent().getIntExtra("rutina_id", -1);
 
-
         if (ejercicio != null) {
             setupToolbar();
             cargarDatos(ejercicio);
+            traducirSiNecesario(ejercicio);
 
             if (yaEnRutina) {
                 binding.btnGuardarEnRutinaDetalle.setText("✓ Ya está en la rutina");
@@ -58,7 +60,7 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
                 binding.btnRegistrarProgreso.setOnClickListener(v -> {
                     RegistroSeriesBottomSheet sheet = RegistroSeriesBottomSheet.newInstance(
                             ejercicio.getId(),
-                            ejercicio.getNombre(),
+                            ejercicio.getNombreMostrar(),
                             rutinaId
                     );
                     sheet.show(getSupportFragmentManager(), "registro_series");
@@ -84,7 +86,7 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
     }
 
     private void cargarDatos(Ejercicio ejercicio) {
-        binding.tvDetalleNombre.setText(ejercicio.getNombre());
+        binding.tvDetalleNombre.setText(ejercicio.getNombreMostrar());
         binding.chipDetalleMusculo.setText(ejercicio.getParteCuerpo());
         binding.chipDetalleEquipo.setText(ejercicio.getEquipamiento());
 
@@ -100,13 +102,48 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
                 .placeholder(R.drawable.imagen_ejemplo)
                 .into(binding.ivDetalleGif);
 
-        if (ejercicio.getInstrucciones() != null) {
+        List<String> instrucciones = ejercicio.getInstruccionesMostrar();
+        if (instrucciones != null) {
             StringBuilder sb = new StringBuilder();
-            for (String paso : ejercicio.getInstrucciones()) {
+            for (String paso : instrucciones) {
                 sb.append("• ").append(paso).append("\n\n");
             }
             binding.tvDetalleInstrucciones.setText(sb.toString().trim());
         }
+    }
+
+    private void traducirSiNecesario(Ejercicio ejercicio) {
+        if (ejercicio.isTraducido()) {
+            android.util.Log.d("TRADUCCION", "Ya traducido, saltando");
+            return;
+        }
+
+        android.util.Log.d("TRADUCCION", "Iniciando traducción de: " + ejercicio.getNombre());
+
+        ServicioTraduccion.getInstance().traducirEjercicio(ejercicio, new ServicioTraduccion.TraduccionCallback() {
+            @Override
+            public void onExito(String nombreEs, List<String> instruccionesEs) {
+                android.util.Log.d("TRADUCCION", "Éxito: " + nombreEs);
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    db.ejercicioDao().actualizarTraduccion(ejercicio.getId(), nombreEs, instruccionesEs);
+                });
+                runOnUiThread(() -> {
+                    binding.tvDetalleNombre.setText(nombreEs);
+                    if (instruccionesEs != null) {
+                        StringBuilder sb = new StringBuilder();
+                        for (String paso : instruccionesEs) {
+                            sb.append("• ").append(paso).append("\n\n");
+                        }
+                        binding.tvDetalleInstrucciones.setText(sb.toString().trim());
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                android.util.Log.e("TRADUCCION", "Error: " + e.getMessage());
+            }
+        });
     }
 
     private void mostrarSelectorDeRutinas(Ejercicio ejercicio) {

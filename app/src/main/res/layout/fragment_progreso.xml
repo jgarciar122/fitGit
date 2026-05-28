@@ -35,17 +35,46 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
+                <!-- Cabecera con navegación de semanas -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ESTA SEMANA"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textAllCaps="true"
-                    android:letterSpacing="0.1"
-                    android:textColor="@color/primary"
-                    android:layout_marginBottom="12dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
 
+                    <ImageButton
+                        android:id="@+id/btn_semana_anterior"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_media_previous"
+                        app:tint="@color/primary" />
+
+                    <TextView
+                        android:id="@+id/tv_titulo_semana"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="ESTA SEMANA"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.1"
+                        android:textColor="@color/primary" />
+
+                    <ImageButton
+                        android:id="@+id/btn_semana_siguiente"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_media_next"
+                        app:tint="@color/primary" />
+
+                </LinearLayout>
+
+                <!-- Días de la semana -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -116,6 +145,7 @@
                         android:textColor="#888888" />
                 </LinearLayout>
 
+                <!-- Círculos de días -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

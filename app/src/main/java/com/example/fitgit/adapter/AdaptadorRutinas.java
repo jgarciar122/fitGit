@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.fitgit.R;
 import com.example.fitgit.model.RutinaConConteo;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,16 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
         this.eliminarListener = listener;
     }
 
+    public interface OnEmpezarRutinaListener {
+        void onEmpezarClick(RutinaConConteo rutina);
+    }
+
+    private OnEmpezarRutinaListener empezarListener;
+
+    public void setOnEmpezarRutinaListener(OnEmpezarRutinaListener listener) {
+        this.empezarListener = listener;
+    }
+
     @NonNull
     @Override
     public RutinaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,6 +73,10 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
         holder.btnEliminar.setOnClickListener(v -> {
             if (eliminarListener != null) eliminarListener.onEliminarClick(rutina);
         });
+
+        holder.btnEmpezar.setOnClickListener(v -> {
+            if (empezarListener != null) empezarListener.onEmpezarClick(rutina);
+        });
     }
 
     @Override
@@ -72,12 +87,14 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
     class RutinaViewHolder extends RecyclerView.ViewHolder {
         TextView tvNombre, tvContador;
         ImageButton btnEliminar;
+        MaterialButton btnEmpezar;
 
         public RutinaViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNombre = itemView.findViewById(R.id.tv_nombre_rutina);
             tvContador = itemView.findViewById(R.id.tv_num_ejercicios);
             btnEliminar = itemView.findViewById(R.id.btn_eliminar_rutina);
+            btnEmpezar = itemView.findViewById(R.id.btn_empezar_rutina);
         }
     }
 }

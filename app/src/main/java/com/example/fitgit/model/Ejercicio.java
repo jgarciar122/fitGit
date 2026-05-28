@@ -35,6 +35,15 @@ public class Ejercicio implements Serializable {
     @SerializedName("secondaryMuscles")
     private List<String> musculosSecundarios;
 
+    @ColumnInfo(name = "nombre_es")
+    private String nombreEs;
+
+    @ColumnInfo(name = "instrucciones_es")
+    private List<String> instruccionesEs;
+
+    @ColumnInfo(name = "traducido")
+    private boolean traducido = false;
+
     public Ejercicio() {}
 
     public String getId() { return id; }
@@ -57,6 +66,23 @@ public class Ejercicio implements Serializable {
 
     public List<String> getMusculosSecundarios() { return musculosSecundarios; }
     public void setMusculosSecundarios(List<String> musculosSecundarios) { this.musculosSecundarios = musculosSecundarios; }
+
+    public String getNombreEs() { return nombreEs; }
+    public void setNombreEs(String nombreEs) { this.nombreEs = nombreEs; }
+
+    public List<String> getInstruccionesEs() { return instruccionesEs; }
+    public void setInstruccionesEs(List<String> instruccionesEs) { this.instruccionesEs = instruccionesEs; }
+
+    public boolean isTraducido() { return traducido; }
+    public void setTraducido(boolean traducido) { this.traducido = traducido; }
+
+    public String getNombreMostrar() {
+        return (nombreEs != null && !nombreEs.isEmpty()) ? nombreEs : nombre;
+    }
+
+    public List<String> getInstruccionesMostrar() {
+        return (instruccionesEs != null && !instruccionesEs.isEmpty()) ? instruccionesEs : instrucciones;
+    }
 
     public String getUrlGif() {
         return "https://exercisedb.p.rapidapi.com/image?exerciseId=" + id + "&resolution=360";

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Nombre del ejercicio -->
+        <TextView
+            android:id="@+id/tv_nombre_ejercicio_entrenamiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sentadilla con barra"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/black"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Cabecera de columnas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:text="Serie"
+                android:textSize="12sp"
+                android:textColor="#888888"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="kg"
+                android:textSize="12sp"
+                android:textColor="#888888"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Reps"
+                android:textSize="12sp"
+                android:textColor="#888888"
+                android:gravity="center" />
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="1dp" />
+
+        </LinearLayout>
+
+        <!-- Lista de series -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_series_entrenamiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Botón añadir serie -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_anadir_serie_entrenamiento"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="8dp"
+            android:text="+ Añadir serie"
+            android:textAllCaps="false"
+            app:cornerRadius="10dp"
+            app:strokeColor="@color/primary"
+            android:textColor="@color/primary" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

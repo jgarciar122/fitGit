@@ -26,10 +26,16 @@ public interface EjercicioDao {
 
     @Query("DELETE FROM tabla_ejercicios")
     void borrarTodo();
-    // Añade este para la comprobación rápida
+
     @Query("SELECT * FROM tabla_ejercicios LIMIT 1")
     Ejercicio obtenerUnoSincrono();
 
     @Delete
     void eliminar(Rutina rutina);
+
+    @Query("SELECT * FROM tabla_ejercicios WHERE id = :id LIMIT 1")
+    Ejercicio obtenerEjercicioPorId(String id);
+
+    @Query("UPDATE tabla_ejercicios SET nombre_es = :nombreEs, instrucciones_es = :instruccionesEs, traducido = 1 WHERE id = :id")
+    void actualizarTraduccion(String id, String nombreEs, List<String> instruccionesEs);
 }

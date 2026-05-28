@@ -1,5 +1,6 @@
 package com.example.fitgit.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,14 @@ public class RutinasFragment extends Fragment {
                     .setPositiveButton("Eliminar", (dialog, which) -> viewModel.eliminarRutina(rutina))
                     .setNegativeButton("Cancelar", null)
                     .show();
+        });
+
+        // ← NUEVO: botón empezar rutina
+        adaptador.setOnEmpezarRutinaListener(rutina -> {
+            Intent intent = new Intent(requireContext(), EntrenamientoActivity.class);
+            intent.putExtra("rutina_id", rutina.id);
+            intent.putExtra("rutina_nombre", rutina.nombre);
+            startActivity(intent);
         });
     }
 
