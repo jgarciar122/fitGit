@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,20 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
+import java.io.InputStream;
+import java.util.concurrent.Executors;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PerfilFragment extends Fragment {
 
+    private static final String SUPABASE_URL = "https://ffxvjhrcdepfpzizslir.supabase.co";
+    private static final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmeHZqaHJjZGVwZnB6aXpzbGlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTYyODIsImV4cCI6MjA5NTU3MjI4Mn0.J6A-2zjL_dDrchEGxEHEmI3e7mJCSisr1g2TnbgDTTU    ";
     private FragmentPerfilBinding binding;
     private ActivityResultLauncher<Intent> selectorImagenLauncher;
 
@@ -37,14 +47,13 @@ public class PerfilFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Registrar selector de imagen de la galería
         selectorImagenLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Uri imagenUri = result.getData().getData();
                         if (imagenUri != null) {
-                            subirFotoAStorage(imagenUri);
+                            subirFotoASupabase(imagenUri);
                         }
                     }
                 }
@@ -143,24 +152,51 @@ public class PerfilFragment extends Fragment {
         selectorImagenLauncher.launch(intent);
     }
 
-    private void subirFotoAStorage(Uri imagenUri) {
+    private void subirFotoASupabase(Uri imagenUri) {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario == null) return;
 
         Toast.makeText(getContext(), "Subiendo foto...", Toast.LENGTH_SHORT).show();
 
-        StorageReference storageRef = FirebaseStorage.getInstance()
-                .getReference("fotos_perfil/" + usuario.getUid() + ".jpg");
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                InputStream inputStream = requireContext().getContentResolver().openInputStream(imagenUri);
+                byte[] bytes = inputStream.readAllBytes();
+                inputStream.close();
 
-        storageRef.putFile(imagenUri)
-                .addOnSuccessListener(taskSnapshot ->
-                        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            actualizarFotoPerfil(uri);
-                        })
-                )
-                .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "Error al subir la foto", Toast.LENGTH_SHORT).show()
+                String nombreArchivo = usuario.getEmail().replace("@", "_").replace(".", "_") + ".jpg";
+                String uploadUrl = SUPABASE_URL + "/storage/v1/object/fotos-perfil/" + nombreArchivo;
+
+                OkHttpClient client = new OkHttpClient();
+                RequestBody body = RequestBody.create(bytes, MediaType.parse("image/jpeg"));
+
+                Request request = new Request.Builder()
+                        .url(uploadUrl)
+                        .addHeader("Authorization", "Bearer " + SUPABASE_KEY)
+                        .addHeader("x-upsert", "true")
+                        .post(body)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                if (response.isSuccessful()) {
+                    String fotoUrl = SUPABASE_URL + "/storage/v1/object/public/fotos-perfil/" + nombreArchivo;
+                    Uri fotoUri = Uri.parse(fotoUrl);
+                    requireActivity().runOnUiThread(() -> actualizarFotoPerfil(fotoUri));
+                } else {
+                    String responseBody = response.body().string();
+                    Log.e("SUPABASE", "Error " + response.code() + ": " + responseBody);
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(), "Error al subir la foto: " + response.code(), Toast.LENGTH_SHORT).show()
+                    );
+                }
+            } catch (Exception e) {
+                Log.e("SUPABASE", "Excepción: " + e.getMessage());
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+            }
+        });
     }
 
     private void actualizarFotoPerfil(Uri fotoUri) {
