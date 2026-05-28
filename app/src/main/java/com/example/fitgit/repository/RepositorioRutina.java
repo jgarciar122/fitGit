@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 public class RepositorioRutina {
     private RutinaDao dao;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private RepositorioFirestore firestore = RepositorioFirestore.getInstance();
 
     public RepositorioRutina(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
@@ -31,16 +32,36 @@ public class RepositorioRutina {
 
     public void insertarRutina(String nombre, String userId) {
         Rutina nuevaRutina = new Rutina(nombre, "Mi rutina personalizada", userId);
-        executor.execute(() -> dao.insertarRutina(nuevaRutina));
+        executor.execute(() -> {
+            dao.insertarRutina(nuevaRutina);
+            // Obtener el ID generado para sincronizar con Firestore
+            Rutina insertada = dao.obtenerUltimaRutina(userId);
+            if (insertada != null) {
+                firestore.guardarRutina(userId, insertada.getId(),
+                        insertada.getNombre(), insertada.getDescripcion(),
+                        insertada.getFechaCreacion());
+            }
+        });
     }
-
-
 
     public void eliminarRutina(Rutina rutina) {
-        executor.execute(() -> dao.eliminarRutina(rutina));
+        executor.execute(() -> {
+            dao.eliminarRutina(rutina);
+            firestore.eliminarRutina(rutina.getUserId(), rutina.getId());
+        });
     }
 
-    public void eliminarEjercicioDeRutina(RutinaEjercicioCrossRef ref) {
-        executor.execute(() -> dao.eliminarEjercicioDeRutina(ref));
+    public void añadirEjercicioARutina(RutinaEjercicioCrossRef ref, String userId) {
+        executor.execute(() -> {
+            dao.añadirEjercicioARutina(ref);
+            firestore.guardarEjercicioEnRutina(userId, ref.rutinaId, ref.ejercicioId);
+        });
+    }
+
+    public void eliminarEjercicioDeRutina(RutinaEjercicioCrossRef ref, String userId) {
+        executor.execute(() -> {
+            dao.eliminarEjercicioDeRutina(ref);
+            firestore.eliminarEjercicioDeRutina(userId, ref.rutinaId, ref.ejercicioId);
+        });
     }
 }

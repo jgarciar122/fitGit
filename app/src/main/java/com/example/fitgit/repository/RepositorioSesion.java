@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 public class RepositorioSesion {
     private SesionDao dao;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private RepositorioFirestore firestore = RepositorioFirestore.getInstance();
 
     public RepositorioSesion(Application application) {
         dao = AppDatabase.getDatabase(application).sesionDao();
@@ -40,14 +41,35 @@ public class RepositorioSesion {
         return dao.obtenerHistorialCompleto(userId);
     }
 
-    public void eliminarSesionCompleta(int sesionId) {
+    public long insertarSesionSincrono(Sesion sesion) {
+        long sesionId = dao.insertarSesion(sesion);
+        firestore.guardarSesion(sesion.userId, (int) sesionId, sesion.rutinaId, sesion.fecha);
+        return sesionId;
+    }
+
+    public void insertarSeries(List<SerieRegistro> series, String userId) {
         executor.execute(() -> {
-            dao.eliminarSeriesDeSesion(sesionId);
-            dao.eliminarSesion(sesionId);
+            dao.insertarSeries(series);
+            for (SerieRegistro serie : series) {
+                firestore.guardarSerie(userId, serie.sesionId, serie.id,
+                        serie.ejercicioId, serie.kg, serie.repeticiones);
+            }
         });
     }
 
-    public void eliminarEjercicioDeSesion(int sesionId, String ejercicioId) {
-        executor.execute(() -> dao.eliminarEjercicioDeSesion(sesionId, ejercicioId));
+    public void eliminarSesionCompleta(int sesionId, String userId) {
+        executor.execute(() -> {
+            dao.eliminarSeriesDeSesion(sesionId);
+            dao.eliminarSesion(sesionId);
+            firestore.eliminarSeriesDeSesion(userId, sesionId);
+            firestore.eliminarSesion(userId, sesionId);
+        });
+    }
+
+    public void eliminarEjercicioDeSesion(int sesionId, String ejercicioId, String userId) {
+        executor.execute(() -> {
+            dao.eliminarEjercicioDeSesion(sesionId, ejercicioId);
+            firestore.eliminarEjercicioDeSesion(userId, sesionId, ejercicioId);
+        });
     }
 }

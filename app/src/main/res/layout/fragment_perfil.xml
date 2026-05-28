@@ -12,14 +12,32 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@android:drawable/ic_menu_myplaces"
-            app:civ_border_width="3dp"
-            app:civ_border_color="@color/primary" />
+        <!-- Avatar con botón de editar encima -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:civ_border_width="3dp"
+                app:civ_border_color="@color/primary" />
+
+            <!-- Botón editar foto -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_editar_foto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:src="@android:drawable/ic_menu_camera"
+                app:backgroundTint="@color/primary"
+                app:fabSize="mini"
+                app:tint="@color/white" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tv_nombre_perfil"
@@ -67,6 +85,7 @@
                     android:textColor="@color/primary"
                     android:layout_marginBottom="12dp" />
 
+                <!-- Fila nombre con botón editar -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -96,6 +115,16 @@
                         android:text="Jorge"
                         android:textSize="14sp"
                         android:textColor="@color/black" />
+
+                    <ImageButton
+                        android:id="@+id/btn_editar_nombre"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_menu_edit"
+                        app:tint="@color/primary" />
+
                 </LinearLayout>
 
                 <View

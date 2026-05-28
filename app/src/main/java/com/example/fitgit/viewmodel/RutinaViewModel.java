@@ -44,7 +44,6 @@ public class RutinaViewModel extends AndroidViewModel {
         RutinaEjercicioCrossRef ref = new RutinaEjercicioCrossRef();
         ref.rutinaId = rutinaId;
         ref.ejercicioId = ejercicio.getId();
-        repositorio.eliminarEjercicioDeRutina(ref);
+        repositorio.eliminarEjercicioDeRutina(ref, userId);
     }
-
 }

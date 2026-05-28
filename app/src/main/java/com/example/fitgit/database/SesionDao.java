@@ -3,6 +3,7 @@ package com.example.fitgit.database;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.fitgit.model.PuntoGrafica;
@@ -76,4 +77,16 @@ public interface SesionDao {
 
     @Query("DELETE FROM series_registro WHERE sesionId = :sesionId AND ejercicioId = :ejercicioId")
     void eliminarEjercicioDeSesion(int sesionId, String ejercicioId);
+
+    @Query("SELECT * FROM sesiones WHERE id = :sesionId LIMIT 1")
+    Sesion obtenerSesionPorId(int sesionId);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertarSesionConId(Sesion sesion);
+
+    @Query("SELECT * FROM series_registro WHERE id = :serieId LIMIT 1")
+    SerieRegistro obtenerSeriePorId(int serieId);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertarSerieConId(SerieRegistro serie);
 }

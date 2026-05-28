@@ -4,8 +4,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "sesiones")
-public class Sesion {
-    @PrimaryKey(autoGenerate = true)
+public class    Sesion {
+    @PrimaryKey
     public int id;
     public int rutinaId;
     public String userId;

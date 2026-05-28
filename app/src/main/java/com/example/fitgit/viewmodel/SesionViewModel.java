@@ -58,11 +58,11 @@ public class SesionViewModel extends AndroidViewModel {
     }
 
     public void eliminarSesionCompleta(int sesionId) {
-        repositorio.eliminarSesionCompleta(sesionId);
+        repositorio.eliminarSesionCompleta(sesionId, userId);
     }
 
     public void eliminarEjercicioDeSesion(int sesionId, String ejercicioId) {
-        repositorio.eliminarEjercicioDeSesion(sesionId, ejercicioId);
+        repositorio.eliminarEjercicioDeSesion(sesionId, ejercicioId, userId);
     }
 
     private List<EntrenamientoDia> agruparPorSesion(List<SesionConDetalle> filas) {

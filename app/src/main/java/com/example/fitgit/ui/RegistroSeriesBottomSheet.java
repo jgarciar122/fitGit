@@ -15,6 +15,7 @@ import com.example.fitgit.database.AppDatabase;
 import com.example.fitgit.databinding.FragmentRegistroSeriesBinding;
 import com.example.fitgit.model.SerieRegistro;
 import com.example.fitgit.model.Sesion;
+import com.example.fitgit.repository.RepositorioSesion;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -65,21 +66,17 @@ public class RegistroSeriesBottomSheet extends BottomSheetDialogFragment {
             rutinaId = getArguments().getInt(ARG_RUTINA_ID);
         }
 
-        // Fecha de hoy
         String fecha = new SimpleDateFormat("dd MMM yyyy", Locale.forLanguageTag("es")).format(new Date());
         binding.tvNombreEjercicioSheet.setText(ejercicioNombre);
         binding.tvFechaSheet.setText(fecha);
 
-        // Configurar RecyclerView
         adaptador = new AdaptadorSerie();
         binding.rvSeries.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvSeries.setAdapter(adaptador);
 
-        // Precargar últimas series del ejercicio
         cargarUltimasSeries();
 
         binding.btnAAdirSerie.setOnClickListener(v -> adaptador.añadirSerie());
-
         binding.btnGuardarSesion.setOnClickListener(v -> guardarSesion());
     }
 
@@ -95,7 +92,6 @@ public class RegistroSeriesBottomSheet extends BottomSheetDialogFragment {
                         adaptador.añadirSerieConDatos(s.kg, s.repeticiones);
                     }
                 } else {
-                    // Si no hay historial añadimos una serie vacía para empezar
                     adaptador.añadirSerie();
                 }
             });
@@ -112,9 +108,9 @@ public class RegistroSeriesBottomSheet extends BottomSheetDialogFragment {
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         AppDatabase db = AppDatabase.getDatabase(requireContext());
+        RepositorioSesion repositorio = new RepositorioSesion(requireActivity().getApplication());
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            // Inicio y fin del día de hoy
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
@@ -126,7 +122,6 @@ public class RegistroSeriesBottomSheet extends BottomSheetDialogFragment {
             cal.set(Calendar.SECOND, 59);
             long finDia = cal.getTimeInMillis();
 
-            // Buscar si ya hay sesión hoy para esta rutina
             Sesion sesionExistente = db.sesionDao().obtenerSesionDeHoy(rutinaId, userId, inicioDia, finDia);
 
             long sesionId;
@@ -134,15 +129,14 @@ public class RegistroSeriesBottomSheet extends BottomSheetDialogFragment {
                 sesionId = sesionExistente.id;
             } else {
                 Sesion nuevaSesion = new Sesion(rutinaId, userId);
-                sesionId = db.sesionDao().insertarSesion(nuevaSesion);
+                sesionId = repositorio.insertarSesionSincrono(nuevaSesion);
             }
 
-            // Guardar las series vinculadas a esa sesión
             List<SerieRegistro> series = new ArrayList<>();
             for (AdaptadorSerie.FilaSerie fila : filas) {
                 series.add(new SerieRegistro((int) sesionId, ejercicioId, fila.kg, fila.reps));
             }
-            db.sesionDao().insertarSeries(series);
+            repositorio.insertarSeries(series, userId);
 
             requireActivity().runOnUiThread(() -> {
                 Toast.makeText(getContext(), "¡Sesión guardada!", Toast.LENGTH_SHORT).show();
