@@ -186,6 +186,15 @@ public class ProgresoFragment extends Fragment {
             }
         }
 
+        // Si el ejercicio seleccionado ya no existe en el historial, limpiar selector y gráfica
+        if (ejercicioIdSeleccionado != null && !ejerciciosDisponibles.containsKey(ejercicioIdSeleccionado)) {
+            ejercicioIdSeleccionado = null;
+            binding.actvSelectorEjercicio.setText("", false);
+            binding.graficaEvolucion.clear();
+            binding.tvSinDatosGrafica.setVisibility(View.GONE);
+            binding.tvMaximoKg.setVisibility(View.GONE);
+        }
+
         List<String> nombres = new ArrayList<>(ejerciciosDisponibles.values());
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
@@ -210,7 +219,6 @@ public class ProgresoFragment extends Fragment {
     }
 
     private void cargarGrafica(String ejercicioId) {
-        if (ejercicioId.equals(ejercicioIdSeleccionado)) return;
         ejercicioIdSeleccionado = ejercicioId;
         viewModel.obtenerEvolucionEjercicio(ejercicioId).observe(getViewLifecycleOwner(), puntos -> {
             if (puntos == null || puntos.isEmpty()) {
