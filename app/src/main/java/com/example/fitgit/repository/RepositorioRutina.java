@@ -34,7 +34,6 @@ public class RepositorioRutina {
         Rutina nuevaRutina = new Rutina(nombre, "Mi rutina personalizada", userId);
         executor.execute(() -> {
             dao.insertarRutina(nuevaRutina);
-            // Obtener el ID generado para sincronizar con Firestore
             Rutina insertada = dao.obtenerUltimaRutina(userId);
             if (insertada != null) {
                 firestore.guardarRutina(userId, insertada.getId(),

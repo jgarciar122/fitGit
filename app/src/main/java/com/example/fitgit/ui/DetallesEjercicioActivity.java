@@ -113,17 +113,11 @@ public class DetallesEjercicioActivity extends AppCompatActivity {
     }
 
     private void traducirSiNecesario(Ejercicio ejercicio) {
-        if (ejercicio.isTraducido()) {
-            android.util.Log.d("TRADUCCION", "Ya traducido, saltando");
-            return;
-        }
-
-        android.util.Log.d("TRADUCCION", "Iniciando traducción de: " + ejercicio.getNombre());
+        if (ejercicio.isTraducido()) return;
 
         ServicioTraduccion.getInstance().traducirEjercicio(ejercicio, new ServicioTraduccion.TraduccionCallback() {
             @Override
             public void onExito(String nombreEs, List<String> instruccionesEs) {
-                android.util.Log.d("TRADUCCION", "Éxito: " + nombreEs);
                 Executors.newSingleThreadExecutor().execute(() -> {
                     db.ejercicioDao().actualizarTraduccion(ejercicio.getId(), nombreEs, instruccionesEs);
                 });

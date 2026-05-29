@@ -64,7 +64,6 @@ public class RutinasFragment extends Fragment {
                     .show();
         });
 
-        // ← NUEVO: botón empezar rutina
         adaptador.setOnEmpezarRutinaListener(rutina -> {
             Intent intent = new Intent(requireContext(), EntrenamientoActivity.class);
             intent.putExtra("rutina_id", rutina.id);

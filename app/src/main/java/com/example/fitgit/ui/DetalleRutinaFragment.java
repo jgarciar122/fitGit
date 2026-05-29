@@ -50,7 +50,7 @@ public class DetalleRutinaFragment extends Fragment {
 
         AdaptadorEjercicios adaptador = new AdaptadorEjercicios();
         adaptador.setEsModoQuitar(true);
-        adaptador.setRutinaId(rutinaId); // ← NUEVO
+        adaptador.setRutinaId(rutinaId);
 
         binding.rvEjerciciosDetalle.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvEjerciciosDetalle.setAdapter(adaptador);

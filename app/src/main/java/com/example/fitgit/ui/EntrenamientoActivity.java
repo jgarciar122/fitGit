@@ -33,7 +33,6 @@ public class EntrenamientoActivity extends AppCompatActivity {
     private String nombreRutina;
     private String userId;
 
-    // Cronómetro
     private Handler handler = new Handler(Looper.getMainLooper());
     private int segundos = 0;
     private boolean cronometroActivo = false;
@@ -59,7 +58,6 @@ public class EntrenamientoActivity extends AppCompatActivity {
         nombreRutina = getIntent().getStringExtra("rutina_nombre");
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Toolbar
         setSupportActionBar(binding.toolbarEntrenamiento);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,17 +66,14 @@ public class EntrenamientoActivity extends AppCompatActivity {
         binding.toolbarEntrenamiento.setNavigationOnClickListener(v -> onBackPressed());
         binding.tvNombreRutinaEntrenamiento.setText(nombreRutina);
 
-        // RecyclerView
         adaptador = new AdaptadorEntrenamiento();
         binding.rvEjerciciosEntrenamiento.setLayoutManager(new LinearLayoutManager(this));
         binding.rvEjerciciosEntrenamiento.setAdapter(adaptador);
 
-        // Cargar ejercicios de la rutina
         viewModel = new ViewModelProvider(this).get(RutinaViewModel.class);
         viewModel.obtenerEjerciciosDeRutina(rutinaId).observe(this, ejercicios -> {
             if (ejercicios != null && !ejercicios.isEmpty()) {
                 adaptador.setEjercicios(ejercicios);
-                // Arrancar cronómetro al cargar
                 if (!cronometroActivo) {
                     cronometroActivo = true;
                     handler.post(cronometroRunnable);
@@ -110,11 +105,9 @@ public class EntrenamientoActivity extends AppCompatActivity {
         RepositorioSesion repositorio = new RepositorioSesion(getApplication());
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            // Crear sesión
             Sesion sesion = new Sesion(rutinaId, userId);
             long sesionId = repositorio.insertarSesionSincrono(sesion);
 
-            // Crear series para cada ejercicio
             List<SerieRegistro> todasLasSeries = new ArrayList<>();
             for (Map.Entry<String, List<AdaptadorSerie.FilaSerie>> entry : seriesPorEjercicio.entrySet()) {
                 String ejercicioId = entry.getKey();

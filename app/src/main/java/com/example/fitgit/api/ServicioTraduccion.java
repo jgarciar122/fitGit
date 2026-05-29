@@ -65,7 +65,6 @@ public class ServicioTraduccion {
 
                 Response response = client.newCall(request).execute();
                 String responseStr = response.body().string();
-                Log.d("TRADUCCION", "Respuesta: " + responseStr);
 
                 JSONObject jsonResponse = new JSONObject(responseStr);
                 JSONArray translations = jsonResponse

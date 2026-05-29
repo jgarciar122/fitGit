@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    private static final int RC_SIGN_IN = 9001; // Código de petición para Google
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void configurarGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)) // Generado automáticamente por el plugin de Google
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 

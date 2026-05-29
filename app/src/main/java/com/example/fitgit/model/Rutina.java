@@ -10,7 +10,7 @@ public class Rutina {
     private String nombre;
     private String descripcion;
     private long fechaCreacion;
-    private String userId; // ← NUEVO
+    private String userId;
 
     public Rutina(String nombre, String descripcion, String userId) {
         this.nombre = nombre;

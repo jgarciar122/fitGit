@@ -46,7 +46,6 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    // Auth viene de tu catálogo de versiones (libs.versions.toml)
     implementation(libs.firebase.auth)
 
     testImplementation(libs.junit)
@@ -56,13 +55,13 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
 
-    // Glide(GIFs)
+    // para cargar gifs de los ejercicios
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.livedata)
 
-    // Navigation Component
+    // navegacion entre fragments
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.navigation:navigation-ui:2.7.7")
 
@@ -72,24 +71,17 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
-    // Soporte para LiveData con Room
     implementation("androidx.room:room-ktx:$roomVersion")
 
-    // 🔥 FIREBASE BOM (El Director de Orquesta) 🔥
-    // Controla las versiones de todas las piezas de Firebase para que no choquen
+    // firebase
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
-
-    // Librerías de Firebase SIN VERSIÓN (el BOM asigna las correctas)
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
 
-    // Google Sign-In (Este no es de Firebase directamente, así que sí lleva versión)
+    // google sign in
     implementation("com.google.android.gms:play-services-auth:21.1.1")
 
-    // UI Extras
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    // imagen circular del perfil y grafica de progreso
+    implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
-    //Gemini
-    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 }

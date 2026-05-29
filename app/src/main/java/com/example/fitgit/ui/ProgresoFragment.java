@@ -45,7 +45,7 @@ public class ProgresoFragment extends Fragment {
     private LinkedHashMap<String, String> ejerciciosDisponibles = new LinkedHashMap<>();
     private String ejercicioIdSeleccionado = null;
 
-    // Control de navegación de semanas (0 = semana actual, -1 = semana anterior, etc.)
+    // 0 = semana actual, -1 = anterior, etc
     private int offsetSemana = 0;
 
     @Override
@@ -117,7 +117,6 @@ public class ProgresoFragment extends Fragment {
     }
 
     private void cargarSemana() {
-        // Calcular inicio y fin de la semana según el offset
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.WEEK_OF_YEAR, offsetSemana);
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -133,7 +132,6 @@ public class ProgresoFragment extends Fragment {
         cal.set(Calendar.SECOND, 59);
         long finSemana = cal.getTimeInMillis();
 
-        // Actualizar título
         if (offsetSemana == 0) {
             binding.tvTituloSemana.setText("ESTA SEMANA");
         } else if (offsetSemana == -1) {
@@ -145,11 +143,9 @@ public class ProgresoFragment extends Fragment {
             binding.tvTituloSemana.setText(sdf.format(inicio.getTime()).toUpperCase());
         }
 
-        // Deshabilitar botón siguiente si estamos en semana actual
         binding.btnSemanaSiguiente.setAlpha(offsetSemana < 0 ? 1f : 0.3f);
         binding.btnSemanaSiguiente.setEnabled(offsetSemana < 0);
 
-        // Observar sesiones de esa semana
         viewModel.obtenerSesionesSemana(inicioDia, finSemana)
                 .observe(getViewLifecycleOwner(), sesiones -> actualizarResumenSemanal(sesiones));
     }
@@ -186,7 +182,7 @@ public class ProgresoFragment extends Fragment {
             }
         }
 
-        // Si el ejercicio seleccionado ya no existe en el historial, limpiar selector y gráfica
+        // si borraron el ejercicio del historial, limpio el selector
         if (ejercicioIdSeleccionado != null && !ejerciciosDisponibles.containsKey(ejercicioIdSeleccionado)) {
             ejercicioIdSeleccionado = null;
             binding.actvSelectorEjercicio.setText("", false);

@@ -47,7 +47,7 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
         this.esModoQuitar = esModoQuitar;
     }
 
-    public void setRutinaId(int rutinaId) { // ← NUEVO
+    public void setRutinaId(int rutinaId) {
         this.rutinaId = rutinaId;
     }
 

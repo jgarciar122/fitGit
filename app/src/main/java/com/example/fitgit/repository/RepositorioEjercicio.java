@@ -27,14 +27,12 @@ public class RepositorioEjercicio {
     }
 
     public LiveData<List<Ejercicio>> obtenerEjercicios() {
+        // si no hay datos en room, los pido a la api
         LiveData<List<Ejercicio>> datosLocales = dao.obtenerTodosLosEjercicios();
 
         executor.execute(() -> {
             if (dao.obtenerUnoSincrono() == null) {
-                Log.d("REPO", "Base de datos vacía. Pidiendo datos a la API...");
                 refrescarEjercicios();
-            } else {
-                Log.d("REPO", "Datos detectados en Room. Ahorrando llamada a la API.");
             }
         });
 
