@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_ejercicios">
+
+    <fragment
+        android:id="@+id/nav_ejercicios"
+        android:name="com.example.fitgit.ui.EjerciciosFragment"
+        android:label="Ejercicios"
+        tools:layout="@layout/fragment_ejercicios" />
+
+    <fragment
+        android:id="@+id/nav_rutinas"
+        android:name="com.example.fitgit.ui.RutinasFragment"
+        android:label="Mis Rutinas"
+        tools:layout="@layout/fragment_rutinas">
+
+        <action
+            android:id="@+id/action_rutinas_to_detalle"
+            app:destination="@id/nav_detalle_rutina" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_progreso"
+        android:name="com.example.fitgit.ui.ProgresoFragment"
+        android:label="Progreso"
+        tools:layout="@layout/fragment_progreso" />
+
+    <fragment
+        android:id="@+id/nav_perfil"
+        android:name="com.example.fitgit.ui.PerfilFragment"
+        android:label="Mi Perfil"
+        tools:layout="@layout/fragment_perfil" />
+
+    <fragment
+        android:id="@+id/nav_detalle_rutina"
+        android:name="com.example.fitgit.ui.DetalleRutinaFragment"
+        android:label="Detalle Rutina"
+        tools:layout="@layout/fragment_detalle_rutina">
+
+        <argument
+            android:name="rutina_id"
+            app:argType="integer" />
+        <argument
+            android:name="rutina_nombre"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.example.fitgit.R;
@@ -48,11 +49,10 @@ public class RutinasFragment extends Fragment {
         });
 
         adaptador.setOnRutinaClickListener(rutina -> {
-            Fragment detalle = DetalleRutinaFragment.newInstance(rutina.id, rutina.nombre);
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, detalle)
-                    .addToBackStack(null)
-                    .commit();
+            Bundle args = new Bundle();
+            args.putInt("rutina_id", rutina.id);
+            args.putString("rutina_nombre", rutina.nombre);
+            Navigation.findNavController(view).navigate(R.id.action_rutinas_to_detalle, args);
         });
 
         adaptador.setOnEliminarRutinaListener(rutina -> {

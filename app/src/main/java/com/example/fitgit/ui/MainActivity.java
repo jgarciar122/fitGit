@@ -1,11 +1,12 @@
 package com.example.fitgit.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.fitgit.R;
 import com.example.fitgit.database.AppDatabase;
@@ -17,14 +18,13 @@ import com.example.fitgit.model.SerieRegistro;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +37,30 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        if (savedInstanceState == null) {
-            reemplazarFragment(new EjerciciosFragment(), "Ejercicios");
-        }
+        NavHostFragment navHostFragment = (NavHostFragment)
+                getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        navController = navHostFragment.getNavController();
 
-        configurarNavegacion();
+        NavigationUI.setupWithNavController(binding.navegacionInferior, navController);
+
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            binding.tvToolbarTitulo.setText(destination.getLabel());
+        });
 
         binding.btnPerfil.setOnClickListener(v ->
-                reemplazarFragment(new PerfilFragment(), "Mi Perfil")
+                navController.navigate(R.id.nav_perfil)
         );
 
         sincronizarDesdeFirestore();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    public void setTituloToolbar(String titulo) {
+        binding.tvToolbarTitulo.setText(titulo);
     }
 
     private void sincronizarDesdeFirestore() {
@@ -150,34 +163,5 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 });
-    }
-
-    private void configurarNavegacion() {
-        binding.navegacionInferior.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_ejercicios) {
-                reemplazarFragment(new EjerciciosFragment(), "Ejercicios");
-                return true;
-            } else if (id == R.id.nav_rutinas) {
-                reemplazarFragment(new RutinasFragment(), "Mis Rutinas");
-                return true;
-            } else if (id == R.id.nav_progreso) {
-                reemplazarFragment(new ProgresoFragment(), "Progreso");
-                return true;
-            }
-            return false;
-        });
-    }
-
-    public void reemplazarFragment(Fragment fragment, String titulo) {
-        binding.tvToolbarTitulo.setText(titulo);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_host_fragment, fragment)
-                .commit();
-    }
-
-    public void setTituloToolbar(String titulo) {
-        binding.tvToolbarTitulo.setText(titulo);
     }
 }
