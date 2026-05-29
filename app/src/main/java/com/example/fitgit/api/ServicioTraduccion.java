@@ -54,8 +54,8 @@ public class ServicioTraduccion {
                 body.put("format", "text");
 
                 RequestBody requestBody = RequestBody.create(
-                        body.toString(),
-                        MediaType.parse("application/json")
+                        MediaType.parse("application/json"),
+                        body.toString()
                 );
 
                 Request request = new Request.Builder()
