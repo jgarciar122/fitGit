@@ -9,6 +9,13 @@
     android:gravity="center"
     android:background="@color/background_light"> <!-- Fondo gris muy claro moderno -->
 
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="Logo FitGit"
+        android:layout_marginBottom="16dp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,8 +24,6 @@
         android:fontFamily="sans-serif-black"
         android:textColor="@color/primary"
         android:layout_marginBottom="40dp"/>
-
-    <!-- Cambiado style de Material3 a MaterialComponents para evitar el CRASH -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_email"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

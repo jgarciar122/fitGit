@@ -8,5 +8,5 @@ import androidx.room.Entity;
 public class RutinaEjercicioCrossRef {
     public int rutinaId;
     @NonNull
-    public String ejercicioId; // Usamos String porque el ID de la API suele ser texto
+    public String ejercicioId;
 }

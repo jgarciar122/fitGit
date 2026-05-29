@@ -168,7 +168,7 @@ public class PerfilFragment extends Fragment {
                 String uploadUrl = SUPABASE_URL + "/storage/v1/object/fotos-perfil/" + nombreArchivo;
 
                 OkHttpClient client = new OkHttpClient();
-                RequestBody body = RequestBody.create(bytes, MediaType.parse("image/jpeg"));
+                RequestBody body = RequestBody.create(MediaType.parse("image/jpeg"), bytes);
 
                 Request request = new Request.Builder()
                         .url(uploadUrl)
