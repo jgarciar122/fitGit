@@ -63,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
 
-    public void setTituloToolbar(String titulo) {
-        binding.tvToolbarTitulo.setText(titulo);
-    }
-
     private void sincronizarDesdeFirestore() {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario == null) return;

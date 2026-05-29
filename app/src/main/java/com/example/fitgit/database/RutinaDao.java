@@ -44,9 +44,6 @@ public interface RutinaDao {
     @Delete
     void eliminarRutina(Rutina rutina);
 
-    @Query("SELECT * FROM rutinas WHERE userId = :userId ORDER BY fechaCreacion DESC LIMIT 1")
-    Rutina obtenerUltimaRutina(String userId);
-
     @Query("SELECT * FROM rutinas WHERE id = :rutinaId LIMIT 1")
     Rutina obtenerRutinaPorId(int rutinaId);
 

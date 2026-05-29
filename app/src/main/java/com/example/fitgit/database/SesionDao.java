@@ -22,15 +22,6 @@ public interface SesionDao {
     @Insert
     List<Long> insertarSeries(List<SerieRegistro> series);
 
-    @Query("SELECT * FROM sesiones " +
-            "INNER JOIN series_registro ON sesiones.id = series_registro.sesionId " +
-            "WHERE series_registro.ejercicioId = :ejercicioId AND sesiones.userId = :userId " +
-            "ORDER BY sesiones.fecha DESC")
-    LiveData<List<Sesion>> obtenerSesionesPorEjercicio(String ejercicioId, String userId);
-
-    @Query("SELECT * FROM series_registro WHERE sesionId = :sesionId AND ejercicioId = :ejercicioId")
-    LiveData<List<SerieRegistro>> obtenerSeriesDeSesion(int sesionId, String ejercicioId);
-
     @Query("SELECT series_registro.* FROM series_registro " +
             "INNER JOIN sesiones ON series_registro.sesionId = sesiones.id " +
             "WHERE series_registro.ejercicioId = :ejercicioId AND sesiones.userId = :userId " +

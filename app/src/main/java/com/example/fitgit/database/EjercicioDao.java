@@ -8,7 +8,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.fitgit.model.Ejercicio;
-import com.example.fitgit.model.Rutina;
 
 import java.util.List;
 
@@ -29,12 +28,6 @@ public interface EjercicioDao {
 
     @Query("SELECT * FROM tabla_ejercicios LIMIT 1")
     Ejercicio obtenerUnoSincrono();
-
-    @Delete
-    void eliminar(Rutina rutina);
-
-    @Query("SELECT * FROM tabla_ejercicios WHERE id = :id LIMIT 1")
-    Ejercicio obtenerEjercicioPorId(String id);
 
     @Query("UPDATE tabla_ejercicios SET nombre_es = :nombreEs, instrucciones_es = :instruccionesEs, traducido = 1 WHERE id = :id")
     void actualizarTraduccion(String id, String nombreEs, List<String> instruccionesEs);
