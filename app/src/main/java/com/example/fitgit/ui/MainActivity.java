@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navegacionInferior, navController);
 
         binding.navegacionInferior.setOnItemReselectedListener(item -> {
-            navController.popBackStack(item.getItemId(), false);
+            if (!navController.popBackStack(item.getItemId(), false)) {
+                navController.navigate(item.getItemId());
+            }
         });
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {

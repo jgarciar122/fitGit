@@ -36,6 +36,7 @@ public class AnadirEjercicioBottomSheet extends BottomSheetDialogFragment {
     private int rutinaId;
     private List<Ejercicio> todosLosEjercicios = new ArrayList<>();
     private Set<String> ejerciciosEnRutina = new HashSet<>();
+    private String filtroMusculo = "todos";
 
     public static AnadirEjercicioBottomSheet newInstance(int rutinaId) {
         AnadirEjercicioBottomSheet sheet = new AnadirEjercicioBottomSheet();
@@ -95,15 +96,34 @@ public class AnadirEjercicioBottomSheet extends BottomSheetDialogFragment {
                 filtrarEjercicios(s.toString());
             }
         });
+
+        binding.chipGroupFiltros.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.isEmpty()) {
+                filtroMusculo = "todos";
+            } else {
+                com.google.android.material.chip.Chip chip = group.findViewById(checkedIds.get(0));
+                String texto = chip.getText().toString().toLowerCase();
+                switch (texto) {
+                    case "pecho":    filtroMusculo = "chest"; break;
+                    case "espalda":  filtroMusculo = "back"; break;
+                    case "hombros":  filtroMusculo = "shoulders"; break;
+                    case "brazos":   filtroMusculo = "upper arms"; break;
+                    case "piernas":  filtroMusculo = "upper legs"; break;
+                    case "cintura":  filtroMusculo = "waist"; break;
+                    case "cardio":   filtroMusculo = "cardio"; break;
+                    default:         filtroMusculo = "todos"; break;
+                }
+            }
+            filtrarEjercicios(binding.etBuscarEjercicio.getText().toString());
+        });
     }
 
     private void filtrarEjercicios(String query) {
         List<Ejercicio> filtrados = new ArrayList<>();
         for (Ejercicio e : todosLosEjercicios) {
-
             if (ejerciciosEnRutina.contains(e.getId())) continue;
-
-            if (!query.isEmpty() && !e.getNombre().toLowerCase().contains(query.toLowerCase())) continue;
+            if (!query.isEmpty() && !e.getNombreMostrar().toLowerCase().contains(query.toLowerCase())) continue;
+            if (!filtroMusculo.equals("todos") && !filtroMusculo.equalsIgnoreCase(e.getParteCuerpo())) continue;
             filtrados.add(e);
         }
         adaptador.setEjercicios(filtrados);

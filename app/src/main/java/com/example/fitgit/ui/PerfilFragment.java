@@ -160,9 +160,18 @@ public class PerfilFragment extends Fragment {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
+                // redimensiono a 256x256 para que no pese mucho y cargue rapido en la app
                 InputStream inputStream = requireContext().getContentResolver().openInputStream(imagenUri);
-                byte[] bytes = inputStream.readAllBytes();
+                android.graphics.Bitmap original = android.graphics.BitmapFactory.decodeStream(inputStream);
                 inputStream.close();
+
+                android.graphics.Bitmap redimensionado = android.graphics.Bitmap.createScaledBitmap(original, 256, 256, true);
+                original.recycle();
+
+                java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+                redimensionado.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, buffer);
+                redimensionado.recycle();
+                byte[] bytes = buffer.toByteArray();
 
                 String nombreArchivo = usuario.getEmail().replace("@", "_").replace(".", "_") + ".jpg";
                 String uploadUrl = SUPABASE_URL + "/storage/v1/object/fotos-perfil/" + nombreArchivo;

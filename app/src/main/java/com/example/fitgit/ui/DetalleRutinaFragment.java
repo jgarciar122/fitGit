@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.fitgit.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,8 +60,15 @@ public class DetalleRutinaFragment extends Fragment {
         binding.tvTituloDetalle.setText("RUTINA: " + nombreRutina);
 
         adaptador.setOnEjercicioClickListener(ejercicio -> {
-            viewModel.eliminarEjercicioDeRutina(rutinaId, ejercicio);
-            Toast.makeText(getContext(), ejercicio.getNombre() + " eliminado", Toast.LENGTH_SHORT).show();
+            new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
+                    .setTitle("Quitar ejercicio")
+                    .setMessage("¿Quitar \"" + ejercicio.getNombreMostrar() + "\" de la rutina?")
+                    .setPositiveButton("Quitar", (dialog, which) -> {
+                        viewModel.eliminarEjercicioDeRutina(rutinaId, ejercicio);
+                        Toast.makeText(getContext(), ejercicio.getNombreMostrar() + " eliminado", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
         });
 
         viewModel.obtenerEjerciciosDeRutina(rutinaId).observe(getViewLifecycleOwner(), ejercicios -> {

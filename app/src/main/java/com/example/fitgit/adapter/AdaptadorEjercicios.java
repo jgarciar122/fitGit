@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -56,59 +57,75 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return esModoQuitar ? 1 : 0;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ejercicio, parent, false);
-        return new ViewHolder(vista);
+        if (viewType == 1) {
+            View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ejercicio_rutina, parent, false);
+            return new ViewHolderRutina(vista);
+        } else {
+            View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ejercicio, parent, false);
+            return new ViewHolderCompleto(vista);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ejercicio ejercicio = listaEjercicios.get(position);
 
-        holder.tvNombre.setText(ejercicio.getNombre());
-        holder.chipMusculo.setText(ejercicio.getParteCuerpo());
-        holder.chipEquipamiento.setText(ejercicio.getEquipamiento());
+        if (holder instanceof ViewHolderRutina) {
+            ViewHolderRutina h = (ViewHolderRutina) holder;
+            h.tvNombre.setText(ejercicio.getNombreMostrar());
+            h.tvMusculo.setText(ejercicio.getParteCuerpo());
 
-        if (esModoQuitar) {
-            holder.btnAdd.setText("Quitar de la rutina");
-            if (holder.btnAdd instanceof MaterialButton) {
-                ((MaterialButton) holder.btnAdd).setIconResource(android.R.drawable.ic_delete);
-                holder.btnAdd.setBackgroundColor(Color.parseColor("#FFEBEE"));
-                holder.btnAdd.setTextColor(Color.RED);
-                ((MaterialButton) holder.btnAdd).setIconTint(android.content.res.ColorStateList.valueOf(Color.RED));
-            }
+            h.btnQuitar.setOnClickListener(v -> {
+                if (listener != null) listener.onEjercicioClick(ejercicio);
+            });
+
+            h.itemView.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(v.getContext(), DetallesEjercicioActivity.class);
+                intent.putExtra("ejercicio_seleccionado", ejercicio);
+                intent.putExtra("ya_en_rutina", true);
+                intent.putExtra("rutina_id", rutinaId);
+                v.getContext().startActivity(intent);
+            });
+
         } else {
-            holder.btnAdd.setText("Añadir a mi rutina");
+            ViewHolderCompleto h = (ViewHolderCompleto) holder;
+            h.tvNombre.setText(ejercicio.getNombreMostrar());
+            h.chipMusculo.setText(ejercicio.getParteCuerpo());
+            h.chipEquipamiento.setText(ejercicio.getEquipamiento());
+
+            GlideUrl glideUrl = new GlideUrl(ejercicio.getUrlGif(), new LazyHeaders.Builder()
+                    .addHeader("x-rapidapi-key", API_KEY)
+                    .addHeader("x-rapidapi-host", "exercisedb.p.rapidapi.com")
+                    .addHeader("User-Agent", "Mozilla/5.0")
+                    .build());
+
+            Glide.with(h.itemView.getContext())
+                    .asGif()
+                    .load(glideUrl)
+                    .placeholder(R.drawable.imagen_ejemplo)
+                    .error(R.drawable.imagen_ejemplo)
+                    .into(h.ivImagen);
+
+            h.itemView.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(v.getContext(), DetallesEjercicioActivity.class);
+                intent.putExtra("ejercicio_seleccionado", ejercicio);
+                intent.putExtra("ya_en_rutina", false);
+                intent.putExtra("rutina_id", rutinaId);
+                v.getContext().startActivity(intent);
+            });
+
+            h.btnAdd.setOnClickListener(v -> {
+                if (listener != null) listener.onEjercicioClick(ejercicio);
+            });
         }
-
-        GlideUrl glideUrl = new GlideUrl(ejercicio.getUrlGif(), new LazyHeaders.Builder()
-                .addHeader("x-rapidapi-key", API_KEY)
-                .addHeader("x-rapidapi-host", "exercisedb.p.rapidapi.com")
-                .addHeader("User-Agent", "Mozilla/5.0")
-                .build());
-
-        Glide.with(holder.itemView.getContext())
-                .asGif()
-                .load(glideUrl)
-                .placeholder(R.drawable.imagen_ejemplo)
-                .error(R.drawable.imagen_ejemplo)
-                .into(holder.ivImagen);
-
-        holder.itemView.setOnClickListener(v -> {
-            android.content.Intent intent = new android.content.Intent(v.getContext(), DetallesEjercicioActivity.class);
-            intent.putExtra("ejercicio_seleccionado", ejercicio);
-            intent.putExtra("ya_en_rutina", esModoQuitar);
-            intent.putExtra("rutina_id", rutinaId);
-            v.getContext().startActivity(intent);
-        });
-
-        holder.btnAdd.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onEjercicioClick(ejercicio);
-            }
-        });
     }
 
     @Override
@@ -117,18 +134,36 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
+
+    public static class ViewHolderCompleto extends ViewHolder {
         TextView tvNombre;
         ImageView ivImagen;
         Chip chipMusculo, chipEquipamiento;
         Button btnAdd;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolderCompleto(@NonNull View itemView) {
             super(itemView);
             tvNombre = itemView.findViewById(R.id.tvNombreEjercicio);
             ivImagen = itemView.findViewById(R.id.ivGifEjercicio);
             chipMusculo = itemView.findViewById(R.id.chipMusculo);
             chipEquipamiento = itemView.findViewById(R.id.chipEquipamiento);
             btnAdd = itemView.findViewById(R.id.btn_add_ejercicio_lista);
+        }
+    }
+
+    public static class ViewHolderRutina extends ViewHolder {
+        TextView tvNombre, tvMusculo;
+        ImageButton btnQuitar;
+
+        public ViewHolderRutina(@NonNull View itemView) {
+            super(itemView);
+            tvNombre = itemView.findViewById(R.id.tvNombreEjercicio);
+            tvMusculo = itemView.findViewById(R.id.tvMusculo);
+            btnQuitar = itemView.findViewById(R.id.btnQuitar);
         }
     }
 }
