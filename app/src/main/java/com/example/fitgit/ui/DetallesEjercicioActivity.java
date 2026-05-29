@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.example.fitgit.BuildConfig;
 import com.example.fitgit.R;
 import com.example.fitgit.api.ServicioTraduccion;
 import com.example.fitgit.database.AppDatabase;
@@ -24,7 +25,7 @@ import java.util.concurrent.Executors;
 public class DetallesEjercicioActivity extends AppCompatActivity {
 
     private ActivityDetalleEjercicioBinding binding;
-    private static final String API_KEY = "84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5";
+    private static final String API_KEY = BuildConfig.RAPIDAPI_KEY;
     private AppDatabase db;
 
     @Override

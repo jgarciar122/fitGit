@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.fitgit.BuildConfig;
 import com.example.fitgit.R;
 import com.example.fitgit.databinding.FragmentPerfilBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -38,8 +39,8 @@ import okhttp3.Response;
 
 public class PerfilFragment extends Fragment {
 
-    private static final String SUPABASE_URL = "https://ffxvjhrcdepfpzizslir.supabase.co";
-    private static final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmeHZqaHJjZGVwZnB6aXpzbGlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTYyODIsImV4cCI6MjA5NTU3MjI4Mn0.J6A-2zjL_dDrchEGxEHEmI3e7mJCSisr1g2TnbgDTTU    ";
+    private static final String SUPABASE_URL = BuildConfig.SUPABASE_URL;
+    private static final String SUPABASE_KEY = BuildConfig.SUPABASE_KEY;
     private FragmentPerfilBinding binding;
     private ActivityResultLauncher<Intent> selectorImagenLauncher;
 

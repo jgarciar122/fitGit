@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.example.fitgit.BuildConfig;
 import com.example.fitgit.R;
 import com.example.fitgit.ui.DetallesEjercicioActivity;
 import com.example.fitgit.model.Ejercicio;
@@ -26,7 +27,7 @@ import java.util.List;
 public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicios.ViewHolder> {
 
     private List<Ejercicio> listaEjercicios;
-    private static final String API_KEY = "84a7879aafmshd2ebff39f76e114p1e4397jsn321495fa09a5";
+    private static final String API_KEY = BuildConfig.RAPIDAPI_KEY;
     private boolean esModoQuitar = false;
     private int rutinaId = -1;
 

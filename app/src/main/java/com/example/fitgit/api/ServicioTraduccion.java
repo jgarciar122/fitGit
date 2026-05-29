@@ -2,6 +2,7 @@ package com.example.fitgit.api;
 
 import android.util.Log;
 
+import com.example.fitgit.BuildConfig;
 import com.example.fitgit.model.Ejercicio;
 
 import org.json.JSONArray;
@@ -20,7 +21,7 @@ import okhttp3.Response;
 
 public class ServicioTraduccion {
 
-    private static final String API_KEY = "AIzaSyB7R7Qs7KxlQHV6hT1XLybZLbPJX3YpT04";
+    private static final String API_KEY = BuildConfig.GOOGLE_TRANSLATE_KEY;
     private static ServicioTraduccion instancia;
     private OkHttpClient client = new OkHttpClient();
     private Executor executor = Executors.newSingleThreadExecutor();
