@@ -20,7 +20,7 @@ public interface SesionDao {
     long insertarSesion(Sesion sesion);
 
     @Insert
-    void insertarSeries(List<SerieRegistro> series);
+    List<Long> insertarSeries(List<SerieRegistro> series);
 
     @Query("SELECT * FROM sesiones " +
             "INNER JOIN series_registro ON sesiones.id = series_registro.sesionId " +
@@ -45,6 +45,9 @@ public interface SesionDao {
 
     @Query("SELECT * FROM sesiones WHERE userId = :userId AND fecha >= :desdeTimestamp ORDER BY fecha DESC")
     LiveData<List<Sesion>> obtenerSesionesDesde(String userId, long desdeTimestamp);
+
+    @Query("SELECT * FROM sesiones WHERE userId = :userId AND fecha >= :inicio AND fecha <= :fin ORDER BY fecha DESC")
+    LiveData<List<Sesion>> obtenerSesionesSemana(String userId, long inicio, long fin);
 
     @Query("SELECT sesiones.fecha, MAX(series_registro.kg) as kg FROM series_registro " +
             "INNER JOIN sesiones ON series_registro.sesionId = sesiones.id " +
@@ -81,12 +84,12 @@ public interface SesionDao {
     @Query("SELECT * FROM sesiones WHERE id = :sesionId LIMIT 1")
     Sesion obtenerSesionPorId(int sesionId);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertarSesionConId(Sesion sesion);
 
     @Query("SELECT * FROM series_registro WHERE id = :serieId LIMIT 1")
     SerieRegistro obtenerSeriePorId(int serieId);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertarSerieConId(SerieRegistro serie);
 }

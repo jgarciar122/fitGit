@@ -25,7 +25,9 @@ public class SesionViewModel extends AndroidViewModel {
     public SesionViewModel(@NonNull Application application) {
         super(application);
         repositorio = new RepositorioSesion(application);
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
     }
 
     public LiveData<List<Sesion>> obtenerHistorial() {
@@ -44,6 +46,10 @@ public class SesionViewModel extends AndroidViewModel {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return repositorio.obtenerSesionesDesde(userId, cal.getTimeInMillis());
+    }
+
+    public LiveData<List<Sesion>> obtenerSesionesSemana(long inicio, long fin) {
+        return repositorio.obtenerSesionesSemana(userId, inicio, fin);
     }
 
     public LiveData<List<PuntoGrafica>> obtenerEvolucionEjercicio(String ejercicioId) {

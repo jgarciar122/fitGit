@@ -33,6 +33,10 @@ public class RepositorioSesion {
         return dao.obtenerSesionesDesde(userId, desdeTimestamp);
     }
 
+    public LiveData<List<Sesion>> obtenerSesionesSemana(String userId, long inicio, long fin) {
+        return dao.obtenerSesionesSemana(userId, inicio, fin);
+    }
+
     public LiveData<List<PuntoGrafica>> obtenerEvolucionEjercicio(String ejercicioId, String userId) {
         return dao.obtenerEvolucionEjercicio(ejercicioId, userId);
     }
@@ -49,9 +53,11 @@ public class RepositorioSesion {
 
     public void insertarSeries(List<SerieRegistro> series, String userId) {
         executor.execute(() -> {
-            dao.insertarSeries(series);
-            for (SerieRegistro serie : series) {
-                firestore.guardarSerie(userId, serie.sesionId, serie.id,
+            List<Long> ids = dao.insertarSeries(series);
+            for (int i = 0; i < series.size(); i++) {
+                SerieRegistro serie = series.get(i);
+                int serieId = ids.get(i).intValue();
+                firestore.guardarSerie(userId, serie.sesionId, serieId,
                         serie.ejercicioId, serie.kg, serie.repeticiones);
             }
         });

@@ -19,6 +19,7 @@ import com.example.fitgit.databinding.FragmentProgresoBinding;
 import com.example.fitgit.model.EntrenamientoDia;
 import com.example.fitgit.model.EjercicioConSeries;
 import com.example.fitgit.model.PuntoGrafica;
+import com.example.fitgit.model.Sesion;
 import com.example.fitgit.viewmodel.SesionViewModel;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -42,6 +43,10 @@ public class ProgresoFragment extends Fragment {
     private SesionViewModel viewModel;
     private AdaptadorHistorial adaptador;
     private LinkedHashMap<String, String> ejerciciosDisponibles = new LinkedHashMap<>();
+    private String ejercicioIdSeleccionado = null;
+
+    // Control de navegación de semanas (0 = semana actual, -1 = semana anterior, etc.)
+    private int offsetSemana = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +62,6 @@ public class ProgresoFragment extends Fragment {
 
         adaptador = new AdaptadorHistorial();
 
-        // Listener eliminar sesión completa
         adaptador.setOnEliminarSesionListener(sesionId ->
                 new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
                         .setTitle("Eliminar sesión")
@@ -68,7 +72,6 @@ public class ProgresoFragment extends Fragment {
                         .show()
         );
 
-        // Listener eliminar ejercicio de sesión
         adaptador.setOnEliminarEjercicioListener((sesionId, ejercicioId) ->
                 new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
                         .setTitle("Eliminar ejercicio")
@@ -83,6 +86,8 @@ public class ProgresoFragment extends Fragment {
         binding.rvHistorial.setAdapter(adaptador);
 
         configurarGrafica();
+        configurarNavegacionSemanas();
+        cargarSemana();
 
         viewModel.obtenerHistorialAgrupado().observe(getViewLifecycleOwner(), entrenamientos -> {
             if (entrenamientos == null || entrenamientos.isEmpty()) {
@@ -95,9 +100,58 @@ public class ProgresoFragment extends Fragment {
                 actualizarSelectorEjercicios(entrenamientos);
             }
         });
+    }
 
-        viewModel.obtenerSesionesEstaSemana().observe(getViewLifecycleOwner(),
-                sesiones -> actualizarResumenSemanal(sesiones));
+    private void configurarNavegacionSemanas() {
+        binding.btnSemanaAnterior.setOnClickListener(v -> {
+            offsetSemana--;
+            cargarSemana();
+        });
+
+        binding.btnSemanaSiguiente.setOnClickListener(v -> {
+            if (offsetSemana < 0) {
+                offsetSemana++;
+                cargarSemana();
+            }
+        });
+    }
+
+    private void cargarSemana() {
+        // Calcular inicio y fin de la semana según el offset
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.WEEK_OF_YEAR, offsetSemana);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        long inicioDia = cal.getTimeInMillis();
+
+        cal.add(Calendar.DAY_OF_WEEK, 6);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        long finSemana = cal.getTimeInMillis();
+
+        // Actualizar título
+        if (offsetSemana == 0) {
+            binding.tvTituloSemana.setText("ESTA SEMANA");
+        } else if (offsetSemana == -1) {
+            binding.tvTituloSemana.setText("SEMANA PASADA");
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.forLanguageTag("es"));
+            Calendar inicio = Calendar.getInstance();
+            inicio.setTimeInMillis(inicioDia);
+            binding.tvTituloSemana.setText(sdf.format(inicio.getTime()).toUpperCase());
+        }
+
+        // Deshabilitar botón siguiente si estamos en semana actual
+        binding.btnSemanaSiguiente.setAlpha(offsetSemana < 0 ? 1f : 0.3f);
+        binding.btnSemanaSiguiente.setEnabled(offsetSemana < 0);
+
+        // Observar sesiones de esa semana
+        viewModel.obtenerSesionesSemana(inicioDia, finSemana)
+                .observe(getViewLifecycleOwner(), sesiones -> actualizarResumenSemanal(sesiones));
     }
 
     private void configurarGrafica() {
@@ -156,6 +210,8 @@ public class ProgresoFragment extends Fragment {
     }
 
     private void cargarGrafica(String ejercicioId) {
+        if (ejercicioId.equals(ejercicioIdSeleccionado)) return;
+        ejercicioIdSeleccionado = ejercicioId;
         viewModel.obtenerEvolucionEjercicio(ejercicioId).observe(getViewLifecycleOwner(), puntos -> {
             if (puntos == null || puntos.isEmpty()) {
                 binding.graficaEvolucion.clear();
@@ -209,7 +265,7 @@ public class ProgresoFragment extends Fragment {
         });
     }
 
-    private void actualizarResumenSemanal(java.util.List<com.example.fitgit.model.Sesion> sesiones) {
+    private void actualizarResumenSemanal(List<Sesion> sesiones) {
         android.widget.TextView[] circulos = {
                 binding.circuloLunes, binding.circuloMartes, binding.circuloMiercoles,
                 binding.circuloJueves, binding.circuloViernes, binding.circuloSabado,
@@ -228,7 +284,7 @@ public class ProgresoFragment extends Fragment {
         int diasEntrenados = 0;
         java.util.Set<Integer> diasMarcados = new java.util.HashSet<>();
 
-        for (com.example.fitgit.model.Sesion sesion : sesiones) {
+        for (Sesion sesion : sesiones) {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(sesion.fecha);
             int diaSemana = cal.get(Calendar.DAY_OF_WEEK);

@@ -18,7 +18,7 @@ import com.example.fitgit.model.SerieRegistro;
         RutinaEjercicioCrossRef.class,
         Sesion.class,
         SerieRegistro.class
-}, version = 4, exportSchema = false)
+}, version = 7, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
