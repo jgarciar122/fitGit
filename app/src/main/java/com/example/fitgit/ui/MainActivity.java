@@ -43,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(binding.navegacionInferior, navController);
 
+        binding.navegacionInferior.setOnItemReselectedListener(item -> {
+            navController.popBackStack(item.getItemId(), false);
+        });
+
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             binding.tvToolbarTitulo.setText(destination.getLabel());
         });
