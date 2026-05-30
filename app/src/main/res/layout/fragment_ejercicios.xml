@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
                 android:background="@null"
-                android:hint="Busca un ejercicio (ej. Push up)..."
+                android:hint="@string/ejercicios_buscar_hint"
                 android:inputType="text"
                 android:textSize="16sp"
                 android:textColor="@color/black"
@@ -62,7 +62,7 @@
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Todos"
+                android:text="@string/filtro_todos"
                 android:checked="true"
                 app:chipBackgroundColor="@color/primary"
                 android:textColor="@color/white" />
@@ -72,70 +72,70 @@
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pecho" />
+                android:text="@string/filtro_pecho" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_espalda"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Espalda" />
+                android:text="@string/filtro_espalda" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_hombros"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hombros" />
+                android:text="@string/filtro_hombros" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_brazos"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Brazos" />
+                android:text="@string/filtro_brazos" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_antebrazos"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Antebrazos" />
+                android:text="@string/filtro_antebrazos" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_piernas"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Piernas" />
+                android:text="@string/filtro_piernas" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_gemelos"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gemelos" />
+                android:text="@string/filtro_gemelos" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_cintura"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cintura" />
+                android:text="@string/filtro_cintura" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_cuello"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cuello" />
+                android:text="@string/filtro_cuello" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/filtro_cardio"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cardio" />
+                android:text="@string/filtro_cardio" />
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>

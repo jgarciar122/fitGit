@@ -8,13 +8,13 @@
     <fragment
         android:id="@+id/nav_ejercicios"
         android:name="com.example.fitgit.ui.EjerciciosFragment"
-        android:label="Ejercicios"
+        android:label="@string/nav_ejercicios"
         tools:layout="@layout/fragment_ejercicios" />
 
     <fragment
         android:id="@+id/nav_rutinas"
         android:name="com.example.fitgit.ui.RutinasFragment"
-        android:label="Mis Rutinas"
+        android:label="@string/nav_rutinas"
         tools:layout="@layout/fragment_rutinas">
 
         <action
@@ -25,19 +25,19 @@
     <fragment
         android:id="@+id/nav_progreso"
         android:name="com.example.fitgit.ui.ProgresoFragment"
-        android:label="Progreso"
+        android:label="@string/nav_progreso"
         tools:layout="@layout/fragment_progreso" />
 
     <fragment
         android:id="@+id/nav_perfil"
         android:name="com.example.fitgit.ui.PerfilFragment"
-        android:label="Mi Perfil"
+        android:label="@string/nav_perfil"
         tools:layout="@layout/fragment_perfil" />
 
     <fragment
         android:id="@+id/nav_detalle_rutina"
         android:name="com.example.fitgit.ui.DetalleRutinaFragment"
-        android:label="Detalle Rutina"
+        android:label="@string/nav_detalle_rutina"
         tools:layout="@layout/fragment_detalle_rutina">
 
         <argument

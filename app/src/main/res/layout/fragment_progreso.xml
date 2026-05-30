@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mi Progreso"
+            android:text="@string/progreso_titulo"
             android:textSize="26sp"
             android:fontFamily="sans-serif-black"
             android:textColor="@color/black"
@@ -62,7 +62,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="ESTA SEMANA"
+                        android:text="@string/progreso_esta_semana"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textAllCaps="true"
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="L"
+                        android:text="@string/progreso_dia_l"
                         android:textSize="13sp"
                         android:textColor="@color/texto_secundario" />
                     <TextView
@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="M"
+                        android:text="@string/progreso_dia_m"
                         android:textSize="13sp"
                         android:textColor="@color/texto_secundario" />
                     <TextView
@@ -109,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="X"
+                        android:text="@string/progreso_dia_x"
                         android:textSize="13sp"
                         android:textColor="@color/texto_secundario" />
                     <TextView
@@ -118,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="J"
+                        android:text="@string/progreso_dia_j"
                         android:textSize="13sp"
                         android:textColor="@color/texto_secundario" />
                     <TextView
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="V"
+                        android:text="@string/progreso_dia_v"
                         android:textSize="13sp"
                         android:textColor="@color/texto_secundario" />
                     <TextView
@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="S"
+                        android:text="@string/progreso_dia_s"
                         android:textSize="13sp"
                         android:textColor="@color/texto_secundario" />
                     <TextView
@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="D"
+                        android:text="@string/progreso_dia_d"
                         android:textSize="13sp"
                         android:textColor="@color/texto_secundario" />
                 </LinearLayout>
@@ -221,7 +221,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:gravity="center"
-                    android:text="0 días entrenados esta semana"
+                    android:text="@string/progreso_resumen"
                     android:textSize="14sp"
                     android:textColor="@color/texto_terciario" />
 
@@ -247,7 +247,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="EVOLUCIÓN"
+                    android:text="@string/progreso_evolucion"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textAllCaps="true"
@@ -261,14 +261,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:hint="Selecciona un ejercicio">
+                    android:hint="@string/progreso_selecciona_ejercicio">
 
                     <AutoCompleteTextView
                         android:id="@+id/actv_selector_ejercicio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
-                        android:text="Selecciona un ejercicio"
+                        android:text="@string/progreso_selecciona_ejercicio"
                         android:textSize="14sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -295,7 +295,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="Registra entrenamientos para ver tu evolución"
+                    android:text="@string/progreso_sin_datos"
                     android:textSize="14sp"
                     android:textColor="@color/texto_secundario"
                     android:visibility="gone" />
@@ -321,7 +321,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="HISTORIAL"
+                    android:text="@string/progreso_historial"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textAllCaps="true"
@@ -339,7 +339,7 @@
                     android:id="@+id/tv_sin_historial"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Aún no has registrado ningún entrenamiento"
+                    android:text="@string/progreso_sin_historial"
                     android:textSize="14sp"
                     android:textColor="@color/texto_secundario"
                     android:gravity="center"

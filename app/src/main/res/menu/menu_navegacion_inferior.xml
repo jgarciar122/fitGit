@@ -2,13 +2,13 @@
     <item
         android:id="@+id/nav_ejercicios"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="Ejercicios" />
+        android:title="@string/nav_ejercicios" />
     <item
         android:id="@+id/nav_rutinas"
         android:icon="@android:drawable/ic_menu_my_calendar"
-        android:title="Mis Rutinas" />
+        android:title="@string/nav_rutinas" />
     <item
         android:id="@+id/nav_progreso"
         android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="Progreso" />
+        android:title="@string/nav_progreso" />
 </menu>

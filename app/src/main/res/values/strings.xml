@@ -1,4 +1,117 @@
 <resources>
     <string name="app_name">FitGIt</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Navegación (toolbar + bottom nav) -->
+    <string name="nav_ejercicios">Ejercicios</string>
+    <string name="nav_rutinas">Mis Rutinas</string>
+    <string name="nav_progreso">Progreso</string>
+    <string name="nav_perfil">Mi Perfil</string>
+    <string name="nav_detalle_rutina">Detalle Rutina</string>
+
+    <!-- Login -->
+    <string name="login_bienvenido">Bienvenido a FitGit</string>
+    <string name="login_hint_correo">Correo electrónico</string>
+    <string name="login_hint_contrasena">Contraseña</string>
+    <string name="login_boton">Iniciar Sesión</string>
+    <string name="login_registrate">¿No tienes cuenta? Regístrate</string>
+
+    <!-- Registro -->
+    <string name="registro_titulo">Crea tu cuenta</string>
+    <string name="registro_hint_nombre">Nombre completo</string>
+    <string name="registro_hint_correo">Correo electrónico</string>
+    <string name="registro_hint_contrasena">Contraseña</string>
+    <string name="registro_hint_confirmar">Confirmar contraseña</string>
+    <string name="registro_boton">Registrarse</string>
+    <string name="registro_ya_cuenta">¿Ya tienes cuenta? Inicia sesión</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_siguiente">Siguiente</string>
+    <string name="onboarding_omitir">Omitir</string>
+
+    <!-- Filtros músculo -->
+    <string name="filtro_todos">Todos</string>
+    <string name="filtro_pecho">Pecho</string>
+    <string name="filtro_espalda">Espalda</string>
+    <string name="filtro_hombros">Hombros</string>
+    <string name="filtro_brazos">Brazos</string>
+    <string name="filtro_antebrazos">Antebrazos</string>
+    <string name="filtro_piernas">Piernas</string>
+    <string name="filtro_gemelos">Gemelos</string>
+    <string name="filtro_cintura">Cintura</string>
+    <string name="filtro_cuello">Cuello</string>
+    <string name="filtro_cardio">Cardio</string>
+
+    <!-- Ejercicios -->
+    <string name="ejercicios_buscar_hint">Busca un ejercicio (ej. Push up)…</string>
+    <string name="ejercicios_anadir_titulo">Añadir ejercicio</string>
+    <string name="ejercicios_anadir_hint">Buscar ejercicio…</string>
+    <string name="ejercicio_anadir_rutina">Añadir a mi rutina</string>
+    <string name="ejercicio_registrar_progreso">📊 Registrar progreso</string>
+    <string name="ejercicio_instrucciones">Instrucciones paso a paso</string>
+
+    <!-- Rutinas -->
+    <string name="rutina_seccion">RUTINA</string>
+    <string name="rutina_sin_ejercicios">Aún no has añadido ejercicios aquí</string>
+    <string name="rutina_gestionar">Toca para gestionar</string>
+    <string name="rutina_empezar">▶ Empezar rutina</string>
+
+    <!-- Entrenamiento -->
+    <string name="entrenamiento_finalizar">Finalizar entrenamiento</string>
+    <string name="series_anadir">+ Añadir serie</string>
+    <string name="series_guardar">Guardar sesión</string>
+    <string name="serie_label">Serie</string>
+    <string name="kg_label">kg</string>
+    <string name="reps_label">Reps</string>
+
+    <!-- Progreso -->
+    <string name="progreso_titulo">Mi Progreso</string>
+    <string name="progreso_esta_semana">ESTA SEMANA</string>
+    <string name="progreso_semana_pasada">SEMANA PASADA</string>
+    <string name="progreso_maximo_kg">Máximo registrado: %s kg</string>
+
+    <!-- Diálogos eliminar -->
+    <string name="dialogo_eliminar_ejercicio_titulo">Eliminar ejercicio</string>
+    <string name="dialogo_eliminar_ejercicio_msg">¿Seguro que quieres eliminar este ejercicio de la sesión?</string>
+    <string name="dialogo_eliminar_sesion_titulo">Eliminar sesión</string>
+    <string name="dialogo_eliminar_sesion_msg">¿Seguro que quieres eliminar este entrenamiento completo?</string>
+    <string name="dialogo_eliminar">Eliminar</string>
+    <string name="dialogo_cancelar">Cancelar</string>
+    <string name="progreso_dia_l">L</string>
+    <string name="progreso_dia_m">M</string>
+    <string name="progreso_dia_x">X</string>
+    <string name="progreso_dia_j">J</string>
+    <string name="progreso_dia_v">V</string>
+    <string name="progreso_dia_s">S</string>
+    <string name="progreso_dia_d">D</string>
+    <string name="progreso_resumen">0 días entrenados esta semana</string>
+    <string name="progreso_evolucion">EVOLUCIÓN</string>
+    <string name="progreso_selecciona_ejercicio">Selecciona un ejercicio</string>
+    <string name="progreso_sin_datos">Registra entrenamientos para ver tu evolución</string>
+    <string name="progreso_historial">HISTORIAL</string>
+    <string name="progreso_sin_historial">Aún no has registrado ningún entrenamiento</string>
+
+    <!-- Perfil - secciones -->
+    <string name="perfil_seccion_cuenta">CUENTA</string>
+    <string name="perfil_nombre">Nombre</string>
+    <string name="perfil_email">Email</string>
+    <string name="perfil_acceso_con">Acceso con</string>
+
+    <!-- Perfil - apariencia -->
+    <string name="perfil_seccion_apariencia">APARIENCIA</string>
+    <string name="perfil_tema_oscuro">Tema oscuro</string>
+    <string name="perfil_idioma">Inglés</string>
+
+    <!-- Perfil - acciones -->
+    <string name="perfil_cerrar_sesion">Cerrar sesión</string>
+    <string name="perfil_subiendo_foto">Subiendo foto…</string>
+    <string name="perfil_foto_actualizada">Foto actualizada</string>
+    <string name="perfil_nombre_actualizado">Nombre actualizado</string>
+    <string name="perfil_cambiar_nombre">Cambiar nombre</string>
+    <string name="perfil_guardar">Guardar</string>
+    <string name="perfil_cancelar">Cancelar</string>
+
+    <plurals name="progreso_dias_entrenados">
+        <item quantity="one">%d día entrenado esta semana</item>
+        <item quantity="other">%d días entrenados esta semana</item>
+    </plurals>
 </resources>

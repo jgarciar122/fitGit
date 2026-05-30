@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bienvenido a FitGit"
+        android:text="@string/login_bienvenido"
         android:textSize="32sp"
         android:fontFamily="sans-serif-black"
         android:textColor="@color/primary"
@@ -29,7 +29,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Correo electrónico"
+        android:hint="@string/login_hint_correo"
         app:startIconDrawable="@android:drawable/ic_dialog_email"
         app:boxStrokeColor="@color/primary"
         app:hintTextColor="@color/primary">
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Contraseña"
+        android:hint="@string/login_hint_contrasena"
         app:startIconDrawable="@android:drawable/ic_lock_lock"
         app:passwordToggleEnabled="true"
         app:boxStrokeColor="@color/primary"
@@ -67,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="32dp"
-        android:text="Iniciar Sesión"
+        android:text="@string/login_boton"
         android:textSize="16sp"
         android:backgroundTint="@color/primary"
         app:cornerRadius="12dp" />
@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="¿No tienes cuenta? Regístrate"
+        android:text="@string/login_registrate"
         android:textColor="@color/primary_dark" />
 
 </LinearLayout>

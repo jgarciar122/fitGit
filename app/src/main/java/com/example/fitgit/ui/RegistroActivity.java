@@ -23,6 +23,7 @@ public class RegistroActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         binding.btnRegistrarFinal.setOnClickListener(v -> registrarUsuario());
+        binding.btnVolverLogin.setOnClickListener(v -> finish());
     }
 
     private void registrarUsuario() {

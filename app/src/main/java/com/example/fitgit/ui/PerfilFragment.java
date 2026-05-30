@@ -77,6 +77,7 @@ public class PerfilFragment extends Fragment {
 
         cargarDatosUsuario();
         configurarDarkMode();
+        configurarIdioma();
 
         binding.btnEditarNombre.setOnClickListener(v -> mostrarDialogoEditarNombre());
         binding.btnEditarFoto.setOnClickListener(v -> abrirGaleria());
@@ -94,6 +95,19 @@ public class PerfilFragment extends Fragment {
             AppCompatDelegate.setDefaultNightMode(
                     isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
             );
+        });
+    }
+
+    private void configurarIdioma() {
+        SharedPreferences prefs = requireContext()
+                .getSharedPreferences(FitGitApp.PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        String idiomaActual = prefs.getString(FitGitApp.KEY_IDIOMA, "es");
+        binding.switchIdioma.setChecked(idiomaActual.equals("en"));
+
+        binding.switchIdioma.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String nuevoIdioma = isChecked ? "en" : "es";
+            prefs.edit().putString(FitGitApp.KEY_IDIOMA, nuevoIdioma).apply();
+            FitGitApp.aplicarIdioma(prefs);
         });
     }
 
@@ -176,7 +190,7 @@ public class PerfilFragment extends Fragment {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario == null) return;
 
-        Toast.makeText(getContext(), "Subiendo foto...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.perfil_subiendo_foto, Toast.LENGTH_SHORT).show();
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
@@ -209,7 +223,8 @@ public class PerfilFragment extends Fragment {
                 Response response = client.newCall(request).execute();
 
                 if (response.isSuccessful()) {
-                    String fotoUrl = SUPABASE_URL + "/storage/v1/object/public/fotos-perfil/" + nombreArchivo;
+                    String fotoUrl = SUPABASE_URL + "/storage/v1/object/public/fotos-perfil/" + nombreArchivo
+                            + "?t=" + System.currentTimeMillis();
                     Uri fotoUri = Uri.parse(fotoUrl);
                     requireActivity().runOnUiThread(() -> actualizarFotoPerfil(fotoUri));
                 } else {
@@ -240,8 +255,11 @@ public class PerfilFragment extends Fragment {
             if (task.isSuccessful()) {
                 Glide.with(this)
                         .load(fotoUri)
-                        .placeholder(android.R.drawable.ic_menu_myplaces)
+                        .placeholder(R.drawable.ic_perfil_placeholder)
                         .into(binding.ivAvatar);
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).actualizarAvatarToolbar(fotoUri);
+                }
                 Toast.makeText(getContext(), "Foto actualizada", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Error al actualizar la foto", Toast.LENGTH_SHORT).show();

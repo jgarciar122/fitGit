@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import androidx.navigation.NavOptions;
@@ -17,6 +18,7 @@ import com.example.fitgit.model.Rutina;
 import com.example.fitgit.model.RutinaEjercicioCrossRef;
 import com.example.fitgit.model.Sesion;
 import com.example.fitgit.model.SerieRegistro;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private NavController navController;
+    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment)
                 getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
+
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_ejercicios, R.id.nav_rutinas, R.id.nav_progreso)
+                .build();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         // setupWithNavController registra el onDestinationChangedListener que actualiza
         // la selección visual del bottom nav — lo necesitamos
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             binding.tvToolbarTitulo.setText(destination.getLabel());
+            cargarFotoPerfil();
         });
 
         binding.btnPerfil.setOnClickListener(v ->
@@ -82,12 +91,35 @@ public class MainActivity extends AppCompatActivity {
                         .build())
         );
 
+        cargarFotoPerfil();
+
         sincronizarDesdeFirestore();
+    }
+
+    public void actualizarAvatarToolbar(android.net.Uri fotoUri) {
+        Glide.with(this)
+                .load(fotoUri)
+                .placeholder(R.drawable.ic_perfil_placeholder)
+                .error(R.drawable.ic_perfil_placeholder)
+                .into(binding.btnPerfil);
+    }
+
+    private void cargarFotoPerfil() {
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+        if (usuario != null && usuario.getPhotoUrl() != null) {
+            Glide.with(this)
+                    .load(usuario.getPhotoUrl())
+                    .placeholder(R.drawable.ic_perfil_placeholder)
+                    .error(R.drawable.ic_perfil_placeholder)
+                    .into(binding.btnPerfil);
+        } else {
+            binding.btnPerfil.setImageResource(R.drawable.ic_perfil_placeholder);
+        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        return navController.navigateUp() || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
     private void sincronizarDesdeFirestore() {

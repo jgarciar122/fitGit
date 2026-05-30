@@ -80,7 +80,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CUENTA"
+                    android:text="@string/perfil_seccion_cuenta"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textAllCaps="true"
@@ -99,7 +99,7 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@android:drawable/ic_menu_myplaces"
+                        android:src="@drawable/ic_persona"
                         app:tint="@color/primary" />
 
                     <TextView
@@ -225,7 +225,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="APARIENCIA"
+                    android:text="@string/perfil_seccion_apariencia"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textAllCaps="true"
@@ -251,12 +251,50 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        android:text="Tema oscuro"
+                        android:text="@string/perfil_tema_oscuro"
                         android:textSize="14sp"
                         android:textColor="@color/black" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switch_dark_mode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOn=""
+                        android:textOff=""
+                        android:checked="false" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/divisor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="4dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_idioma"
+                        app:tint="@color/primary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/perfil_idioma"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_idioma"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textOn=""
@@ -273,7 +311,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="32dp"
-            android:text="Cerrar sesión"
+            android:text="@string/perfil_cerrar_sesion"
             android:textAllCaps="false"
             android:textSize="16sp"
             android:textColor="@color/white"

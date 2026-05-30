@@ -37,7 +37,7 @@
             <TextView
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
-                android:text="Serie"
+                android:text="@string/serie_label"
                 android:textSize="12sp"
                 android:textColor="@color/texto_secundario"
                 android:gravity="center" />
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:text="Reps"
+                android:text="@string/reps_label"
                 android:textSize="12sp"
                 android:textColor="@color/texto_secundario"
                 android:gravity="center" />
@@ -82,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="8dp"
-            android:text="+ Añadir serie"
+            android:text="@string/series_anadir"
             android:textAllCaps="false"
             app:cornerRadius="10dp"
             app:strokeColor="@color/primary"

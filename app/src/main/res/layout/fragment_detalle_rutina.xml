@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RUTINA"
+            android:text="@string/rutina_seccion"
             android:textSize="10sp"
             android:textStyle="bold"
             android:textColor="@color/primary"
@@ -61,7 +61,7 @@
         android:id="@+id/tv_rutina_vacia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aún no has añadido ejercicios aquí"
+        android:text="@string/rutina_sin_ejercicios"
         android:textSize="16sp"
         android:textColor="@color/texto_secundario"
         android:visibility="gone"

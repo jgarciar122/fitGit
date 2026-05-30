@@ -52,16 +52,22 @@ public class TraductorLocal {
 
     public static String traducirParteCuerpo(String en) {
         if (en == null) return "";
+        if (java.util.Locale.getDefault().getLanguage().equals("en")) {
+            return capitalizar(en);
+        }
         String traduccion = PARTES_CUERPO.get(en.toLowerCase().trim());
         return traduccion != null ? traduccion : capitalizar(en);
     }
 
-    /** Convierte el nombre en español del chip de filtro al valor en inglés que espera la API */
-    public static String parteCuerpoAIngles(String es) {
-        if (es == null) return "todos";
-        String clave = es.toLowerCase().trim();
+    /** Convierte el texto del chip (en español o inglés) al valor en inglés que espera la API */
+    public static String parteCuerpoAIngles(String chipText) {
+        if (chipText == null) return "todos";
+        String lower = chipText.toLowerCase().trim();
+        // Si ya es una clave inglesa válida (app en inglés)
+        if (PARTES_CUERPO.containsKey(lower)) return lower;
+        // Buscar por valor español → clave inglesa
         for (Map.Entry<String, String> entrada : PARTES_CUERPO.entrySet()) {
-            if (entrada.getValue().toLowerCase().equals(clave)) {
+            if (entrada.getValue().toLowerCase().equals(lower)) {
                 return entrada.getKey();
             }
         }
@@ -70,6 +76,9 @@ public class TraductorLocal {
 
     public static String traducirEquipamiento(String en) {
         if (en == null) return "";
+        if (java.util.Locale.getDefault().getLanguage().equals("en")) {
+            return capitalizar(en);
+        }
         String traduccion = EQUIPAMIENTO.get(en.toLowerCase().trim());
         return traduccion != null ? traduccion : capitalizar(en);
     }

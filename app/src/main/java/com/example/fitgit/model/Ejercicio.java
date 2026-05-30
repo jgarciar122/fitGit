@@ -77,10 +77,16 @@ public class Ejercicio implements Serializable {
     public void setTraducido(boolean traducido) { this.traducido = traducido; }
 
     public String getNombreMostrar() {
+        if (java.util.Locale.getDefault().getLanguage().equals("en")) {
+            return nombre;
+        }
         return (nombreEs != null && !nombreEs.isEmpty()) ? nombreEs : nombre;
     }
 
     public List<String> getInstruccionesMostrar() {
+        if (java.util.Locale.getDefault().getLanguage().equals("en")) {
+            return instrucciones;
+        }
         return (instruccionesEs != null && !instruccionesEs.isEmpty()) ? instruccionesEs : instrucciones;
     }
 

@@ -2,17 +2,22 @@ package com.example.fitgit;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 
 public class FitGitApp extends Application {
 
     public static final String PREFS_NAME = "fitgit_prefs";
     public static final String KEY_DARK_MODE = "dark_mode";
+    public static final String KEY_IDIOMA = "idioma";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        aplicarTema();
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        aplicarTema(prefs);
+        aplicarIdioma(prefs);
     }
 
     public static void aplicarTema(SharedPreferences prefs) {
@@ -22,8 +27,8 @@ public class FitGitApp extends Application {
         );
     }
 
-    private void aplicarTema() {
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        aplicarTema(prefs);
+    public static void aplicarIdioma(SharedPreferences prefs) {
+        String idioma = prefs.getString(KEY_IDIOMA, "es");
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(idioma));
     }
 }

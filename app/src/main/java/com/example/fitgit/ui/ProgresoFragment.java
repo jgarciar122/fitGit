@@ -72,11 +72,11 @@ public class ProgresoFragment extends Fragment {
 
         adaptador.setOnEliminarEjercicioListener((sesionId, ejercicioId) ->
                 new MaterialAlertDialogBuilder(requireContext(), R.style.DialogEliminar)
-                        .setTitle("Eliminar ejercicio")
-                        .setMessage("¿Seguro que quieres eliminar este ejercicio de la sesión?")
-                        .setPositiveButton("Eliminar", (dialog, which) ->
+                        .setTitle(R.string.dialogo_eliminar_ejercicio_titulo)
+                        .setMessage(R.string.dialogo_eliminar_ejercicio_msg)
+                        .setPositiveButton(R.string.dialogo_eliminar, (dialog, which) ->
                                 viewModel.eliminarEjercicioDeSesion(sesionId, ejercicioId))
-                        .setNegativeButton("Cancelar", null)
+                        .setNegativeButton(R.string.dialogo_cancelar, null)
                         .show()
         );
 
@@ -90,12 +90,12 @@ public class ProgresoFragment extends Fragment {
                 int sesionId = adaptador.obtenerSesionId(position);
 
                 new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.DialogEliminar)
-                        .setTitle("Eliminar sesión")
-                        .setMessage("¿Seguro que quieres eliminar este entrenamiento completo?")
-                        .setPositiveButton("Eliminar", (dialog, which) -> {
+                        .setTitle(R.string.dialogo_eliminar_sesion_titulo)
+                        .setMessage(R.string.dialogo_eliminar_sesion_msg)
+                        .setPositiveButton(R.string.dialogo_eliminar, (dialog, which) -> {
                             if (sesionId != -1) viewModel.eliminarSesionCompleta(sesionId);
                         })
-                        .setNegativeButton("Cancelar", (dialog, which) ->
+                        .setNegativeButton(R.string.dialogo_cancelar, (dialog, which) ->
                                 adaptador.notifyItemChanged(position))
                         .setOnCancelListener(dialog ->
                                 adaptador.notifyItemChanged(position))
@@ -151,11 +151,11 @@ public class ProgresoFragment extends Fragment {
         long finSemana = cal.getTimeInMillis();
 
         if (offsetSemana == 0) {
-            binding.tvTituloSemana.setText("ESTA SEMANA");
+            binding.tvTituloSemana.setText(R.string.progreso_esta_semana);
         } else if (offsetSemana == -1) {
-            binding.tvTituloSemana.setText("SEMANA PASADA");
+            binding.tvTituloSemana.setText(R.string.progreso_semana_pasada);
         } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.forLanguageTag("es"));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
             Calendar inicio = Calendar.getInstance();
             inicio.setTimeInMillis(inicioDia);
             binding.tvTituloSemana.setText(sdf.format(inicio.getTime()).toUpperCase());
@@ -178,7 +178,7 @@ public class ProgresoFragment extends Fragment {
         binding.graficaEvolucion.setScaleEnabled(true);
         binding.graficaEvolucion.getDescription().setEnabled(false);
         binding.graficaEvolucion.getLegend().setEnabled(false);
-        binding.graficaEvolucion.setNoDataText("Selecciona un ejercicio");
+        binding.graficaEvolucion.setNoDataText(getString(R.string.progreso_selecciona_ejercicio));
         int colorSecundario = ContextCompat.getColor(requireContext(), R.color.texto_secundario);
         int colorDivisor    = ContextCompat.getColor(requireContext(), R.color.divisor);
 
@@ -274,7 +274,7 @@ public class ProgresoFragment extends Fragment {
             dataSet.setFillColor(getResources().getColor(R.color.primary, null));
             dataSet.setFillAlpha(30);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.forLanguageTag("es"));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
             binding.graficaEvolucion.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
@@ -290,7 +290,7 @@ public class ProgresoFragment extends Fragment {
             binding.graficaEvolucion.animateX(500);
             binding.graficaEvolucion.invalidate();
 
-            binding.tvMaximoKg.setText("Máximo registrado: " + maxKg + " kg");
+            binding.tvMaximoKg.setText(getString(R.string.progreso_maximo_kg, maxKg));
         });
     }
 
@@ -306,7 +306,8 @@ public class ProgresoFragment extends Fragment {
         }
 
         if (sesiones == null || sesiones.isEmpty()) {
-            binding.tvResumenSemana.setText("0 días entrenados esta semana");
+            binding.tvResumenSemana.setText(
+                    getResources().getQuantityString(R.plurals.progreso_dias_entrenados, 0, 0));
             return;
         }
 
@@ -326,9 +327,8 @@ public class ProgresoFragment extends Fragment {
             }
         }
 
-        binding.tvResumenSemana.setText(diasEntrenados + " día" +
-                (diasEntrenados != 1 ? "s" : "") + " entrenado" +
-                (diasEntrenados != 1 ? "s" : "") + " esta semana");
+        binding.tvResumenSemana.setText(
+                getResources().getQuantityString(R.plurals.progreso_dias_entrenados, diasEntrenados, diasEntrenados));
     }
 
     @Override

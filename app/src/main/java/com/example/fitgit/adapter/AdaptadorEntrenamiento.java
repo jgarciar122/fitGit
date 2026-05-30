@@ -54,7 +54,7 @@ public class AdaptadorEntrenamiento extends RecyclerView.Adapter<AdaptadorEntren
     @Override
     public void onBindViewHolder(@NonNull EjercicioViewHolder holder, int position) {
         Ejercicio ejercicio = listaEjercicios.get(position);
-        holder.tvNombre.setText(ejercicio.getNombre());
+        holder.tvNombre.setText(ejercicio.getNombreMostrar());
 
         List<AdaptadorSerie.FilaSerie> series = seriesPorEjercicio.get(ejercicio.getId());
 
