@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -47,6 +48,8 @@ public class ProgresoFragment extends Fragment {
 
     // 0 = semana actual, -1 = anterior, etc
     private int offsetSemana = 0;
+    private LiveData<List<Sesion>> liveDataSemanaActual = null;
+    private androidx.lifecycle.Observer<List<Sesion>> observerSemana = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -146,8 +149,12 @@ public class ProgresoFragment extends Fragment {
         binding.btnSemanaSiguiente.setAlpha(offsetSemana < 0 ? 1f : 0.3f);
         binding.btnSemanaSiguiente.setEnabled(offsetSemana < 0);
 
-        viewModel.obtenerSesionesSemana(inicioDia, finSemana)
-                .observe(getViewLifecycleOwner(), sesiones -> actualizarResumenSemanal(sesiones));
+        if (liveDataSemanaActual != null && observerSemana != null) {
+            liveDataSemanaActual.removeObserver(observerSemana);
+        }
+        observerSemana = sesiones -> actualizarResumenSemanal(sesiones);
+        liveDataSemanaActual = viewModel.obtenerSesionesSemana(inicioDia, finSemana);
+        liveDataSemanaActual.observe(getViewLifecycleOwner(), observerSemana);
     }
 
     private void configurarGrafica() {

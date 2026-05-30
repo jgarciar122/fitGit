@@ -8,6 +8,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import androidx.navigation.NavOptions;
+
 import com.example.fitgit.R;
 import com.example.fitgit.database.AppDatabase;
 import com.example.fitgit.databinding.ActivityMainBinding;
@@ -41,11 +43,32 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
 
+        // setupWithNavController registra el onDestinationChangedListener que actualiza
+        // la selección visual del bottom nav — lo necesitamos
         NavigationUI.setupWithNavController(binding.navegacionInferior, navController);
 
+        // Reemplazamos el onItemSelectedListener para garantizar que siempre se hace
+        // popUpTo al inicio antes de navegar, eliminando Perfil u otros destinos que
+        // pudieran estar apilados fuera del bottom nav
+        binding.navegacionInferior.setOnItemSelectedListener(item -> {
+            navController.navigate(item.getItemId(), null, new NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setPopUpTo(navController.getGraph().getStartDestinationId(), false)
+                    .build());
+            return true;
+        });
+
         binding.navegacionInferior.setOnItemReselectedListener(item -> {
-            if (!navController.popBackStack(item.getItemId(), false)) {
-                navController.navigate(item.getItemId());
+            if (navController.getCurrentDestination() != null
+                    && navController.getCurrentDestination().getId() != item.getItemId()) {
+                // Estamos en un destino fuera del bottom nav (ej: Perfil)
+                navController.navigate(item.getItemId(), null, new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .setPopUpTo(navController.getGraph().getStartDestinationId(), false)
+                        .build());
+            } else {
+                // Reselección real: volvemos a la raíz del tab actual
+                navController.popBackStack(item.getItemId(), false);
             }
         });
 
@@ -54,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.btnPerfil.setOnClickListener(v ->
-                navController.navigate(R.id.nav_perfil)
+                navController.navigate(R.id.nav_perfil, null, new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build())
         );
 
         sincronizarDesdeFirestore();
