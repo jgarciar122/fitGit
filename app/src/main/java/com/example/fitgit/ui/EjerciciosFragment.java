@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fitgit.adapter.AdaptadorEjercicios;
+import com.example.fitgit.util.TraductorLocal;
 import com.example.fitgit.database.AppDatabase;
 import com.example.fitgit.databinding.FragmentEjerciciosBinding;
 import com.example.fitgit.model.Ejercicio;
@@ -130,24 +131,9 @@ public class EjerciciosFragment extends Fragment {
         binding.grupoFiltros.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) return;
 
-            int idSeleccionado = checkedIds.get(0);
-            Chip chip = binding.getRoot().findViewById(idSeleccionado);
-            String texto = chip.getText().toString().toLowerCase();
-
-            String filtro;
-            switch (texto) {
-                case "pecho":      filtro = "chest"; break;
-                case "espalda":    filtro = "back"; break;
-                case "hombros":    filtro = "shoulders"; break;
-                case "brazos":     filtro = "upper arms"; break;
-                case "antebrazos": filtro = "lower arms"; break;
-                case "piernas":    filtro = "upper legs"; break;
-                case "gemelos":    filtro = "lower legs"; break;
-                case "cintura":    filtro = "waist"; break;
-                case "cuello":     filtro = "neck"; break;
-                case "cardio":     filtro = "cardio"; break;
-                default:           filtro = "todos"; break;
-            }
+            Chip chip = binding.getRoot().findViewById(checkedIds.get(0));
+            String texto = chip.getText().toString();
+            String filtro = TraductorLocal.parteCuerpoAIngles(texto);
             viewModel.filtrar(filtro);
         });
     }

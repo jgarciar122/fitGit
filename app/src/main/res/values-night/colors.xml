@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores base invertidos -->
+    <color name="white">#1E1E1E</color>
+    <color name="black">#EFEFEF</color>
+    <color name="background_light">#121212</color>
+    <color name="gris_detalle">#2A2A2A</color>
+
+    <!-- Colores semánticos en dark -->
+    <color name="texto_secundario">#AAAAAA</color>
+    <color name="texto_hint">#777777</color>
+    <color name="texto_terciario">#9E8FA8</color>
+    <color name="texto_etiqueta">#B0B3BA</color>
+    <color name="divisor">#2C2C2C</color>
+    <color name="borde_card">#2E2E2E</color>
+    <color name="borde_handle">#555555</color>
+    <color name="fondo_chip_rutina">#1A2560</color>
+    <color name="fondo_chip_ejercicio">#1A2560</color>
+</resources>

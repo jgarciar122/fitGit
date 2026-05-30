@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:text="Toca para gestionar"
                     android:textSize="13sp"
-                    android:textColor="#625B71" />
+                    android:textColor="@color/texto_terciario" />
             </LinearLayout>
 
             <ImageButton

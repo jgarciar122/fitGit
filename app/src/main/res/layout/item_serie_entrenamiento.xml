@@ -14,7 +14,7 @@
         android:layout_width="28dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="#44474E"
+        android:textColor="@color/texto_etiqueta"
         android:textSize="14sp"
         android:fontFamily="sans-serif-medium" />
 

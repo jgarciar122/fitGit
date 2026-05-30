@@ -28,6 +28,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import android.content.SharedPreferences;
+import androidx.appcompat.app.AppCompatDelegate;
+import com.example.fitgit.FitGitApp;
+
 import java.io.InputStream;
 import java.util.concurrent.Executors;
 
@@ -72,10 +76,25 @@ public class PerfilFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         cargarDatosUsuario();
+        configurarDarkMode();
 
         binding.btnEditarNombre.setOnClickListener(v -> mostrarDialogoEditarNombre());
         binding.btnEditarFoto.setOnClickListener(v -> abrirGaleria());
         binding.btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
+    }
+
+    private void configurarDarkMode() {
+        SharedPreferences prefs = requireContext()
+                .getSharedPreferences(FitGitApp.PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        boolean darkMode = prefs.getBoolean(FitGitApp.KEY_DARK_MODE, false);
+        binding.switchDarkMode.setChecked(darkMode);
+
+        binding.switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean(FitGitApp.KEY_DARK_MODE, isChecked).apply();
+            AppCompatDelegate.setDefaultNightMode(
+                    isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
+            );
+        });
     }
 
     private void cargarDatosUsuario() {

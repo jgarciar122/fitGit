@@ -57,10 +57,10 @@ public class DetalleRutinaFragment extends Fragment {
 
         binding.rvEjerciciosDetalle.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvEjerciciosDetalle.setAdapter(adaptador);
-        binding.tvTituloDetalle.setText("RUTINA: " + nombreRutina);
+        binding.tvTituloDetalle.setText(nombreRutina);
 
         adaptador.setOnEjercicioClickListener(ejercicio -> {
-            new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
+            new MaterialAlertDialogBuilder(requireContext(), R.style.DialogEliminar)
                     .setTitle("Quitar ejercicio")
                     .setMessage("¿Quitar \"" + ejercicio.getNombreMostrar() + "\" de la rutina?")
                     .setPositiveButton("Quitar", (dialog, which) -> {

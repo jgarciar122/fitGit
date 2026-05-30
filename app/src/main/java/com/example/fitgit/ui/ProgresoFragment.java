@@ -1,6 +1,7 @@
 package com.example.fitgit.ui;
 
 import android.graphics.Color;
+import androidx.core.content.ContextCompat;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.fitgit.R;
 import com.example.fitgit.adapter.AdaptadorHistorial;
+import com.example.fitgit.util.SwipeEliminarCallback;
 import com.example.fitgit.databinding.FragmentProgresoBinding;
 import com.example.fitgit.model.EntrenamientoDia;
 import com.example.fitgit.model.EjercicioConSeries;
@@ -65,18 +70,8 @@ public class ProgresoFragment extends Fragment {
 
         adaptador = new AdaptadorHistorial();
 
-        adaptador.setOnEliminarSesionListener(sesionId ->
-                new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
-                        .setTitle("Eliminar sesión")
-                        .setMessage("¿Seguro que quieres eliminar este entrenamiento completo?")
-                        .setPositiveButton("Eliminar", (dialog, which) ->
-                                viewModel.eliminarSesionCompleta(sesionId))
-                        .setNegativeButton("Cancelar", null)
-                        .show()
-        );
-
         adaptador.setOnEliminarEjercicioListener((sesionId, ejercicioId) ->
-                new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
+                new MaterialAlertDialogBuilder(requireContext(), R.style.DialogEliminar)
                         .setTitle("Eliminar ejercicio")
                         .setMessage("¿Seguro que quieres eliminar este ejercicio de la sesión?")
                         .setPositiveButton("Eliminar", (dialog, which) ->
@@ -87,6 +82,26 @@ public class ProgresoFragment extends Fragment {
 
         binding.rvHistorial.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvHistorial.setAdapter(adaptador);
+
+        new ItemTouchHelper(new SwipeEliminarCallback(requireContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                int sesionId = adaptador.obtenerSesionId(position);
+
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.DialogEliminar)
+                        .setTitle("Eliminar sesión")
+                        .setMessage("¿Seguro que quieres eliminar este entrenamiento completo?")
+                        .setPositiveButton("Eliminar", (dialog, which) -> {
+                            if (sesionId != -1) viewModel.eliminarSesionCompleta(sesionId);
+                        })
+                        .setNegativeButton("Cancelar", (dialog, which) ->
+                                adaptador.notifyItemChanged(position))
+                        .setOnCancelListener(dialog ->
+                                adaptador.notifyItemChanged(position))
+                        .show();
+            }
+        }).attachToRecyclerView(binding.rvHistorial);
 
         configurarGrafica();
         configurarNavegacionSemanas();
@@ -164,18 +179,21 @@ public class ProgresoFragment extends Fragment {
         binding.graficaEvolucion.getDescription().setEnabled(false);
         binding.graficaEvolucion.getLegend().setEnabled(false);
         binding.graficaEvolucion.setNoDataText("Selecciona un ejercicio");
-        binding.graficaEvolucion.setNoDataTextColor(Color.GRAY);
+        int colorSecundario = ContextCompat.getColor(requireContext(), R.color.texto_secundario);
+        int colorDivisor    = ContextCompat.getColor(requireContext(), R.color.divisor);
+
+        binding.graficaEvolucion.setNoDataTextColor(colorSecundario);
 
         XAxis xAxis = binding.graficaEvolucion.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
-        xAxis.setTextColor(Color.GRAY);
+        xAxis.setTextColor(colorSecundario);
         xAxis.setDrawGridLines(false);
 
         binding.graficaEvolucion.getAxisRight().setEnabled(false);
-        binding.graficaEvolucion.getAxisLeft().setTextColor(Color.GRAY);
+        binding.graficaEvolucion.getAxisLeft().setTextColor(colorSecundario);
         binding.graficaEvolucion.getAxisLeft().setDrawGridLines(true);
-        binding.graficaEvolucion.getAxisLeft().setGridColor(Color.parseColor("#F0F0F0"));
+        binding.graficaEvolucion.getAxisLeft().setGridColor(colorDivisor);
     }
 
     private void actualizarSelectorEjercicios(List<EntrenamientoDia> entrenamientos) {

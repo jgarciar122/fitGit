@@ -37,7 +37,7 @@
                 android:inputType="text"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:textColorHint="#999999" />
+                android:textColorHint="@color/texto_hint" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -148,6 +148,6 @@
         android:layout_weight="1"
         android:paddingHorizontal="12dp"
         android:clipToPadding="false"
-        android:paddingBottom="24dp" />
+        android:paddingBottom="80dp" />
 
 </LinearLayout>

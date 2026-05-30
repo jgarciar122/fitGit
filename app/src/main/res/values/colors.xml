@@ -16,4 +16,15 @@
     <!-- Estados y Errores -->
     <color name="error">#B00020</color>
     <color name="success">#4CAF50</color>
+
+    <!-- Colores semánticos (adaptables a dark mode) -->
+    <color name="texto_secundario">#888888</color>
+    <color name="texto_hint">#999999</color>
+    <color name="texto_terciario">#625B71</color>
+    <color name="texto_etiqueta">#44474E</color>
+    <color name="divisor">#F0F0F0</color>
+    <color name="borde_card">#E0E0E0</color>
+    <color name="borde_handle">#CCCCCC</color>
+    <color name="fondo_chip_rutina">#E8EEFF</color>
+    <color name="fondo_chip_ejercicio">#F0F4FF</color>
 </resources>

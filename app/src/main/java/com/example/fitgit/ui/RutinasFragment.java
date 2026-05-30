@@ -56,7 +56,7 @@ public class RutinasFragment extends Fragment {
         });
 
         adaptador.setOnEliminarRutinaListener(rutina -> {
-            new MaterialAlertDialogBuilder(requireContext(), R.style.DialogRedondeado)
+            new MaterialAlertDialogBuilder(requireContext(), R.style.DialogEliminar)
                     .setTitle("Eliminar rutina")
                     .setMessage("¿Seguro que quieres eliminar \"" + rutina.nombre + "\"? Se perderán todos sus ejercicios.")
                     .setPositiveButton("Eliminar", (dialog, which) -> viewModel.eliminarRutina(rutina))

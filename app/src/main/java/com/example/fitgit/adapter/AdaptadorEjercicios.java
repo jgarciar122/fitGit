@@ -18,6 +18,7 @@ import com.example.fitgit.BuildConfig;
 import com.example.fitgit.R;
 import com.example.fitgit.ui.DetallesEjercicioActivity;
 import com.example.fitgit.model.Ejercicio;
+import com.example.fitgit.util.TraductorLocal;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 
@@ -82,7 +83,7 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
         if (holder instanceof ViewHolderRutina) {
             ViewHolderRutina h = (ViewHolderRutina) holder;
             h.tvNombre.setText(ejercicio.getNombreMostrar());
-            h.tvMusculo.setText(ejercicio.getParteCuerpo());
+            h.tvMusculo.setText(TraductorLocal.traducirParteCuerpo(ejercicio.getParteCuerpo()));
 
             h.btnQuitar.setOnClickListener(v -> {
                 if (listener != null) listener.onEjercicioClick(ejercicio);
@@ -99,8 +100,8 @@ public class AdaptadorEjercicios extends RecyclerView.Adapter<AdaptadorEjercicio
         } else {
             ViewHolderCompleto h = (ViewHolderCompleto) holder;
             h.tvNombre.setText(ejercicio.getNombreMostrar());
-            h.chipMusculo.setText(ejercicio.getParteCuerpo());
-            h.chipEquipamiento.setText(ejercicio.getEquipamiento());
+            h.chipMusculo.setText(TraductorLocal.traducirParteCuerpo(ejercicio.getParteCuerpo()));
+            h.chipEquipamiento.setText(TraductorLocal.traducirEquipamiento(ejercicio.getEquipamiento()));
 
             GlideUrl glideUrl = new GlideUrl(ejercicio.getUrlGif(), new LazyHeaders.Builder()
                     .addHeader("x-rapidapi-key", API_KEY)

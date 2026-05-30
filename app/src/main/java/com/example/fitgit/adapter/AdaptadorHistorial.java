@@ -3,7 +3,6 @@ package com.example.fitgit.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -88,12 +87,6 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
             }
         });
 
-        // Botón eliminar sesión completa
-        holder.btnEliminarSesion.setOnClickListener(v -> {
-            if (eliminarSesionListener != null && sesionId != -1) {
-                eliminarSesionListener.onEliminarSesion(sesionId);
-            }
-        });
     }
 
     private void cargarEjercicios(List<EjercicioConSeries> ejercicios, int sesionId, SesionViewHolder holder) {
@@ -108,6 +101,15 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
         holder.rvEjercicios.setAdapter(adaptador);
     }
 
+    public int obtenerSesionId(int position) {
+        EntrenamientoDia entrenamiento = listaEntrenamientos.get(position);
+        if (!entrenamiento.ejercicios.isEmpty()
+                && !entrenamiento.ejercicios.get(0).series.isEmpty()) {
+            return entrenamiento.ejercicios.get(0).series.get(0).sesionId;
+        }
+        return -1;
+    }
+
     @Override
     public int getItemCount() {
         return listaEntrenamientos.size();
@@ -116,7 +118,6 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
     static class SesionViewHolder extends RecyclerView.ViewHolder {
         TextView tvFecha, tvNombreRutina, tvNumEjercicios;
         ImageView ivExpandir;
-        ImageButton btnEliminarSesion;
         RecyclerView rvEjercicios;
 
         public SesionViewHolder(@NonNull View itemView) {
@@ -125,7 +126,6 @@ public class AdaptadorHistorial extends RecyclerView.Adapter<AdaptadorHistorial.
             tvNombreRutina = itemView.findViewById(R.id.tv_nombre_rutina_sesion);
             tvNumEjercicios = itemView.findViewById(R.id.tv_num_ejercicios_sesion);
             ivExpandir = itemView.findViewById(R.id.iv_expandir);
-            btnEliminarSesion = itemView.findViewById(R.id.btn_eliminar_sesion);
             rvEjercicios = itemView.findViewById(R.id.rv_ejercicios_sesion);
         }
     }
