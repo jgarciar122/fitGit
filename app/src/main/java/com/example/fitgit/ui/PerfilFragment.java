@@ -87,7 +87,15 @@ public class PerfilFragment extends Fragment {
     private void configurarDarkMode() {
         SharedPreferences prefs = requireContext()
                 .getSharedPreferences(FitGitApp.PREFS_NAME, android.content.Context.MODE_PRIVATE);
-        boolean darkMode = prefs.getBoolean(FitGitApp.KEY_DARK_MODE, false);
+
+        boolean darkMode;
+        if (prefs.contains(FitGitApp.KEY_DARK_MODE)) {
+            darkMode = prefs.getBoolean(FitGitApp.KEY_DARK_MODE, false);
+        } else {
+            int uiMode = requireContext().getResources().getConfiguration().uiMode
+                    & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+            darkMode = uiMode == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+        }
         binding.switchDarkMode.setChecked(darkMode);
 
         binding.switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -101,7 +109,12 @@ public class PerfilFragment extends Fragment {
     private void configurarIdioma() {
         SharedPreferences prefs = requireContext()
                 .getSharedPreferences(FitGitApp.PREFS_NAME, android.content.Context.MODE_PRIVATE);
-        String idiomaActual = prefs.getString(FitGitApp.KEY_IDIOMA, "es");
+
+        String idiomaActual = prefs.getString(FitGitApp.KEY_IDIOMA, null);
+        if (idiomaActual == null) {
+            String lang = getResources().getConfiguration().getLocales().get(0).getLanguage();
+            idiomaActual = lang.equals("en") ? "en" : "es";
+        }
         binding.switchIdioma.setChecked(idiomaActual.equals("en"));
 
         binding.switchIdioma.setOnCheckedChangeListener((buttonView, isChecked) -> {

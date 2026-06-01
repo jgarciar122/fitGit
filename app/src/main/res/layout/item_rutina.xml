@@ -79,14 +79,6 @@
                     android:textColor="@color/texto_terciario" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btn_eliminar_rutina"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_delete"
-                app:tint="#FF5252" />
-
         </LinearLayout>
 
         <!-- Botón empezar rutina -->

@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AdaptadorEntrenamiento extends RecyclerView.Adapter<AdaptadorEntrenamiento.EjercicioViewHolder> {
+public class        AdaptadorEntrenamiento extends RecyclerView.Adapter<AdaptadorEntrenamiento.EjercicioViewHolder> {
 
     private List<Ejercicio> listaEjercicios = new ArrayList<>();
 

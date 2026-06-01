@@ -3,7 +3,6 @@ package com.example.fitgit.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +22,10 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
         notifyDataSetChanged();
     }
 
+    public RutinaConConteo obtenerRutina(int position) {
+        return listaRutinas.get(position);
+    }
+
     public interface OnRutinaClickListener {
         void onRutinaClick(RutinaConConteo rutina);
     }
@@ -31,16 +34,6 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
 
     public void setOnRutinaClickListener(OnRutinaClickListener listener) {
         this.listener = listener;
-    }
-
-    public interface OnEliminarRutinaListener {
-        void onEliminarClick(RutinaConConteo rutina);
-    }
-
-    private OnEliminarRutinaListener eliminarListener;
-
-    public void setOnEliminarRutinaListener(OnEliminarRutinaListener listener) {
-        this.eliminarListener = listener;
     }
 
     public interface OnEmpezarRutinaListener {
@@ -70,10 +63,6 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
             if (listener != null) listener.onRutinaClick(rutina);
         });
 
-        holder.btnEliminar.setOnClickListener(v -> {
-            if (eliminarListener != null) eliminarListener.onEliminarClick(rutina);
-        });
-
         holder.btnEmpezar.setOnClickListener(v -> {
             if (empezarListener != null) empezarListener.onEmpezarClick(rutina);
         });
@@ -86,14 +75,12 @@ public class AdaptadorRutinas extends RecyclerView.Adapter<AdaptadorRutinas.Ruti
 
     class RutinaViewHolder extends RecyclerView.ViewHolder {
         TextView tvNombre, tvContador;
-        ImageButton btnEliminar;
         MaterialButton btnEmpezar;
 
         public RutinaViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNombre = itemView.findViewById(R.id.tv_nombre_rutina);
             tvContador = itemView.findViewById(R.id.tv_num_ejercicios);
-            btnEliminar = itemView.findViewById(R.id.btn_eliminar_rutina);
             btnEmpezar = itemView.findViewById(R.id.btn_empezar_rutina);
         }
     }

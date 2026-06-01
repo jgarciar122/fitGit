@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.fitgit.util.SwipeEliminarCallback;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.example.fitgit.R;
@@ -44,6 +47,21 @@ public class RutinasFragment extends Fragment {
 
         binding.fabAddRutina.setOnClickListener(v -> mostrarDialogoNuevaRutina());
 
+        new ItemTouchHelper(new SwipeEliminarCallback(requireContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                com.example.fitgit.model.RutinaConConteo rutina = adaptador.obtenerRutina(position);
+                new MaterialAlertDialogBuilder(requireContext(), R.style.DialogEliminar)
+                        .setTitle("Eliminar rutina")
+                        .setMessage("¿Seguro que quieres eliminar \"" + rutina.nombre + "\"? Se perderán todos sus ejercicios.")
+                        .setPositiveButton("Eliminar", (dialog, which) -> viewModel.eliminarRutina(rutina))
+                        .setNegativeButton("Cancelar", (dialog, which) -> adaptador.notifyItemChanged(position))
+                        .setOnCancelListener(dialog -> adaptador.notifyItemChanged(position))
+                        .show();
+            }
+        }).attachToRecyclerView(binding.rvRutinas);
+
         viewModel.obtenerRutinasConConteo().observe(getViewLifecycleOwner(), rutinas -> {
             if (rutinas != null) adaptador.setRutinas(rutinas);
         });
@@ -53,15 +71,6 @@ public class RutinasFragment extends Fragment {
             args.putInt("rutina_id", rutina.id);
             args.putString("rutina_nombre", rutina.nombre);
             Navigation.findNavController(view).navigate(R.id.action_rutinas_to_detalle, args);
-        });
-
-        adaptador.setOnEliminarRutinaListener(rutina -> {
-            new MaterialAlertDialogBuilder(requireContext(), R.style.DialogEliminar)
-                    .setTitle("Eliminar rutina")
-                    .setMessage("¿Seguro que quieres eliminar \"" + rutina.nombre + "\"? Se perderán todos sus ejercicios.")
-                    .setPositiveButton("Eliminar", (dialog, which) -> viewModel.eliminarRutina(rutina))
-                    .setNegativeButton("Cancelar", null)
-                    .show();
         });
 
         adaptador.setOnEmpezarRutinaListener(rutina -> {
